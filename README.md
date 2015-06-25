@@ -31,3 +31,5 @@ rtr.password=<password>
 Place the file under `ebinterface-web/src/main/resources/rtr.properties`
 
 Username and password may be requested from RTR directly, and are not provided in this GitHub repository.
+
+:green_heart: Pull requests are greatly appreciated and welcomed.
