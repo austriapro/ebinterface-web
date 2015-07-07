@@ -1,6 +1,6 @@
 ![ebInterface Logo](https://github.com/pliegl/ebinterface/blob/master/site/images/logo.jpg?raw=true "ebInterface e-Invoice standard")
 
-#ebInterface Web
+#ebInterface Web [![Build Status](https://travis-ci.org/austriapro/ebinterface-web.svg)](https://travis-ci.org/austriapro/ebinterface-web)
 
 ebInterface Web allows to validate ebInterface instances according to ebInterface XML Schema version 3.0, 3.02, 4.0, and 4.01. Furthermore, XML instances may be converted to human-readable HTML representations as well as PDF files.
 
