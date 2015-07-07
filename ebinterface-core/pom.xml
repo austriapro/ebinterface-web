@@ -102,13 +102,6 @@
     </description>
     <url>http://ebinterface.at</url>
 
-
-    <scm>
-        <developerConnection>scm:git:git@github.com:pliegl/ebinterface.git</developerConnection>
-        <url>http://github.com/pliegl/ebinterface/tree/master/validation-service</url>
-        <tag>HEAD</tag>
-    </scm>
-
     <organization>
         <url>http://ebinterface.at</url>
     </organization>
