@@ -24,11 +24,18 @@ public class VerificationServiceInvoker {
     private static final Logger LOG = LoggerFactory.getLogger(VerificationServiceInvoker.class.getName());
 
 
-    private static String USERNAME = "";
-    private static String PASSWORD = "";
+    private static String USERNAME;
+    private static String PASSWORD;
 
+
+    private static boolean activated = true;
 
     static {
+
+        //Set correct JAXB Context
+        System.setProperty("javax.xml.bind.JAXBContext",
+                           "com.sun.xml.internal.bind.v2.ContextFactory");
+
 
         //Get username and password for the RTR Web Service, which requires HTTP Basic Authentication
         //That may be done more nicely using Spring, but we abstain to use Spring dependencies in this project...
@@ -43,8 +50,20 @@ public class VerificationServiceInvoker {
             USERNAME = prop.getProperty("rtr.username");
             PASSWORD = prop.getProperty("rtr.password");
 
+
+            //Set a password authenticator in order to allow communication through the basic authentication
+            Authenticator.setDefault(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(
+                        USERNAME,
+                        PASSWORD.toCharArray());
+                }
+            });
+
         } catch (Exception ex) {
-            throw new RuntimeException("Unable to read username/password for HTTP basic authentication of RTR service. Unable to proceed");
+            LOG.error("Unable to read username/password for HTTP basic authentication of RTR service. Validation service Won't be able to perform signature validations.");
+            activated = false;
         } finally {
             if (input != null) {
                 try {
@@ -56,15 +75,7 @@ public class VerificationServiceInvoker {
         }
 
 
-        //Set a password authenticator in order to allow communication through the basic authentication
-        Authenticator.setDefault(new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                        USERNAME,
-                        PASSWORD.toCharArray());
-            }
-        });
+
 
         //Enable some more verbose logging
 //        System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
@@ -72,9 +83,7 @@ public class VerificationServiceInvoker {
 //        System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
 //        System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
 
-        //Set correct JAXB Context
-        System.setProperty("javax.xml.bind.JAXBContext",
-                "com.sun.xml.internal.bind.v2.ContextFactory");
+
     }
 
     /**
@@ -92,7 +101,6 @@ public class VerificationServiceInvoker {
      */
     public static VerifyDocumentResponse verifyDocument(VerifyDocumentRequest request) throws VerificationFault {
 
-
         VerificationService verificationService = new VerificationService();
         VerificationServicePortType portType = verificationService.getVerificationServicePortSOAP();
 
@@ -104,6 +112,14 @@ public class VerificationServiceInvoker {
         return portType.verifyDocument(request);
 
     }
+
+
+
+    public static boolean isActivated() {
+        return activated;
+    }
+
+
 
 
 }

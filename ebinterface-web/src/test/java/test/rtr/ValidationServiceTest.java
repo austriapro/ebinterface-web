@@ -53,6 +53,14 @@ public class ValidationServiceTest {
 
         //Get a response
         try {
+
+            //We can only test this, if the verification service is available
+            if (!VerificationServiceInvoker.isActivated()) {
+                LOG.warn("Unable to test verification service, since it is not activated.");
+                return;
+            }
+
+
             VerifyDocumentResponse response = VerificationServiceInvoker.verifyDocument(request);
 
             SignatureValidationResult result = new SignatureValidationResult(response);
