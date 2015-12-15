@@ -3,7 +3,7 @@
 
     <artifactId>ebinterface-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <name>ebInterface validation core</name>
 
