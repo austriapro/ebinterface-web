@@ -7,52 +7,50 @@ package at.ebinterface.validation.validator;
  */
 public enum EbInterfaceVersion {
 
+  E3P0("http://www.ebinterface.at/schema/3p0/", "ebInterface 3.0"),
+  E3P02("http://www.ebinterface.at/schema/3p02/", "ebInterface 3.02"),
+  E4P0("http://www.ebinterface.at/schema/4p0/", "ebInterface 4.0"),
+  E4P1("http://www.ebinterface.at/schema/4p1/", "ebInterface 4.1"),
+  E4P2("http://www.ebinterface.at/schema/4p2/", "ebInterface 4.2");
 
-    E3P0("http://www.ebinterface.at/schema/3p0/", "ebInterface 3.0"),
-    E3P02("http://www.ebinterface.at/schema/3p02/", "ebInterface 3.02"),
-    E4P0("http://www.ebinterface.at/schema/4p0/", "ebInterface 4.0"),
-    E4P1("http://www.ebinterface.at/schema/4p1/", "ebInterface 4.1"),
-    E4P2("http://www.ebinterface.at/schema/4p2/", "ebInterface 4.2");
-
-    private final String namespace;
-    private final String caption;
-    private boolean signed;
-    private String signatureNamespacePrefix;
-
-
-    private EbInterfaceVersion(final String s, final String caption) {
-        this.namespace = s;
-        this.caption = caption;
-    }
+  private final String namespace;
+  private final String caption;
+  private boolean signed;
+  private String signatureNamespacePrefix;
 
 
-    public String getNamespace() {
-        return namespace;
-    }
+  private EbInterfaceVersion(final String s, final String caption) {
+    this.namespace = s;
+    this.caption = caption;
+  }
 
 
-    public boolean isSigned() {
-        return signed;
-    }
+  public String getNamespace() {
+    return namespace;
+  }
 
 
-    public void setSigned(final boolean signed) {
-        this.signed = signed;
-    }
+  public boolean isSigned() {
+    return signed;
+  }
 
 
-    public String getSignatureNamespacePrefix() {
-        return signatureNamespacePrefix;
-    }
+  public void setSigned(final boolean signed) {
+    this.signed = signed;
+  }
 
 
-    public void setSignatureNamespacePrefix(final String signatureNamespacePrefix) {
-        this.signatureNamespacePrefix = signatureNamespacePrefix;
-    }
+  public String getSignatureNamespacePrefix() {
+    return signatureNamespacePrefix;
+  }
 
-    public String getCaption() {
-        return caption;
-    }
 
+  public void setSignatureNamespacePrefix(final String signatureNamespacePrefix) {
+    this.signatureNamespacePrefix = signatureNamespacePrefix;
+  }
+
+  public String getCaption() {
+    return caption;
+  }
 
 }

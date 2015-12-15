@@ -1,6 +1,7 @@
 package at.ebinterface.validation.web.panels;
 
 import at.ebinterface.validation.validator.jaxb.Result;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -16,21 +17,21 @@ import java.util.List;
  */
 public class ErrorDetailsPanel extends Panel {
 
-    public ErrorDetailsPanel(String id, List<Result.Error> errors) {
-        super(id);
+  public ErrorDetailsPanel(String id, List<Result.Error> errors) {
+    super(id);
 
-        //Create a table with the error messages
-        ListView<Result.Error> listview = new ListView<Result.Error>("repeater", errors) {
-            @Override
-            protected void populateItem(ListItem<Result.Error> item) {
-                item.add(new Label("errorElement", Model.of(item.getModelObject().getViolatingElement())));
-                item.add(new Label("errorMessage", Model.of(item.getModelObject().getErrorMessage())));
-            }
+    //Create a table with the error messages
+    ListView<Result.Error> listview = new ListView<Result.Error>("repeater", errors) {
+      @Override
+      protected void populateItem(ListItem<Result.Error> item) {
+        item.add(new Label("errorElement", Model.of(item.getModelObject().getViolatingElement())));
+        item.add(new Label("errorMessage", Model.of(item.getModelObject().getErrorMessage())));
+      }
 
-        };
-        this.add(listview);
+    };
+    this.add(listview);
 
-    }
+  }
 
 
 }

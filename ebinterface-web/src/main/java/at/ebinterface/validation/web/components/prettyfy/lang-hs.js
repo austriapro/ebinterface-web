@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview
  * Registers a language handler for Haskell.
@@ -52,9 +51,9 @@ PR.registerLangHandler(
             //                        | x hexadecimal )
             // charesc      ->    a | b | f | n | r | t | v | \ | " | ' | &
             [PR.PR_STRING, /^\"(?:[^\"\\\n\x0C\r]|\\[\s\S])*(?:\"|$)/,
-                null, '"'],
+             null, '"'],
             [PR.PR_STRING, /^\'(?:[^\'\\\n\x0C\r]|\\[^&])\'?/,
-                null, "'"],
+             null, "'"],
             // decimal      ->    digit{digit}
             // octal        ->    octit{octit}
             // hexadecimal  ->    hexit{hexit}
@@ -65,8 +64,8 @@ PR.registerLangHandler(
             //               |    decimal exponent
             // exponent     ->    (e | E) [+ | -] decimal
             [PR.PR_LITERAL,
-                /^(?:0o[0-7]+|0x[\da-f]+|\d+(?:\.\d+)?(?:e[+\-]?\d+)?)/i,
-                null, '0123456789']
+             /^(?:0o[0-7]+|0x[\da-f]+|\d+(?:\.\d+)?(?:e[+\-]?\d+)?)/i,
+             null, '0123456789']
         ],
         [
             // Haskell does not have a regular lexical grammar due to the nested
@@ -81,7 +80,9 @@ PR.registerLangHandler(
             //               |    else | if | import | in | infix | infixl | infixr
             //               |    instance | let | module | newtype | of | then
             //               |    type | where | _
-            [PR.PR_KEYWORD, /^(?:case|class|data|default|deriving|do|else|if|import|in|infix|infixl|infixr|instance|let|module|newtype|of|then|type|where|_)(?=[^a-zA-Z0-9\']|$)/, null],
+            [PR.PR_KEYWORD,
+             /^(?:case|class|data|default|deriving|do|else|if|import|in|infix|infixl|infixr|instance|let|module|newtype|of|then|type|where|_)(?=[^a-zA-Z0-9\']|$)/,
+             null],
             // qvarid       ->    [ modid . ] varid
             // qconid       ->    [ modid . ] conid
             // varid        ->    (small {small | large | digit | ' })<reservedid>

@@ -21,13 +21,13 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * @author Richard Nichols
- * @version $Id: PrettifyJSResourceReference.java 261 2011-03-08 20:53:16Z
- *          tibes80@gmail.com $
+ * @version $Id: PrettifyJSResourceReference.java 261 2011-03-08 20:53:16Z tibes80@gmail.com $
  */
 public class PrettifyJSResourceReference extends PackageResourceReference {
-    private static final long serialVersionUID = 1L;
 
-    public PrettifyJSResourceReference() {
-        super(PrettifyJSResourceReference.class, "prettify.js");
-    }
+  private static final long serialVersionUID = 1L;
+
+  public PrettifyJSResourceReference() {
+    super(PrettifyJSResourceReference.class, "prettify.js");
+  }
 }

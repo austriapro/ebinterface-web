@@ -6,10 +6,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
- * <p>Java class for FileInfoType complex type.
- * <p/>
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
+ * <p>Java class for FileInfoType complex type. <p/> <p>The following schema fragment specifies the
+ * expected content contained within this class. <p/>
  * <pre>
  * &lt;complexType name="FileInfoType">
  *   &lt;complexContent>
@@ -26,79 +24,73 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FileInfoType", namespace = "http://reference.e-government.gv.at/namespace/verificationservice/20120922#", propOrder = {
-        "fileID",
-        "fileType",
-        "fileHash"
+    "fileID",
+    "fileType",
+    "fileHash"
 })
 public class FileInfoType {
 
-    @XmlElement(name = "FileID")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "token")
-    protected String fileID;
-    @XmlElement(name = "FileType", required = true)
-    protected String fileType;
-    @XmlElement(name = "File-Hash", required = true)
-    protected byte[] fileHash;
+  @XmlElement(name = "FileID")
+  @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+  @XmlSchemaType(name = "token")
+  protected String fileID;
+  @XmlElement(name = "FileType", required = true)
+  protected String fileType;
+  @XmlElement(name = "File-Hash", required = true)
+  protected byte[] fileHash;
 
-    /**
-     * Gets the value of the fileID property.
-     *
-     * @return possible object is
-     * {@link String }
-     */
-    public String getFileID() {
-        return fileID;
-    }
+  /**
+   * Gets the value of the fileID property.
+   *
+   * @return possible object is {@link String }
+   */
+  public String getFileID() {
+    return fileID;
+  }
 
-    /**
-     * Sets the value of the fileID property.
-     *
-     * @param value allowed object is
-     *              {@link String }
-     */
-    public void setFileID(String value) {
-        this.fileID = value;
-    }
+  /**
+   * Sets the value of the fileID property.
+   *
+   * @param value allowed object is {@link String }
+   */
+  public void setFileID(String value) {
+    this.fileID = value;
+  }
 
-    /**
-     * Gets the value of the fileType property.
-     *
-     * @return possible object is
-     * {@link String }
-     */
-    public String getFileType() {
-        return fileType;
-    }
+  /**
+   * Gets the value of the fileType property.
+   *
+   * @return possible object is {@link String }
+   */
+  public String getFileType() {
+    return fileType;
+  }
 
-    /**
-     * Sets the value of the fileType property.
-     *
-     * @param value allowed object is
-     *              {@link String }
-     */
-    public void setFileType(String value) {
-        this.fileType = value;
-    }
+  /**
+   * Sets the value of the fileType property.
+   *
+   * @param value allowed object is {@link String }
+   */
+  public void setFileType(String value) {
+    this.fileType = value;
+  }
 
-    /**
-     * Gets the value of the fileHash property.
-     *
-     * @return possible object is
-     * byte[]
-     */
-    public byte[] getFileHash() {
-        return fileHash;
-    }
+  /**
+   * Gets the value of the fileHash property.
+   *
+   * @return possible object is byte[]
+   */
+  public byte[] getFileHash() {
+    return fileHash;
+  }
 
-    /**
-     * Sets the value of the fileHash property.
-     *
-     * @param value allowed object is
-     *              byte[]
-     */
-    public void setFileHash(byte[] value) {
-        this.fileHash = value;
-    }
+  /**
+   * Sets the value of the fileHash property.
+   *
+   * @param value allowed object is byte[]
+   */
+  public void setFileHash(byte[] value) {
+    this.fileHash = value;
+  }
 
 }

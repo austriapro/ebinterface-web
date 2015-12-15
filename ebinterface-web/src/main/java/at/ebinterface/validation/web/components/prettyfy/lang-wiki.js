@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview
  * Registers a language handler for Wiki pages.
@@ -27,7 +26,7 @@ PR.registerLangHandler(
         [
             // Whitespace
             [PR.PR_PLAIN, /^[\t \xA0a-gi-z0-9]+/, null,
-                '\t \xA0abcdefgijklmnopqrstuvwxyz0123456789'],
+             '\t \xA0abcdefgijklmnopqrstuvwxyz0123456789'],
             // Wiki formatting
             [PR.PR_PUNCTUATION, /^[=*~\^\[\]]+/, null, '=*~^[]']
         ],
@@ -43,13 +42,13 @@ PR.registerLangHandler(
             ['lang-', /^`([^\r\n`]+)`/],
             // An inline URL.
             [PR.PR_STRING,
-                /^https?:\/\/[^\/?#\s]*(?:\/[^?#\s]*)?(?:\?[^#\s]*)?(?:#\S*)?/i],
+             /^https?:\/\/[^\/?#\s]*(?:\/[^?#\s]*)?(?:\?[^#\s]*)?(?:#\S*)?/i],
             [PR.PR_PLAIN, /^(?:\r\n|[\s\S])[^#=*~^A-Zh\{`\[\r\n]*/]
         ]),
     ['wiki']);
 
 PR.registerLangHandler(
     PR.createSimpleLexer([
-        [PR.PR_KEYWORD, /^#[a-z]+/i, null, '#']
-    ], []),
+                             [PR.PR_KEYWORD, /^#[a-z]+/i, null, '#']
+                         ], []),
     ['wiki.meta']);

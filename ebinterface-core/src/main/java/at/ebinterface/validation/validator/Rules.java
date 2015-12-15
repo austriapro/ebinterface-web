@@ -11,48 +11,53 @@ import java.util.List;
 public class Rules {
 
 
-    /**
-     * Stores the rules which are currently supported by this validation service.
-     * Use Rule as the key in order to allow retrieval based on type and ebInterface version
-     */
-    private static final List<Rule> rules;
+  /**
+   * Stores the rules which are currently supported by this validation service. Use Rule as the key
+   * in order to allow retrieval based on type and ebInterface version
+   */
+  private static final List<Rule> rules;
 
 
-    static {
+  static {
 
-        //Initialize the set of rules
-        rules = new ArrayList<Rule>();
+    //Initialize the set of rules
+    rules = new ArrayList<Rule>();
 
-        Rule rule1 = new Rule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0, "/schematron/sv/sv-rules-4p0.sch");
-        rules.add(rule1);
+    Rule
+        rule1 =
+        new Rule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0,
+                 "/schematron/sv/sv-rules-4p0.sch");
+    rules.add(rule1);
 
-        Rule rule2 = new Rule("Sozialversicherung (ebInterface 4p1)", EbInterfaceVersion.E4P1, "/schematron/sv/sv-rules-4p1.sch");
-        rules.add(rule2);
+    Rule
+        rule2 =
+        new Rule("Sozialversicherung (ebInterface 4p1)", EbInterfaceVersion.E4P1,
+                 "/schematron/sv/sv-rules-4p1.sch");
+    rules.add(rule2);
 
-        Rule rule3 = new Rule("Sozialversicherung (ebInterface 4p2)", EbInterfaceVersion.E4P2, "/schematron/sv/sv-rules-4p2.sch");
-        rules.add(rule3);
+    Rule
+        rule3 =
+        new Rule("Sozialversicherung (ebInterface 4p2)", EbInterfaceVersion.E4P2,
+                 "/schematron/sv/sv-rules-4p2.sch");
+    rules.add(rule3);
 
+  }
+
+
+  /**
+   * Get a certain rule
+   */
+  public static Rule getRule(String name, EbInterfaceVersion version) {
+    for (Rule r : rules) {
+      if (r.getName().equals(name) && r.getEbInterfaceVersion().equals(version)) {
+        return r;
+      }
     }
+    return null;
+  }
 
 
-    /**
-     * Get a certain rule
-     *
-     * @param name
-     * @param version
-     * @return
-     */
-    public static Rule getRule(String name, EbInterfaceVersion version) {
-        for (Rule r : rules) {
-            if (r.getName().equals(name) && r.getEbInterfaceVersion().equals(version)) {
-                return r;
-            }
-        }
-        return null;
-    }
-
-
-    public static List<Rule> getRules() {
-        return rules;
-    }
+  public static List<Rule> getRules() {
+    return rules;
+  }
 }

@@ -2,6 +2,7 @@ package at.ebinterface.validation.web.pages;
 
 import at.ebinterface.validation.validator.*;
 import at.ebinterface.validation.validator.jaxb.Result;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -27,317 +28,321 @@ import java.io.InputStream;
  */
 public class StartPage extends BasePage {
 
+  /**
+   * The three possible actions
+   */
+  public enum ActionType {
+    SCHEMA_VALIDATION, SCHEMA_AND_SCHEMATRON_VALIDATION, VISUALIZATION_HTML, VISUALIZATION_PDF, CONVERSION_ZUGFERD
+  }
+
+
+  private static final Logger LOG = LoggerFactory.getLogger(StartPage.class.getName());
+
+  /**
+   * Construc the start page
+   */
+  public StartPage() {
+
+    //Add the input form
+    final InputForm inputForm = new InputForm("inputForm");
+    add(inputForm);
+
+    //Add the form for showing the supported rules
+    final ShowRulesForm showRulesForm = new ShowRulesForm("showRulesForm");
+    add(showRulesForm);
+
+
+  }
+
+
+  /**
+   * Form for showing the rules which are currently supported
+   *
+   * @author pl
+   */
+  private class ShowRulesForm extends Form {
+
     /**
-     * The three possible actions
+     * Panel for providing feedback in case of errorneous input
      */
-    public enum ActionType {
-        SCHEMA_VALIDATION, SCHEMA_AND_SCHEMATRON_VALIDATION, VISUALIZATION_HTML, VISUALIZATION_PDF, CONVERSION_ZUGFERD
+    FeedbackPanel feedbackPanel;
+
+    /**
+     * Dropdown choice for the schmeatrno rules
+     */
+    DropDownChoice<Rule> rules;
+
+    public ShowRulesForm(final String id) {
+      super(id);
+
+      //Add a feedback panel
+      feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+      feedbackPanel.setVisible(false);
+      add(feedbackPanel);
+
+      //Add the drop down choice for the different rules which are currently supported
+      rules =
+          new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
+                                   new IChoiceRenderer<Rule>() {
+                                     @Override
+                                     public Object getDisplayValue(Rule object) {
+                                       return object.getName();
+                                     }
+
+                                     @Override
+                                     public String getIdValue(Rule object, int index) {
+                                       return object.getName();
+                                     }
+                                   });
+
+      add(rules);
+
+      //Add a submit button
+      add(new SubmitLink("showSchematron"));
+    }
+
+    @Override
+    protected void onSubmit() {
+      super.onSubmit();
+
+      //Did the user select a schematron file?
+      if (rules.getModelObject() == null || rules.getModelObject().toString().equals("")) {
+        error(new ResourceModel("ruleSelector.NoSelected").getObject());
+        onError();
+        return;
+      }
+
+      //Redirect
+      setResponsePage(new ShowRulesPage(rules.getModel()));
     }
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(StartPage.class.getName());
-
     /**
-     * Construc the start page
+     * Process errors
      */
-    public StartPage() {
-
-
-        //Add the input form
-        final InputForm inputForm = new InputForm("inputForm");
-        add(inputForm);
-
-
-        //Add the form for showing the supported rules
-        final ShowRulesForm showRulesForm = new ShowRulesForm("showRulesForm");
-        add(showRulesForm);
-
-
+    @Override
+    protected void onError() {
+      //Show the feedback panel in case on an error
+      feedbackPanel.setVisible(true);
     }
+  }
+
+
+  /**
+   * The input form class
+   *
+   * @author pl
+   */
+  private class InputForm extends Form {
 
 
     /**
-     * Form for showing the rules which are currently supported
-     *
-     * @author pl
+     * Panel for providing feedback in case of errorneous input
      */
-    private class ShowRulesForm extends Form {
+    FeedbackPanel feedbackPanel;
 
-        /**
-         * Panel for providing feedback in case of errorneous input
-         */
-        FeedbackPanel feedbackPanel;
+    /**
+     * Dropdown choice for the schmeatrno rules
+     */
+    DropDownChoice<Rule> rules;
 
-        /**
-         * Dropdown choice for the schmeatrno rules
-         */
-        DropDownChoice<Rule> rules;
+    /**
+     * Upload field for the ebInterface instance
+     */
+    FileUploadField fileUploadField;
 
-        public ShowRulesForm(final String id) {
-            super(id);
+    public InputForm(final String id) {
+      super(id);
 
-            //Add a feedback panel
-            feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-            feedbackPanel.setVisible(false);
-            add(feedbackPanel);
+      //Set the form to multi part since we use file upload
+      setMultiPart(true);
 
-            //Add the drop down choice for the different rules which are currently supported
-            rules = new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(), new IChoiceRenderer<Rule>() {
-                @Override
-                public Object getDisplayValue(Rule object) {
-                    return object.getName();
-                }
+      //Add a feedback panel
+      feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+      feedbackPanel.setVisible(false);
+      add(feedbackPanel);
 
-                @Override
-                public String getIdValue(Rule object, int index) {
-                    return object.getName();
-                }
-            });
+      //Add the file upload field
+      fileUploadField = new FileUploadField("fileInput");
+      fileUploadField.setRequired(true);
+      add(fileUploadField);
 
-            add(rules);
+      //Add the drop down choice for the different rules which are currently supported
+      rules =
+          new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
+                                   new IChoiceRenderer<Rule>() {
+                                     @Override
+                                     public Object getDisplayValue(Rule object) {
+                                       return object.getName();
+                                     }
 
-            //Add a submit button
-            add(new SubmitLink("showSchematron"));
-        }
+                                     @Override
+                                     public String getIdValue(Rule object, int index) {
+                                       return object.getName();
+                                     }
+                                   });
 
+      add(rules);
+
+      //Add a second submit button
+      add(new SubmitLink("submitButtonSchemaOnly") {
         @Override
-        protected void onSubmit() {
-            super.onSubmit();
-
-            //Did the user select a schematron file?
-            if (rules.getModelObject() == null || rules.getModelObject().toString().equals("")) {
-                error(new ResourceModel("ruleSelector.NoSelected").getObject());
-                onError();
-                return;
-            }
-
-
-            //Redirect
-            setResponsePage(new ShowRulesPage(rules.getModel()));
+        public void onSubmit() {
+          submit(ActionType.SCHEMA_VALIDATION);
         }
+      });
 
-
-        /**
-         * Process errors
-         */
+      //Add a submit button
+      add(new SubmitLink("submitButtonSchematron") {
         @Override
-        protected void onError() {
-            //Show the feedback panel in case on an error
-            feedbackPanel.setVisible(true);
+        public void onSubmit() {
+          submit(ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION);
         }
-    }
+      });
 
+      //Add a button to visualize it as HTML
+      add(new SubmitLink("submitButtonVisualizeHTML") {
+        @Override
+        public void onSubmit() {
+          submit(ActionType.VISUALIZATION_HTML);
+        }
+      });
+
+      //Add a button to visualize it as PDF
+      add(new SubmitLink("submitButtonVisualizePDF") {
+        @Override
+        public void onSubmit() {
+          submit(ActionType.VISUALIZATION_PDF);
+        }
+      });
+
+      //Add a button to convert to ZUGFerD
+      add(new SubmitLink("submitButtonConvertZUGFeRD") {
+        @Override
+        public void onSubmit() {
+          submit(ActionType.CONVERSION_ZUGFERD);
+        }
+      });
+    }
 
     /**
-     * The input form class
-     *
-     * @author pl
+     * Process the input
      */
-    private class InputForm extends Form {
+    protected void submit(final ActionType selectedAction) {
 
+      //Hide the feedback panel first (will be shown in case of an error)
+      feedbackPanel.setVisible(false);
 
-        /**
-         * Panel for providing feedback in case of errorneous input
-         */
-        FeedbackPanel feedbackPanel;
+      //Schematron validation?
+      //Schematron set must be selected
+      if (selectedAction == ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
+        if (rules.getModelObject() == null) {
+          error(new ResourceModel("ruleSelector.Required").getObject());
+          onError();
+          return;
+        }
+      }
 
-        /**
-         * Dropdown choice for the schmeatrno rules
-         */
-        DropDownChoice<Rule> rules;
+      //Get the file input
+      final FileUpload upload = fileUploadField.getFileUpload();
+      byte[] uploadedData = null;
 
-        /**
-         * Upload field for the ebInterface instance
-         */
-        FileUploadField fileUploadField;
+      try {
+        final InputStream inputStream = upload.getInputStream();
+        uploadedData = IOUtils.toByteArray(inputStream);
+      } catch (final IOException e) {
+        LOG.error("Unable to get content of uploaded file", e);
+      }
 
-        public InputForm(final String id) {
-            super(id);
+      //Validate the XML instance - performed in any case
+      final EbInterfaceValidator validator = new EbInterfaceValidator();
+      final ValidationResult
+          validationResult =
+          validator.validateXMLInstanceAgainstSchema(uploadedData);
 
-            //Set the form to multi part since we use file upload
-            setMultiPart(true);
+      //Schematron validation too?
+      if (selectedAction == ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
+        //Schematron validation may only be started in case of ebInterface 4p0
+        if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0 ||
+            validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1 ||
+            validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
 
-            //Add a feedback panel
-            feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-            feedbackPanel.setVisible(false);
-            add(feedbackPanel);
+          Rule rule = rules.getModelObject();
+          if (rule != null && !(rule.getEbInterfaceVersion()
+                                    .equals(validationResult.getDeterminedEbInterfaceVersion()))) {
+            error(new ResourceModel("schematron.version.mismatch").getObject());
+            onError();
+            return;
+          }
 
-
-            //Add the file upload field
-            fileUploadField = new FileUploadField("fileInput");
-            fileUploadField.setRequired(true);
-            add(fileUploadField);
-
-
-            //Add the drop down choice for the different rules which are currently supported
-            rules = new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(), new IChoiceRenderer<Rule>() {
-                @Override
-                public Object getDisplayValue(Rule object) {
-                    return object.getName();
-                }
-
-                @Override
-                public String getIdValue(Rule object, int index) {
-                    return object.getName();
-                }
-            });
-
-            add(rules);
-
-            //Add a second submit button
-            add(new SubmitLink("submitButtonSchemaOnly") {
-                @Override
-                public void onSubmit() {
-                    submit(ActionType.SCHEMA_VALIDATION);
-                }
-            });
-
-
-            //Add a submit button
-            add(new SubmitLink("submitButtonSchematron") {
-                @Override
-                public void onSubmit() {
-                    submit(ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION);
-                }
-            });
-
-
-            //Add a button to visualize it as HTML
-            add(new SubmitLink("submitButtonVisualizeHTML") {
-                @Override
-                public void onSubmit() {
-                    submit(ActionType.VISUALIZATION_HTML);
-                }
-            });
-
-            //Add a button to visualize it as PDF
-            add(new SubmitLink("submitButtonVisualizePDF") {
-                @Override
-                public void onSubmit() {
-                    submit(ActionType.VISUALIZATION_PDF);
-                }
-            });
-
-
-            //Add a button to convert to ZUGFerD
-            add(new SubmitLink("submitButtonConvertZUGFeRD") {
-                @Override
-                public void onSubmit() {
-                    submit(ActionType.CONVERSION_ZUGFERD);
-                }
-            });
+          //Invoke the validation
+          Result
+              r =
+              validator.validateXMLInstanceAgainstSchematron(uploadedData, rule.getFileReference());
+          validationResult.setResult(r);
+        }
+        //Wrong ebInterface version
+        else {
+          error(
+              "Schematronregeln können nur auf ebInterface 4.0/4.1/4.2 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: "
+              + validationResult.getDeterminedEbInterfaceVersion().getCaption());
+          onError();
+          return;
+        }
+      }
+      //Visualization HTML?
+      else if (selectedAction == ActionType.VISUALIZATION_HTML) {
+        //Visualization is only possible for valid instances
+        if (!StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+          error(
+              "Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
+          onError();
+          return;
         }
 
-        /**
-         * Process the input
-         */
-        protected void submit(final ActionType selectedAction) {
-
-            //Hide the feedback panel first (will be shown in case of an error)
-            feedbackPanel.setVisible(false);
-
-            //Schematron validation?
-            //Schematron set must be selected
-            if (selectedAction == ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
-                if (rules.getModelObject() == null) {
-                    error(new ResourceModel("ruleSelector.Required").getObject());
-                    onError();
-                    return;
-                }
-            }
-
-            //Get the file input
-            final FileUpload upload = fileUploadField.getFileUpload();
-            byte[] uploadedData = null;
-
-            try {
-                final InputStream inputStream = upload.getInputStream();
-                uploadedData = IOUtils.toByteArray(inputStream);
-            } catch (final IOException e) {
-                LOG.error("Unable to get content of uploaded file", e);
-            }
-
-            //Validate the XML instance - performed in any case
-            final EbInterfaceValidator validator = new EbInterfaceValidator();
-            final ValidationResult validationResult = validator.validateXMLInstanceAgainstSchema(uploadedData);
+        //Get the transformed string
+        final String
+            s =
+            validator
+                .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion());
+        //Redirect to the printview page
+        setResponsePage(new PrintViewPage(s));
+        return;
 
 
-            //Schematron validation too?
-            if (selectedAction == ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
-                //Schematron validation may only be started in case of ebInterface 4p0
-                if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0 ||
-                        validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1 ||
-                    validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
+      }
+      //Visualization PDF?
+      else if (selectedAction == ActionType.VISUALIZATION_PDF) {
+        error("Coming soon.");
+        onError();
+        return;
+      }
+      //Conversion ZUGFerD?
+      else if (selectedAction == ActionType.CONVERSION_ZUGFERD) {
+        error("Coming soon.");
+        onError();
+        return;
+      }
 
-                    Rule rule = rules.getModelObject();
-                    if (rule != null && !(rule.getEbInterfaceVersion().equals(validationResult.getDeterminedEbInterfaceVersion()))) {
-                        error(new ResourceModel("schematron.version.mismatch").getObject());
-                        onError();
-                        return;
-                    }
+      String selectedSchematronRule = "";
+      if (rules.getModelObject() != null) {
+        selectedSchematronRule = rules.getModelObject().getName();
+      }
 
-                    //Invoke the validation
-                    Result r = validator.validateXMLInstanceAgainstSchematron(uploadedData, rule.getFileReference());
-                    validationResult.setResult(r);
-                }
-                //Wrong ebInterface version
-                else {
-                    error("Schematronregeln können nur auf ebInterface 4.0/4.1/4.2 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: " + validationResult.getDeterminedEbInterfaceVersion().getCaption());
-                    onError();
-                    return;
-                }
-            }
-            //Visualization HTML?
-            else if (selectedAction == ActionType.VISUALIZATION_HTML) {
-                //Visualization is only possible for valid instances
-                if (!StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
-                    error("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
-                    onError();
-                    return;
-                }
+      //Redirect to the result page
+      setResponsePage(new ResultPage(validationResult, selectedSchematronRule, selectedAction));
 
-                //Get the transformed string
-                final String s = validator.transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion());
-                //Redirect to the printview page
-                setResponsePage(new PrintViewPage(s));
-                return;
-
-
-            }
-            //Visualization PDF?
-            else if (selectedAction == ActionType.VISUALIZATION_PDF) {
-                error("Coming soon.");
-                onError();
-                return;
-            }
-            //Conversion ZUGFerD?
-            else if (selectedAction == ActionType.CONVERSION_ZUGFERD) {
-                error("Coming soon.");
-                onError();
-                return;
-            }
-
-
-            String selectedSchematronRule = "";
-            if (rules.getModelObject() != null) {
-                selectedSchematronRule = rules.getModelObject().getName();
-            }
-
-
-            //Redirect to the result page
-            setResponsePage(new ResultPage(validationResult, selectedSchematronRule, selectedAction));
-
-        }
-
-        /**
-         * Process errors
-         */
-        @Override
-        protected void onError() {
-            //Show the feedback panel in case on an error
-            feedbackPanel.setVisible(true);
-        }
     }
+
+    /**
+     * Process errors
+     */
+    @Override
+    protected void onError() {
+      //Show the feedback panel in case on an error
+      feedbackPanel.setVisible(true);
+    }
+  }
 
 
 }

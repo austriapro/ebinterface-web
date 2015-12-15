@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview
  * some functions for browser-side pretty printing of code contained in html.
@@ -93,7 +92,7 @@ window['PR_normalizedHtml']
 /** browser detection. @extern @returns false if not IE, otherwise the major version. */
 window['_pr_isIE6'] = function () {
     var ieVersion = navigator && navigator.userAgent &&
-        navigator.userAgent.match(/\bMSIE ([678])\./);
+                    navigator.userAgent.match(/\bMSIE ([678])\./);
     ieVersion = ieVersion ? +ieVersion[1] : false;
     window['_pr_isIE6'] = function () {
         return ieVersion;
@@ -101,48 +100,47 @@ window['_pr_isIE6'] = function () {
     return ieVersion;
 };
 
-
 (function () {
     // Keyword lists for various languages.
     var FLOW_CONTROL_KEYWORDS =
         "break continue do else for if return while ";
     var C_KEYWORDS = FLOW_CONTROL_KEYWORDS + "auto case char const default " +
-        "double enum extern float goto int long register short signed sizeof " +
-        "static struct switch typedef union unsigned void volatile ";
+                     "double enum extern float goto int long register short signed sizeof " +
+                     "static struct switch typedef union unsigned void volatile ";
     var COMMON_KEYWORDS = C_KEYWORDS + "catch class delete false import " +
-        "new operator private protected public this throw true try typeof ";
+                          "new operator private protected public this throw true try typeof ";
     var CPP_KEYWORDS = COMMON_KEYWORDS + "alignof align_union asm axiom bool " +
-        "concept concept_map const_cast constexpr decltype " +
-        "dynamic_cast explicit export friend inline late_check " +
-        "mutable namespace nullptr reinterpret_cast static_assert static_cast " +
-        "template typeid typename using virtual wchar_t where ";
+                       "concept concept_map const_cast constexpr decltype " +
+                       "dynamic_cast explicit export friend inline late_check " +
+                       "mutable namespace nullptr reinterpret_cast static_assert static_cast " +
+                       "template typeid typename using virtual wchar_t where ";
     var JAVA_KEYWORDS = COMMON_KEYWORDS +
-        "abstract boolean byte extends final finally implements import " +
-        "instanceof null native package strictfp super synchronized throws " +
-        "transient ";
+                        "abstract boolean byte extends final finally implements import " +
+                        "instanceof null native package strictfp super synchronized throws " +
+                        "transient ";
     var CSHARP_KEYWORDS = JAVA_KEYWORDS +
-        "as base by checked decimal delegate descending event " +
-        "fixed foreach from group implicit in interface internal into is lock " +
-        "object out override orderby params partial readonly ref sbyte sealed " +
-        "stackalloc string select uint ulong unchecked unsafe ushort var ";
+                          "as base by checked decimal delegate descending event " +
+                          "fixed foreach from group implicit in interface internal into is lock " +
+                          "object out override orderby params partial readonly ref sbyte sealed " +
+                          "stackalloc string select uint ulong unchecked unsafe ushort var ";
     var JSCRIPT_KEYWORDS = COMMON_KEYWORDS +
-        "debugger eval export function get null set undefined var with " +
-        "Infinity NaN ";
+                           "debugger eval export function get null set undefined var with " +
+                           "Infinity NaN ";
     var PERL_KEYWORDS = "caller delete die do dump elsif eval exit foreach for " +
-        "goto if import last local my next no our print package redo require " +
-        "sub undef unless until use wantarray while BEGIN END ";
+                        "goto if import last local my next no our print package redo require " +
+                        "sub undef unless until use wantarray while BEGIN END ";
     var PYTHON_KEYWORDS = FLOW_CONTROL_KEYWORDS + "and as assert class def del " +
-        "elif except exec finally from global import in is lambda " +
-        "nonlocal not or pass print raise try with yield " +
-        "False True None ";
+                          "elif except exec finally from global import in is lambda " +
+                          "nonlocal not or pass print raise try with yield " +
+                          "False True None ";
     var RUBY_KEYWORDS = FLOW_CONTROL_KEYWORDS + "alias and begin case class def" +
-        " defined elsif end ensure false in module next nil not or redo rescue " +
-        "retry self super then true undef unless until when yield BEGIN END ";
+                        " defined elsif end ensure false in module next nil not or redo rescue " +
+                        "retry self super then true undef unless until when yield BEGIN END ";
     var SH_KEYWORDS = FLOW_CONTROL_KEYWORDS + "case done elif esac eval fi " +
-        "function in local set then until ";
+                      "function in local set then until ";
     var ALL_KEYWORDS = (
-        CPP_KEYWORDS + CSHARP_KEYWORDS + JSCRIPT_KEYWORDS + PERL_KEYWORDS +
-        PYTHON_KEYWORDS + RUBY_KEYWORDS + SH_KEYWORDS);
+    CPP_KEYWORDS + CSHARP_KEYWORDS + JSCRIPT_KEYWORDS + PERL_KEYWORDS +
+    PYTHON_KEYWORDS + RUBY_KEYWORDS + SH_KEYWORDS);
 
     // token style names.  correspond to css classes
     /** token style for a string literal */
@@ -244,7 +242,6 @@ window['_pr_isIE6'] = function () {
             .replace(pr_gt, '&gt;');
     }
 
-
     var pr_ltEnt = /&lt;/g;
     var pr_gtEnt = /&gt;/g;
     var pr_aposEnt = /&apos;/g;
@@ -273,7 +270,7 @@ window['_pr_isIE6'] = function () {
                 var codePoint = parseInt(num, radix);
                 if (!isNaN(codePoint)) {
                     html = (html.substring(0, pos) + String.fromCharCode(codePoint) +
-                        html.substring(end + 1));
+                            html.substring(end + 1));
                 }
             }
         }
@@ -366,7 +363,7 @@ window['_pr_isIE6'] = function () {
             if (regex.ignoreCase) {
                 ignoreCase = true;
             } else if (/[a-z]/i.test(regex.source.replace(
-                /\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[^ux]/gi, ''))) {
+                    /\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[^ux]/gi, ''))) {
                 needToFoldCase = true;
                 ignoreCase = false;
                 break;
@@ -393,7 +390,7 @@ window['_pr_isIE6'] = function () {
                 case 'u':
                 case 'x':
                     return parseInt(charsetPart.substring(2), 16)
-                        || charsetPart.charCodeAt(1);
+                           || charsetPart.charCodeAt(1);
                 case '0':
                 case '1':
                 case '2':
@@ -422,13 +419,13 @@ window['_pr_isIE6'] = function () {
         function caseFoldCharset(charSet) {
             var charsetParts = charSet.substring(1, charSet.length - 1).match(
                 new RegExp(
-                        '\\\\u[0-9A-Fa-f]{4}'
-                        + '|\\\\x[0-9A-Fa-f]{2}'
-                        + '|\\\\[0-3][0-7]{0,2}'
-                        + '|\\\\[0-7]{1,2}'
-                        + '|\\\\[\\s\\S]'
-                        + '|-'
-                        + '|[^-\\\\]',
+                    '\\\\u[0-9A-Fa-f]{4}'
+                    + '|\\\\x[0-9A-Fa-f]{2}'
+                    + '|\\\\[0-3][0-7]{0,2}'
+                    + '|\\\\[0-7]{1,2}'
+                    + '|\\\\[\\s\\S]'
+                    + '|-'
+                    + '|[^-\\\\]',
                     'g'));
             var groups = [];
             var ranges = [];
@@ -508,16 +505,16 @@ window['_pr_isIE6'] = function () {
             // include any of the above.
             var parts = regex.source.match(
                 new RegExp(
-                        '(?:'
-                        + '\\[(?:[^\\x5C\\x5D]|\\\\[\\s\\S])*\\]'  // a character set
-                        + '|\\\\u[A-Fa-f0-9]{4}'  // a unicode escape
-                        + '|\\\\x[A-Fa-f0-9]{2}'  // a hex escape
-                        + '|\\\\[0-9]+'  // a back-reference or octal escape
-                        + '|\\\\[^ux0-9]'  // other escape sequence
-                        + '|\\(\\?[:!=]'  // start of a non-capturing group
-                        + '|[\\(\\)\\^]'  // start/emd of a group, or line start
-                        + '|[^\\x5B\\x5C\\(\\)\\^]+'  // run of other characters
-                        + ')',
+                    '(?:'
+                    + '\\[(?:[^\\x5C\\x5D]|\\\\[\\s\\S])*\\]'  // a character set
+                    + '|\\\\u[A-Fa-f0-9]{4}'  // a unicode escape
+                    + '|\\\\x[A-Fa-f0-9]{2}'  // a hex escape
+                    + '|\\\\[0-9]+'  // a back-reference or octal escape
+                    + '|\\\\[^ux0-9]'  // other escape sequence
+                    + '|\\(\\?[:!=]'  // start of a non-capturing group
+                    + '|[\\(\\)\\^]'  // start/emd of a group, or line start
+                    + '|[^\\x5B\\x5C\\(\\)\\^]+'  // run of other characters
+                    + ')',
                     'g'));
             var n = parts.length;
 
@@ -601,7 +598,7 @@ window['_pr_isIE6'] = function () {
                 throw new Error('' + regex);
             }
             rewritten.push(
-                    '(?:' + allowAnywhereFoldCaseAndRenumberGroups(regex) + ')');
+                '(?:' + allowAnywhereFoldCaseAndRenumberGroups(regex) + ')');
         }
 
         return new RegExp(rewritten.join('|'), ignoreCase ? 'gi' : 'g');
@@ -692,12 +689,12 @@ window['_pr_isIE6'] = function () {
     }
 
     var pr_chunkPattern = new RegExp(
-            '[^<]+'  // A run of characters other than '<'
-            + '|<\!--[\\s\\S]*?--\>'  // an HTML comment
-            + '|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>'  // a CDATA section
-            // a probable tag that should not be highlighted
-            + '|<\/?[a-zA-Z](?:[^>\"\']|\'[^\']*\'|\"[^\"]*\")*>'
-            + '|<',  // A '<' that does not begin a larger chunk
+        '[^<]+'  // A run of characters other than '<'
+        + '|<\!--[\\s\\S]*?--\>'  // an HTML comment
+        + '|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>'  // a CDATA section
+        // a probable tag that should not be highlighted
+        + '|<\/?[a-zA-Z](?:[^>\"\']|\'[^\']*\'|\"[^\"]*\")*>'
+        + '|<',  // A '<' that does not begin a larger chunk
         'g');
     var pr_commentPrefix = /^<\!--/;
     var pr_cdataPrefix = /^<!\[CDATA\[/;
@@ -775,15 +772,15 @@ window['_pr_isIE6'] = function () {
                 }
             }
         }
-        return { source: sourceBuf.join(''), tags: extractedTags };
+        return {source: sourceBuf.join(''), tags: extractedTags};
     }
 
     /** True if the given tag contains a class attribute with the nocode class. */
     function isNoCodeTag(tag) {
         return !!tag
-            // First canonicalize the representation of attributes
+        // First canonicalize the representation of attributes
             .replace(/\s(\w+)\s*=\s*(?:\"([^\"]*)\"|'([^\']*)'|(\S+))/g,
-            ' $1="$2$3$4"')
+                     ' $1="$2$3$4"')
             // Then look for the attribute we want.
             .match(/[cC][lL][aA][sS][sS]=\"[^\"]*\bnocode\b/);
     }
@@ -962,18 +959,18 @@ window['_pr_isIE6'] = function () {
                     var lang = style.substring(5);
                     // Decorate the left of the embedded source
                     appendDecorations(
-                            basePos + tokenStart,
+                        basePos + tokenStart,
                         token.substring(0, embeddedSourceStart),
                         decorate, decorations);
                     // Decorate the embedded source
                     appendDecorations(
-                            basePos + tokenStart + embeddedSourceStart,
+                        basePos + tokenStart + embeddedSourceStart,
                         embeddedSource,
                         langHandlerForExtension(lang, embeddedSource),
                         decorations);
                     // Decorate the right of the embedded section
                     appendDecorations(
-                            basePos + tokenStart + embeddedSourceEnd,
+                        basePos + tokenStart + embeddedSourceEnd,
                         token.substring(embeddedSourceEnd),
                         decorate, decorations);
                 }
@@ -1003,19 +1000,21 @@ window['_pr_isIE6'] = function () {
         if (options['tripleQuotedStrings']) {
             // '''multi-line-string''', 'single-line-string', and double-quoted
             shortcutStylePatterns.push(
-                [PR_STRING, /^(?:\'\'\'(?:[^\'\\]|\\[\s\S]|\'{1,2}(?=[^\']))*(?:\'\'\'|$)|\"\"\"(?:[^\"\\]|\\[\s\S]|\"{1,2}(?=[^\"]))*(?:\"\"\"|$)|\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$))/,
-                    null, '\'"']);
+                [PR_STRING,
+                 /^(?:\'\'\'(?:[^\'\\]|\\[\s\S]|\'{1,2}(?=[^\']))*(?:\'\'\'|$)|\"\"\"(?:[^\"\\]|\\[\s\S]|\"{1,2}(?=[^\"]))*(?:\"\"\"|$)|\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$))/,
+                 null, '\'"']);
         } else if (options['multiLineStrings']) {
             // 'multi-line-string', "multi-line-string"
             shortcutStylePatterns.push(
-                [PR_STRING, /^(?:\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$)|\`(?:[^\\\`]|\\[\s\S])*(?:\`|$))/,
-                    null, '\'"`']);
+                [PR_STRING,
+                 /^(?:\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$)|\`(?:[^\\\`]|\\[\s\S])*(?:\`|$))/,
+                 null, '\'"`']);
         } else {
             // 'single-line-string', "single-line-string"
             shortcutStylePatterns.push(
                 [PR_STRING,
-                    /^(?:\'(?:[^\\\'\r\n]|\\.)*(?:\'|$)|\"(?:[^\\\"\r\n]|\\.)*(?:\"|$))/,
-                    null, '"\'']);
+                 /^(?:\'(?:[^\\\'\r\n]|\\.)*(?:\'|$)|\"(?:[^\\\"\r\n]|\\.)*(?:\"|$))/,
+                 null, '"\'']);
         }
         if (options['verbatimStrings']) {
             // verbatim-string-literal production from the C# grammar.  See issue 93.
@@ -1026,12 +1025,13 @@ window['_pr_isIE6'] = function () {
             if (options['cStyleComments']) {
                 // Stop C preprocessor declarations at an unclosed open comment
                 shortcutStylePatterns.push(
-                    [PR_COMMENT, /^#(?:(?:define|elif|else|endif|error|ifdef|include|ifndef|line|pragma|undef|warning)\b|[^\r\n]*)/,
-                        null, '#']);
+                    [PR_COMMENT,
+                     /^#(?:(?:define|elif|else|endif|error|ifdef|include|ifndef|line|pragma|undef|warning)\b|[^\r\n]*)/,
+                     null, '#']);
                 fallthroughStylePatterns.push(
                     [PR_STRING,
-                        /^<(?:(?:(?:\.\.\/)*|\/?)(?:[\w-]+(?:\/[\w-]+)+)?[\w-]+\.h|[a-z]\w*)>/,
-                        null]);
+                     /^<(?:(?:(?:\.\.\/)*|\/?)(?:[\w-]+(?:\/[\w-]+)+)?[\w-]+\.h|[a-z]\w*)>/,
+                     null]);
             } else {
                 shortcutStylePatterns.push([PR_COMMENT, /^#[^\r\n]*/, null, '#']);
             }
@@ -1046,18 +1046,18 @@ window['_pr_isIE6'] = function () {
                 // A regular expression literal starts with a slash that is
                 // not followed by * or / so that it is not confused with
                 // comments.
-                '/(?=[^/*])'
-                // and then contains any number of raw characters,
-                + '(?:[^/\\x5B\\x5C]'
-                // escape sequences (\x5C),
-                + '|\\x5C[\\s\\S]'
-                // or non-nesting character sets (\x5B\x5D);
-                + '|\\x5B(?:[^\\x5C\\x5D]|\\x5C[\\s\\S])*(?:\\x5D|$))+'
-                // finally closed by a /.
-                + '/');
+            '/(?=[^/*])'
+            // and then contains any number of raw characters,
+            + '(?:[^/\\x5B\\x5C]'
+            // escape sequences (\x5C),
+            + '|\\x5C[\\s\\S]'
+            // or non-nesting character sets (\x5B\x5D);
+            + '|\\x5B(?:[^\\x5C\\x5D]|\\x5C[\\s\\S])*(?:\\x5D|$))+'
+            // finally closed by a /.
+            + '/');
             fallthroughStylePatterns.push(
                 ['lang-regex',
-                    new RegExp('^' + REGEXP_PRECEDER_PATTERN + '(' + REGEX_LITERAL + ')')
+                 new RegExp('^' + REGEXP_PRECEDER_PATTERN + '(' + REGEX_LITERAL + ')')
                 ]);
         }
 
@@ -1065,7 +1065,7 @@ window['_pr_isIE6'] = function () {
         if (keywords.length) {
             fallthroughStylePatterns.push(
                 [PR_KEYWORD,
-                    new RegExp('^(?:' + keywords.replace(/\s+/g, '|') + ')\\b'), null]);
+                 new RegExp('^(?:' + keywords.replace(/\s+/g, '|') + ')\\b'), null]);
         }
 
         shortcutStylePatterns.push([PR_PLAIN, /^\s+/, null, ' \r\n\t\xA0']);
@@ -1075,30 +1075,30 @@ window['_pr_isIE6'] = function () {
             [PR_TYPE, /^@?[A-Z]+[a-z][A-Za-z_$@0-9]*/, null],
             [PR_PLAIN, /^[a-z_$][a-z_$@0-9]*/i, null],
             [PR_LITERAL,
-                new RegExp(
-                        '^(?:'
-                        // A hex number
-                        + '0x[a-f0-9]+'
-                        // or an octal or decimal number,
-                        + '|(?:\\d(?:_\\d+)*\\d*(?:\\.\\d*)?|\\.\\d\\+)'
-                        // possibly in scientific notation
-                        + '(?:e[+\\-]?\\d+)?'
-                        + ')'
-                        // with an optional modifier like UL for unsigned long
-                        + '[a-z]*', 'i'),
-                null, '0123456789'],
+             new RegExp(
+                 '^(?:'
+                 // A hex number
+                 + '0x[a-f0-9]+'
+                 // or an octal or decimal number,
+                 + '|(?:\\d(?:_\\d+)*\\d*(?:\\.\\d*)?|\\.\\d\\+)'
+                 // possibly in scientific notation
+                 + '(?:e[+\\-]?\\d+)?'
+                 + ')'
+                 // with an optional modifier like UL for unsigned long
+                 + '[a-z]*', 'i'),
+             null, '0123456789'],
             [PR_PUNCTUATION, /^.[^\s\w\.$@\'\"\`\/\#]*/, null]);
 
         return createSimpleLexer(shortcutStylePatterns, fallthroughStylePatterns);
     }
 
     var decorateSource = sourceDecorator({
-        'keywords': ALL_KEYWORDS,
-        'hashComments': true,
-        'cStyleComments': true,
-        'multiLineStrings': true,
-        'regexLiterals': true
-    });
+                                             'keywords': ALL_KEYWORDS,
+                                             'hashComments': true,
+                                             'cStyleComments': true,
+                                             'multiLineStrings': true,
+                                             'regexLiterals': true
+                                         });
 
     /** Breaks {@code job.source} around style boundaries in
      * {@code job.decorations} while re-interleaving {@code job.extractedTags},
@@ -1157,8 +1157,8 @@ window['_pr_isIE6'] = function () {
                 var htmlChunk = textToHtml(
                     tabExpander(sourceText.substring(outputIdx, sourceIdx)))
                     .replace(lastWasSpace
-                        ? startOrSpaceRe
-                        : adjacentSpaceRe, '$1&nbsp;');
+                                 ? startOrSpaceRe
+                                 : adjacentSpaceRe, '$1&nbsp;');
                 // Keep track of whether we need to escape space at the beginning of the
                 // next chunk.
                 lastWasSpace = trailingSpaceRe.test(htmlChunk);
@@ -1219,7 +1219,7 @@ window['_pr_isIE6'] = function () {
      *      of decorations.  Takes a single argument job which describes the
      *      state of the computation.   The single parameter has the form
      *      {@code {
-    *        source: {string} as plain text.
+     *        source: {string} as plain text.
      *        decorations: {Array.<number|string>} an array of style classes
      *                     preceded by the position at which they start in
      *                     job.source in order.
@@ -1296,51 +1296,51 @@ window['_pr_isIE6'] = function () {
             [PR_ATTRIB_VALUE, /^[\s\S]+/]
         ]), ['uq.val']);
     registerLangHandler(sourceDecorator({
-        'keywords': CPP_KEYWORDS,
-        'hashComments': true,
-        'cStyleComments': true
-    }), ['c', 'cc', 'cpp', 'cxx', 'cyc', 'm']);
+                                            'keywords': CPP_KEYWORDS,
+                                            'hashComments': true,
+                                            'cStyleComments': true
+                                        }), ['c', 'cc', 'cpp', 'cxx', 'cyc', 'm']);
     registerLangHandler(sourceDecorator({
-        'keywords': 'null true false'
-    }), ['json']);
+                                            'keywords': 'null true false'
+                                        }), ['json']);
     registerLangHandler(sourceDecorator({
-        'keywords': CSHARP_KEYWORDS,
-        'hashComments': true,
-        'cStyleComments': true,
-        'verbatimStrings': true
-    }), ['cs']);
+                                            'keywords': CSHARP_KEYWORDS,
+                                            'hashComments': true,
+                                            'cStyleComments': true,
+                                            'verbatimStrings': true
+                                        }), ['cs']);
     registerLangHandler(sourceDecorator({
-        'keywords': JAVA_KEYWORDS,
-        'cStyleComments': true
-    }), ['java']);
+                                            'keywords': JAVA_KEYWORDS,
+                                            'cStyleComments': true
+                                        }), ['java']);
     registerLangHandler(sourceDecorator({
-        'keywords': SH_KEYWORDS,
-        'hashComments': true,
-        'multiLineStrings': true
-    }), ['bsh', 'csh', 'sh']);
+                                            'keywords': SH_KEYWORDS,
+                                            'hashComments': true,
+                                            'multiLineStrings': true
+                                        }), ['bsh', 'csh', 'sh']);
     registerLangHandler(sourceDecorator({
-        'keywords': PYTHON_KEYWORDS,
-        'hashComments': true,
-        'multiLineStrings': true,
-        'tripleQuotedStrings': true
-    }), ['cv', 'py']);
+                                            'keywords': PYTHON_KEYWORDS,
+                                            'hashComments': true,
+                                            'multiLineStrings': true,
+                                            'tripleQuotedStrings': true
+                                        }), ['cv', 'py']);
     registerLangHandler(sourceDecorator({
-        'keywords': PERL_KEYWORDS,
-        'hashComments': true,
-        'multiLineStrings': true,
-        'regexLiterals': true
-    }), ['perl', 'pl', 'pm']);
+                                            'keywords': PERL_KEYWORDS,
+                                            'hashComments': true,
+                                            'multiLineStrings': true,
+                                            'regexLiterals': true
+                                        }), ['perl', 'pl', 'pm']);
     registerLangHandler(sourceDecorator({
-        'keywords': RUBY_KEYWORDS,
-        'hashComments': true,
-        'multiLineStrings': true,
-        'regexLiterals': true
-    }), ['rb']);
+                                            'keywords': RUBY_KEYWORDS,
+                                            'hashComments': true,
+                                            'multiLineStrings': true,
+                                            'regexLiterals': true
+                                        }), ['rb']);
     registerLangHandler(sourceDecorator({
-        'keywords': JSCRIPT_KEYWORDS,
-        'cStyleComments': true,
-        'regexLiterals': true
-    }), ['js']);
+                                            'keywords': JSCRIPT_KEYWORDS,
+                                            'cStyleComments': true,
+                                            'regexLiterals': true
+                                        }), ['js']);
     registerLangHandler(
         createSimpleLexer([], [
             [PR_STRING, /^[\s\S]+/]
@@ -1398,7 +1398,7 @@ window['_pr_isIE6'] = function () {
         var codeSegments = [
             document.getElementsByTagName('pre'),
             document.getElementsByTagName('code'),
-            document.getElementsByTagName('xmp') ];
+            document.getElementsByTagName('xmp')];
         var elements = [];
         for (var i = 0; i < codeSegments.length; ++i) {
             for (var j = 0, n = codeSegments[i].length; j < n; ++j) {
@@ -1409,9 +1409,11 @@ window['_pr_isIE6'] = function () {
 
         var clock = Date;
         if (!clock['now']) {
-            clock = { 'now': function () {
-                return (new Date).getTime();
-            } };
+            clock = {
+                'now': function () {
+                    return (new Date).getTime();
+                }
+            };
         }
 
         // The loop is broken into a series of continuations to make sure that we
@@ -1421,8 +1423,8 @@ window['_pr_isIE6'] = function () {
 
         function doWork() {
             var endTime = (window['PR_SHOULD_USE_CONTINUATION'] ?
-                clock.now() + 250 /* ms */ :
-                Infinity);
+                           clock.now() + 250 /* ms */ :
+                           Infinity);
             for (; k < elements.length && clock.now() < endTime; k++) {
                 var cs = elements[k];
                 if (cs.className && cs.className.indexOf('prettyprint') >= 0) {
@@ -1440,7 +1442,7 @@ window['_pr_isIE6'] = function () {
                     var nested = false;
                     for (var p = cs.parentNode; p; p = p.parentNode) {
                         if ((p.tagName === 'pre' || p.tagName === 'code' ||
-                            p.tagName === 'xmp') &&
+                             p.tagName === 'xmp') &&
                             p.className && p.className.indexOf('prettyprint') >= 0) {
                             nested = true;
                             break;

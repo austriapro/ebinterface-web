@@ -12,13 +12,13 @@ import org.apache.wicket.model.Model;
 public class PrintViewPage extends WebPage {
 
 
-    public PrintViewPage(final String xsltOutput) {
+  public PrintViewPage(final String xsltOutput) {
 
-        final Label printViewLabel = new Label("printViewPanel", Model.of(xsltOutput));
-        printViewLabel.setEscapeModelStrings(false);
-        add(printViewLabel);
+    final Label printViewLabel = new Label("printViewPanel", Model.of(xsltOutput));
+    printViewLabel.setEscapeModelStrings(false);
+    add(printViewLabel);
 
-    }
+  }
 
 
 }

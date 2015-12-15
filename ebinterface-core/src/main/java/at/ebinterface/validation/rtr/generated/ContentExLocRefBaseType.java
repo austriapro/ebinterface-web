@@ -7,10 +7,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for ContentExLocRefBaseType complex type.
- * <p/>
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
+ * <p>Java class for ContentExLocRefBaseType complex type. <p/> <p>The following schema fragment
+ * specifies the expected content contained within this class. <p/>
  * <pre>
  * &lt;complexType name="ContentExLocRefBaseType">
  *   &lt;complexContent>
@@ -26,54 +24,50 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ContentExLocRefBaseType", namespace = "http://reference.e-government.gv.at/namespace/verificationservice/20120922#", propOrder = {
-        "base64Content",
-        "fileType"
+    "base64Content",
+    "fileType"
 })
 public class ContentExLocRefBaseType {
 
-    @XmlElement(name = "Base64Content", required = true)
-    protected byte[] base64Content;
-    @XmlElement(name = "FileType", required = true)
-    protected String fileType;
+  @XmlElement(name = "Base64Content", required = true)
+  protected byte[] base64Content;
+  @XmlElement(name = "FileType", required = true)
+  protected String fileType;
 
-    /**
-     * Gets the value of the base64Content property.
-     *
-     * @return possible object is
-     * byte[]
-     */
-    public byte[] getBase64Content() {
-        return base64Content;
-    }
+  /**
+   * Gets the value of the base64Content property.
+   *
+   * @return possible object is byte[]
+   */
+  public byte[] getBase64Content() {
+    return base64Content;
+  }
 
-    /**
-     * Sets the value of the base64Content property.
-     *
-     * @param value allowed object is
-     *              byte[]
-     */
-    public void setBase64Content(byte[] value) {
-        this.base64Content = value;
-    }
+  /**
+   * Sets the value of the base64Content property.
+   *
+   * @param value allowed object is byte[]
+   */
+  public void setBase64Content(byte[] value) {
+    this.base64Content = value;
+  }
 
-    /**
-     * Gets the value of the fileType property.
-     *
-     * @return possible object is
-     * {@link String }
-     */
-    public String getFileType() {
-        return fileType;
-    }
+  /**
+   * Gets the value of the fileType property.
+   *
+   * @return possible object is {@link String }
+   */
+  public String getFileType() {
+    return fileType;
+  }
 
-    /**
-     * Sets the value of the fileType property.
-     *
-     * @param value allowed object is
-     *              {@link String }
-     */
-    public void setFileType(String value) {
-        this.fileType = value;
-    }
+  /**
+   * Sets the value of the fileType property.
+   *
+   * @param value allowed object is {@link String }
+   */
+  public void setFileType(String value) {
+    this.fileType = value;
+  }
 
 }

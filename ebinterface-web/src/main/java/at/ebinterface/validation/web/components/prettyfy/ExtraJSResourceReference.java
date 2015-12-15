@@ -18,18 +18,19 @@
 package at.ebinterface.validation.web.components.prettyfy;
 
 import at.ebinterface.validation.web.components.CodeBoxLanguage;
+
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 
 /**
  * @author Richard Nichols
- * @version $Id: PrettifyJSResourceReference.java 17 2009-11-15 04:56:30Z
- *          tibes80@gmail.com $
+ * @version $Id: PrettifyJSResourceReference.java 17 2009-11-15 04:56:30Z tibes80@gmail.com $
  */
 public class ExtraJSResourceReference extends PackageResourceReference {
-    private static final long serialVersionUID = 1L;
 
-    public ExtraJSResourceReference(CodeBoxLanguage lang) {
-        super(ExtraJSResourceReference.class, lang.getExtraJSfile());
-    }
+  private static final long serialVersionUID = 1L;
+
+  public ExtraJSResourceReference(CodeBoxLanguage lang) {
+    super(ExtraJSResourceReference.class, lang.getExtraJSfile());
+  }
 }

@@ -9,9 +9,9 @@ package at.ebinterface.validation.exception;
 public class NamespaceUnknownException extends Exception {
 
 
-    public NamespaceUnknownException(String message) {
-        super(message);
-    }
+  public NamespaceUnknownException(String message) {
+    super(message);
+  }
 
 
 }

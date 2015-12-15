@@ -15,7 +15,9 @@ public class SignatureDetailsPanel extends Panel {
   public SignatureDetailsPanel(String id, IModel<String> detailsModel, IModel<Boolean> isValid) {
     super(id);
 
-    add(new Label("status", isValid.getObject() ? "Gültig" : "Ungültig").add(new AttributeAppender("class", isValid.getObject() ? Model.of("alert alert-success") : Model.of("alert alert-danger"))));
+    add(new Label("status", isValid.getObject() ? "Gültig" : "Ungültig").add(
+        new AttributeAppender("class", isValid.getObject() ? Model.of("alert alert-success")
+                                                           : Model.of("alert alert-danger"))));
     add(new Label("details", detailsModel));
 
   }
