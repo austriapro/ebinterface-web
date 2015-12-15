@@ -29,6 +29,9 @@ public class Rules {
         Rule rule2 = new Rule("Sozialversicherung (ebInterface 4p1)", EbInterfaceVersion.E4P1, "/schematron/sv/sv-rules-4p1.sch");
         rules.add(rule2);
 
+        Rule rule3 = new Rule("Sozialversicherung (ebInterface 4p2)", EbInterfaceVersion.E4P2, "/schematron/sv/sv-rules-4p2.sch");
+        rules.add(rule3);
+
     }
 
 

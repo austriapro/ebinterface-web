@@ -31,7 +31,7 @@ public class StartPage extends BasePage {
      * The three possible actions
      */
     public enum ActionType {
-        SCHEMA_VALIDATION, SCHEMA_AND_SCHEMATRON_VALIDATION, VISUALIZATION
+        SCHEMA_VALIDATION, SCHEMA_AND_SCHEMATRON_VALIDATION, VISUALIZATION_HTML, VISUALIZATION_PDF, CONVERSION_ZUGFERD
     }
 
 
@@ -202,25 +202,30 @@ public class StartPage extends BasePage {
             });
 
 
-            //Add a button to visualize
-            add(new SubmitLink("submitButtonVisualize") {
+            //Add a button to visualize it as HTML
+            add(new SubmitLink("submitButtonVisualizeHTML") {
                 @Override
                 public void onSubmit() {
-                    submit(ActionType.VISUALIZATION);
+                    submit(ActionType.VISUALIZATION_HTML);
+                }
+            });
+
+            //Add a button to visualize it as PDF
+            add(new SubmitLink("submitButtonVisualizePDF") {
+                @Override
+                public void onSubmit() {
+                    submit(ActionType.VISUALIZATION_PDF);
                 }
             });
 
 
-            //Add a reset button - if clicked we reload the page
-            final SubmitLink resetButton = new SubmitLink("resetButton") {
+            //Add a button to convert to ZUGFerD
+            add(new SubmitLink("submitButtonConvertZUGFeRD") {
                 @Override
                 public void onSubmit() {
-                    this.getPage().setResponsePage(StartPage.class);
+                    submit(ActionType.CONVERSION_ZUGFERD);
                 }
-            };
-            resetButton.setDefaultFormProcessing(false);
-            add(resetButton);
-
+            });
         }
 
         /**
@@ -252,7 +257,7 @@ public class StartPage extends BasePage {
                 LOG.error("Unable to get content of uploaded file", e);
             }
 
-            //Validate the XML instance
+            //Validate the XML instance - performed in any case
             final EbInterfaceValidator validator = new EbInterfaceValidator();
             final ValidationResult validationResult = validator.validateXMLInstanceAgainstSchema(uploadedData);
 
@@ -261,7 +266,8 @@ public class StartPage extends BasePage {
             if (selectedAction == ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
                 //Schematron validation may only be started in case of ebInterface 4p0
                 if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0 ||
-                        validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1) {
+                        validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1 ||
+                    validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
 
                     Rule rule = rules.getModelObject();
                     if (rule != null && !(rule.getEbInterfaceVersion().equals(validationResult.getDeterminedEbInterfaceVersion()))) {
@@ -276,13 +282,13 @@ public class StartPage extends BasePage {
                 }
                 //Wrong ebInterface version
                 else {
-                    error("Schematronregeln können nur auf ebInterface 4.0 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: " + validationResult.getDeterminedEbInterfaceVersion().getCaption());
+                    error("Schematronregeln können nur auf ebInterface 4.0/4.1/4.2 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: " + validationResult.getDeterminedEbInterfaceVersion().getCaption());
                     onError();
                     return;
                 }
             }
-            //Visualization?
-            else if (selectedAction == ActionType.VISUALIZATION) {
+            //Visualization HTML?
+            else if (selectedAction == ActionType.VISUALIZATION_HTML) {
                 //Visualization is only possible for valid instances
                 if (!StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
                     error("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
@@ -298,6 +304,19 @@ public class StartPage extends BasePage {
 
 
             }
+            //Visualization PDF?
+            else if (selectedAction == ActionType.VISUALIZATION_PDF) {
+                error("Coming soon.");
+                onError();
+                return;
+            }
+            //Conversion ZUGFerD?
+            else if (selectedAction == ActionType.CONVERSION_ZUGFERD) {
+                error("Coming soon.");
+                onError();
+                return;
+            }
+
 
             String selectedSchematronRule = "";
             if (rules.getModelObject() != null) {

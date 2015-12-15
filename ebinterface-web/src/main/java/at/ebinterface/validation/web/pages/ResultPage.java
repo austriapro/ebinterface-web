@@ -5,7 +5,10 @@ import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.pages.StartPage.ActionType;
 import at.ebinterface.validation.web.panels.ErrorDetailsPanel;
+import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -78,17 +81,13 @@ public class ResultPage extends BasePage {
 
 
         //Signature
-        signatureResultContainer.add(new Label("signatureResult", Model.of(signatureValidationResult.isSignatureValid() ? "gültig" : "ungültig")));
-        signatureResultContainer.add(new Label("signatureText", Model.of(signatureValidationResult.getSignatureText())));
+        signatureResultContainer.add(new SignatureDetailsPanel("signatureDetails", Model.of(signatureValidationResult.getSignatureText()), Model.of(signatureValidationResult.isSignatureValid())));
 
         //Certificate
-        signatureResultContainer.add(new Label("certificateResult", Model.of(signatureValidationResult.isCertificateValid() ? "gültig" : "ungültig")));
-        signatureResultContainer.add(new Label("certificateText", Model.of(signatureValidationResult.getCertificateText())));
+        signatureResultContainer.add(new SignatureDetailsPanel("certificateDetails", Model.of(signatureValidationResult.getCertificateText()), Model.of(signatureValidationResult.isCertificateValid())));
 
         //Manifest
-        signatureResultContainer.add(new Label("manifestResult", Model.of(signatureValidationResult.isManifestValid() ? "gültig" : "ungültig")));
-        signatureResultContainer.add(new Label("manifestText", Model.of(signatureValidationResult.getManifestText())));
-
+        signatureResultContainer.add(new SignatureDetailsPanel("manifestDetails", Model.of(signatureValidationResult.getManifestText()), Model.of(signatureValidationResult.isManifestValid())));
 
         add(signatureResultContainer);
 

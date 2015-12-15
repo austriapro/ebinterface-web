@@ -3,14 +3,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h3>Beschreibung</h3><br/>
-
-            <p>Das ebInterface Pr&uuml;fservice dient zum Validieren von ebInterface 3.0, 3.02, 4.0 und 4.1 Instanzen.
-                Dabei wird die G&uuml;ltigkeit der Instanz geben das entsprechende Schema gepr&uuml;ft, sowie bei
-                Vorhandensein einer digitalen Signatur auch deren G&uuml;ltigkeit. F&uuml;r ebInterface 4.0/4.1 ist auch
-                das Pr&uuml;fen von zus&auml;tzlichen Regeln, welchen eine ebInterface 4.0/4.1 XML Rechnungsinstanz gen&uuml;gen
-                muss, m&ouml;glich. Zus&auml;tzlich haben Sie die M&ouml;glichkeit ebInterface XML Instanzen in einem
-                ausdruckbaren Format anzeigen zu lassen.</p>
+            <h3>ebInterface validieren, konvertieren und visualisieren</h3><br/>
         </div>
     </div>
 
@@ -25,32 +18,38 @@
 
                 <fieldset>
 
-                    <legend>Pr&uuml;fservice</legend>
+                    <legend>W&auml;hlen Sie eine ebInterface-Datei und anschlie&szlig;end eine Funktion:</legend>
 
 
-                    <div class="alert alert-error" wicket:id="feedback">
+                    <div class="alert alert-danger" wicket:id="feedback">
 
                     </div>
 
 
                     <div class="control-group">
 
-                        <label class="control-label" for="fileInput"><strong>ebInterface Datei</strong></label>
+                        <label class="control-label" for="fileInput"><strong>Schritt 1: ebInterface Datei</strong></label>
 
                         <div class="controls">
                             <input class="input-file" id="fileInput" type="file" wicket:id="fileInput"/>
 
-                            <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface 3.0, 3.02, 4.0 und 4.1
+                            <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface 3.0, 3.02, 4.0, 4.1 oder 4.2
                                 Instanz von Ihrer Festplatte</p>
                         </div>
-
 
                     </div>
 
 
                     <div class="control-group">
 
-                        <label class="control-label" for="ruleSelector"><strong>Schematron Regeln</strong></label>
+                        <label class="control-label" for="ruleSelector"><strong>Schritt 2: Funktion</strong></label>
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label class="control-label" for="ruleSelector"><strong>Validieren</strong></label>
 
                         <div class="controls">
                             <select id="ruleSelector" wicket:id="ruleSelector">
@@ -61,7 +60,6 @@
                             <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, gegen welches Sie pr&uuml;fen
                                 m&ouml;chten.</p>
                         </div>
-
 
                     </div>
 
@@ -74,11 +72,41 @@
                         <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">Instanz gegen
                             Schematronregeln validieren</a>
 
-                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonVisualize">Instanz in
-                            Druckansicht anzeigen</a>
 
-                        <a class="btn btn-default" wicket:id="resetButton">Abbrechen</a>
                     </div>
+
+
+                    <div class="control-group">
+
+                        <label class="control-label" for="ruleSelector"><strong>Visualiseren</strong></label>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonVisualizeHTML">Instanz in
+                            HTML Druckansicht anzeigen</a>
+
+                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonVisualizePDF">Instanz als PDF anzeigen</a>
+
+                    </div>
+
+
+                    <div class="control-group">
+
+                        <label class="control-label" for="ruleSelector"><strong>Konvertieren</strong></label>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonConvertZUGFeRD">Instanz nach ZUGFeRD konvertieren</a>
+
+                    </div>
+
+
 
 
                 </fieldset>
@@ -87,9 +115,9 @@
             <br/><br/>
 
             <form class="well form-horizontal" wicket:id="showRulesForm">
-                <legend>Unterst&uuml;tzte ebInterface 4.0/4.01 Schematrondateien einsehen</legend>
+                <legend>Unterst&uuml;tzte ebInterface 4.0/4.1/4.2 Schematrondateien einsehen</legend>
 
-                <div class="alert alert-error" wicket:id="feedback">
+                <div class="alert alert-danger" wicket:id="feedback">
 
                 </div>
 

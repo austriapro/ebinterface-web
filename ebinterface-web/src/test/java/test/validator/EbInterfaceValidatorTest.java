@@ -54,6 +54,36 @@ public class EbInterfaceValidatorTest {
      * @throws IOException
      */
     @Test
+    public void test4p2SchemaValidator() throws IOException {
+
+        // Valid schema
+        InputStream input = this.getClass().getResourceAsStream("/ebinterface/4p2/ebInterface_4p2_sample.xml");
+        byte[] uploadedData = null;
+
+        assertNotNull(input);
+        // Step 1 - validate against the schema
+        uploadedData = IOUtils.toByteArray(input);
+        EbInterfaceValidator validator = new EbInterfaceValidator();
+        ValidationResult result = validator.validateXMLInstanceAgainstSchema(uploadedData);
+        assertTrue(StringUtils.isEmpty(result.getSchemaValidationErrorMessage()));
+
+
+        // Invalid schema
+        input = this.getClass().getResourceAsStream("/ebinterface/4p2/ebInterface_4p2_sample_invalid.xml");
+        uploadedData = IOUtils.toByteArray(input);
+        validator = new EbInterfaceValidator();
+        result = validator.validateXMLInstanceAgainstSchema(uploadedData);
+        assertFalse(StringUtils.isEmpty(result.getSchemaValidationErrorMessage()));
+
+
+    }
+
+    /**
+     * Test the schema validator
+     *
+     * @throws IOException
+     */
+    @Test
     public void test4p1SchemaValidator() throws IOException {
 
         // Valid schema
@@ -148,19 +178,24 @@ public class EbInterfaceValidatorTest {
         assertFalse(StringUtils.isEmpty(result.getSignatureValidationExceptionMessage()));
 
         //Test a correctly signed sample
-        //TODO - since 2014-07-24 the valid sample does not work any more (although the sample validates correctly
         //on the Web interface)
 
-//        input = this.getClass().getResourceAsStream("/ebinterface/4p0/ebinterface4_signed_and_valid.xml");
-//        uploadedData = IOUtils.toByteArray(input);
-//        validator = new EbInterfaceValidator();
-//        result = validator.validateXMLInstanceAgainstSchema(uploadedData);
-//        //Must be ebinterface 4p0
-//        assertEquals(EbInterfaceVersion.E4P0, result.getDeterminedEbInterfaceVersion());
-//        //Must be signed
-//        assertEquals(true, result.getDeterminedEbInterfaceVersion().isSigned());
-//        //Signature must be valid - i.e. there must be an answer from the signature service
-//        assertNotNull(result.getVerifyDocumentResponse());
+        input = this.getClass().getResourceAsStream("/ebinterface/4p0/ebinterface4_signed_and_valid.xml");
+        uploadedData = IOUtils.toByteArray(input);
+        validator = new EbInterfaceValidator();
+        result = validator.validateXMLInstanceAgainstSchema(uploadedData);
+
+        //Must be ebinterface 4p0
+        assertEquals(EbInterfaceVersion.E4P0, result.getDeterminedEbInterfaceVersion());
+
+        //Must be signed
+        assertEquals(true, result.getDeterminedEbInterfaceVersion().isSigned());
+
+        //Signature must be valid - i.e. there must be an answer from the signature service
+        //Enable this line in order to check if the signature validation correct
+        //It is currently disabled since we do not push the RTR Web Service credentials to GitHub
+        //and, thus, our CI environment does not have them either
+        //assertNotNull(result.getVerifyDocumentResponse());
 
 
 
