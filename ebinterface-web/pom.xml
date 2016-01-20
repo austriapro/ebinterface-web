@@ -9,7 +9,7 @@
 
 
     <parent>
-        <groupId>at.ebinterface</groupId>
+        <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-parent</artifactId>
         <version>1.0.6-SNAPSHOT</version>
     </parent>
@@ -20,7 +20,11 @@
         <logback-version>1.0.0</logback-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j-version>1.6.4</slf4j-version>
-        <wicket-version>6.21.0</wicket-version>
+		<wicket-version>6.21.0</wicket-version>
+		<ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
+		<ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
+
+
 	</properties>
 
 
@@ -67,13 +71,26 @@
 
 	<dependencies>
 
-        <!-- ebInterface core for the validation logic -->
-        <dependency>
-            <groupId>at.ebinterface</groupId>
-            <artifactId>ebinterface-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<!-- ebInterface core for the validation logic -->
+		<dependency>
+			<groupId>at.austriapro</groupId>
+			<artifactId>ebinterface-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
+		<!-- ebInterface rendering for PDF rendering and ZUGFeRD generation-->
+		<dependency>
+			<groupId>at.austriapro</groupId>
+			<artifactId>ebinterface-rendering</artifactId>
+			<version>${ebinterface-rendering-version}</version>
+		</dependency>
+
+		<!-- ebInterface mappings for ebInterface -> ZUGFeRD mapping-->
+		<dependency>
+			<groupId>at.austriapro</groupId>
+			<artifactId>ebinterface-mappings-zugferd</artifactId>
+			<version>${ebinterface-mapping-version}</version>
+		</dependency>
 
 		<!-- Wicket -->
 		<dependency>
