@@ -1,5 +1,14 @@
 package at.ebinterface.validation.web.pages;
 
+import com.helger.commons.errorlist.ErrorList;
+import com.helger.commons.errorlist.IError;
+import com.helger.commons.io.resource.IReadableResource;
+import com.helger.commons.io.resource.inmemory.ReadableResourceByteArray;
+import com.helger.ebinterface.EbInterface41Marshaller;
+import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface41Converter;
+import com.helger.ebinterface.v41.Ebi41InvoiceType;
+import com.helger.ubl21.UBL21Reader;
+
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.saxon.Controller;
 import net.sf.saxon.serialize.MessageWarner;
@@ -15,6 +24,7 @@ import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageZugferd;
+import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
@@ -34,13 +44,21 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -48,6 +66,8 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * First page of the ebInterface Validation Service
@@ -81,6 +101,10 @@ public class StartPage extends BasePage {
     //Add the form for showing the supported rules
     final ShowRulesForm showRulesForm = new ShowRulesForm("showRulesForm");
     add(showRulesForm);
+
+    //Add the form for showing the supported rules
+    final UblForm ublForm = new UblForm("ublForm");
+    add(ublForm);
 
 
   }
@@ -144,6 +168,145 @@ public class StartPage extends BasePage {
 
       //Redirect
       setResponsePage(new ShowRulesPage(rules.getModel()));
+    }
+
+
+    /**
+     * Process errors
+     */
+    @Override
+    protected void onError() {
+      //Show the feedback panel in case on an error
+      feedbackPanel.setVisible(true);
+    }
+  }
+
+  /**
+   * Form for showing the rules which are currently supported
+   *
+   * @author pl
+   */
+  private class UblForm extends Form {
+
+    /**
+     * Panel for providing feedback in case of errorneous input
+     */
+    FeedbackPanel feedbackPanel;
+
+    /**
+     * Upload field for the ebInterface instance
+     */
+    FileUploadField fileUploadField;
+
+    public UblForm(final String id) {
+      super(id);
+
+      //Add a feedback panel
+      feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+      feedbackPanel.setVisible(false);
+      add(feedbackPanel);
+
+      //Add the file upload field
+      fileUploadField = new FileUploadField("ublInput");
+      fileUploadField.setRequired(true);
+      add(fileUploadField);
+
+      //Add a submit button
+      add(new SubmitLink("convertUbl"));
+    }
+
+    @Override
+    protected void onSubmit() {
+      super.onSubmit();
+
+      feedbackPanel.setVisible(false);
+
+      //Get the file input
+      final FileUpload upload = fileUploadField.getFileUpload();
+      byte[] uploadedData = null;
+
+      try {
+        final InputStream inputStream = upload.getInputStream();
+        uploadedData = IOUtils.toByteArray(inputStream);
+      } catch (final IOException e) {
+        LOG.error("Unable to get content of uploaded file", e);
+      }
+
+      // Read UBL
+      final InvoiceType aUBLInvoice = UBL21Reader.invoice().read(uploadedData);
+
+      if (aUBLInvoice == null){
+        error(
+            "Das UBL kann nicht verarbeitet werden.");
+        onError();
+        return;
+      }
+
+      // Convert to ebInterface
+      final ErrorList aErrorList = new ErrorList ();
+      final Ebi41InvoiceType aEbInvoice = new InvoiceToEbInterface41Converter(Locale.GERMANY,
+                                                                              Locale.GERMANY,
+                                                                              false).convertToEbInterface (aUBLInvoice, aErrorList);
+      byte[] ebInterface = null;
+      ValidationResult
+          validationResult = null;
+      byte[] pdf = null;
+
+      StringBuilder sbLog = new StringBuilder();
+
+      if(aErrorList.hasErrorsOrWarnings()) {
+        validationResult = new ValidationResult();
+
+        sbLog.append("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
+        for (IError error : aErrorList.getAllItems()){
+          sbLog.append(error.getErrorFieldName()).append(":<br/>").append(error.getErrorText()).append("<br/><br/>");
+        }
+      } else {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+
+        new EbInterface41Marshaller().write(aEbInvoice, bo);
+
+        ebInterface = bo.toByteArray();
+
+        //Validate the XML instance - performed in any case
+        final EbInterfaceValidator validator = Application.get().getMetaData(
+            Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+        validationResult =
+            validator.validateXMLInstanceAgainstSchema(ebInterface);
+
+        if (validationResult.getDeterminedEbInterfaceVersion() == null) {
+          error(
+              "Das konvertierte XML kann nicht verarbeitet werden, das es keiner ebInterface Version entspricht.");
+          onError();
+          return;
+        }
+
+        BaseRenderer renderer = new BaseRenderer();
+
+        try {
+          LOG.debug("Load ebInterface JasperReport template from application context.");
+          JasperReport
+              jrReport =
+              Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
+
+          LOG.debug("Rendering PDF.");
+
+          pdf = renderer.renderReport(jrReport, ebInterface, null);
+
+        } catch (Exception ex) {
+          error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
+          onError();
+          return;
+        }
+      }
+
+      String log = null;
+      if (sbLog.toString().length()>0){
+        log = sbLog.toString();
+      }
+
+      //Redirect
+      setResponsePage(new ResultPageEbInterface(validationResult, null, ActionType.SCHEMA_VALIDATION, pdf, ebInterface, log));
     }
 
 
@@ -456,7 +619,8 @@ public class StartPage extends BasePage {
 
           if (eh.catchedError()) {
             zugferd = null;
-            sbLog.append("<b>ZUGFeRD XSD Validierung fehlgeschlagen:</b><br/>").append(eh.toString().replace("\n", "<br/>"));
+            sbLog.append("<b>ZUGFeRD XSD Validierung fehlgeschlagen:</b><br/>").append(
+                eh.toString().replace("\n", "<br/>"));
           }
         } catch (Exception e) {
           error("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
@@ -530,7 +694,7 @@ public class StartPage extends BasePage {
         //Redirect to the ebInterface result page
         setResponsePage(
             new ResultPageEbInterface(validationResult, selectedSchematronRule, selectedAction,
-                                      pdf));
+                                      pdf, null, null));
       } else {
         //Redirect to the ZUGFeRD result page
         setResponsePage(

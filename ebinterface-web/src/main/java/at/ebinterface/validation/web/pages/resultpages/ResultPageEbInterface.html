@@ -137,6 +137,26 @@
                 </div>
             </div>
 
+            <div wicket:id="mappingLog">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <br/>
+                        <h4>
+                            Konvertierung
+                        </h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div wicket:id="mappingLogError">
+                        <div class="col-md-12 alert alert-danger">
+                            <div wicket:id="logErrorPanel"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -145,6 +165,8 @@
     <div class="row">
         <div class="col-md-12">
             <br/> <br/>
+            <a class="btn btn-primary" type="submit"
+               wicket:id="linkXMLDownload">Download XML</a>
             <a class="btn btn-primary" type="submit"
                wicket:id="linkPDFDownload">Download PDF</a>
         </div>

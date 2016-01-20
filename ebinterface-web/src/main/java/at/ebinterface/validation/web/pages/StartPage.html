@@ -163,6 +163,40 @@
 
             </form>
 
+            <br/><br/>
+
+            <form class="well form-horizontal" wicket:id="ublForm">
+                <legend>UBL nach ebInterface 4.1 konvertieren
+                </legend>
+
+                <div class="alert alert-danger" wicket:id="feedback">
+
+                </div>
+
+                <div class="control-group">
+
+                    <h4>Schritt 1: UBL Datei</h4>
+
+                    <div class="controls">
+                        <input class="input-file" id="ublInput" type="file"
+                               wicket:id="ublInput"/>
+
+                        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL
+                            Instanz von Ihrer Festplatte</p>
+                    </div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <h4>Schritt 2: Konvertieren</h4>
+                    <button class="btn btn-primary" type="submit" wicket:id="convertUbl">
+                        Konvertieren
+                    </button>
+                </div>
+
+            </form>
+
 
             <div style="text-align: center;">
 

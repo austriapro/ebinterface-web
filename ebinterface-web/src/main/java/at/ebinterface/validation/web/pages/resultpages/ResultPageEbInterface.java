@@ -35,7 +35,9 @@ public class ResultPageEbInterface extends BasePage {
   public ResultPageEbInterface(final ValidationResult validationResult,
                                final String selectedSchematron,
                                final ActionType selectedAction,
-                               final byte[] pdf) {
+                               final byte[] pdf,
+                               final byte[] xml,
+                               final String log) {
 
     final byte[] pfd = pdf;
 
@@ -50,8 +52,12 @@ public class ResultPageEbInterface extends BasePage {
       }
     }
 
-    //Add a label with the schema version
-    add(new Label("schemaVersion", Model.of(schemaVersion.toString())));
+    if(schemaVersion != null) {
+      //Add a label with the schema version
+      add(new Label("schemaVersion", Model.of(schemaVersion.toString())));
+    } else {
+      add(new Label("schemaVersion", Model.of("Keine valide Version erkannt.")));
+    }
 
     //Schema OK Container
     final WebMarkupContainer schemaOkContainer = new WebMarkupContainer("schemvalidationOK");
@@ -64,8 +70,12 @@ public class ResultPageEbInterface extends BasePage {
     add(schemaNOkContainer);
 
     //Is there a schema validation message?
+    if (selectedSchematron== null) {
+      schemaOkContainer.setVisible(false);
+      schemaNOkContainer.setVisible(false);
+    }
     //Schema is OK
-    if (StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+    else if (StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
       schemaOkContainer.setVisible(true);
       schemaNOkContainer.setVisible(false);
     }
@@ -152,6 +162,26 @@ public class ResultPageEbInterface extends BasePage {
       schematronNokContainer.setVisible(true);
     }
 
+    //Log Container
+    final WebMarkupContainer mappingContainer = new WebMarkupContainer("mappingLog");
+    add(mappingContainer);
+
+    final WebMarkupContainer errorContainer = new WebMarkupContainer("mappingLogError");
+    mappingContainer.add(errorContainer);
+    errorContainer.setVisible(true);
+
+    if (log != null){
+      mappingContainer.setVisible(true);
+
+      Label slog = new Label("logErrorPanel", Model.of(new String(log).trim()));
+      errorContainer.add(slog.setEscapeModelStrings(false));
+    } else {
+      mappingContainer.setVisible(false);
+
+      EmptyPanel slog = new EmptyPanel("logErrorPanel");
+      errorContainer.add(slog);
+    }
+
     add(new Link<Object>("returnLink") {
       @Override
       public void onClick() {
@@ -177,6 +207,25 @@ public class ResultPageEbInterface extends BasePage {
     pdflink.setVisible(pdf != null);
     //Add a PDF-download button
     add(pdflink);
+
+    Link<Void> xmllink = new Link<Void>("linkXMLDownload") {
+      @Override
+      public void onClick() {
+        AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
+          @Override
+          public void write(OutputStream output) throws IOException {
+            output.write(xml);
+          }
+        };
+
+        ResourceStreamRequestHandler
+            handler = new ResourceStreamRequestHandler(rstream, "ebInterface-Invoice.xml");
+        getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
+      }
+    };
+    xmllink.setVisible(xml != null);
+    //Add a PDF-download button
+    add(xmllink);
   }
 
 }

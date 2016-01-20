@@ -92,6 +92,12 @@
 			<version>${ebinterface-mapping-version}</version>
 		</dependency>
 
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ebinterface-ubl-mapping</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
 		<!-- Wicket -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
