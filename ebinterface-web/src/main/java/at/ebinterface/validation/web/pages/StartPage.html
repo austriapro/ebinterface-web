@@ -71,11 +71,11 @@
 
                     <div class="form-actions">
 
-                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchemaOnly">Instanz
+                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchemaOnly">ebInterface
                             gegen Schema
                             validieren</a>
 
-                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">Instanz
+                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">ebInterface
                             gegen
                             Schematronregeln validieren</a>
 
@@ -93,11 +93,11 @@
                     <div class="form-actions">
 
                         <a class="btn btn-primary" type="submit"
-                           wicket:id="submitButtonVisualizeHTML">Instanz in
+                           wicket:id="submitButtonVisualizeHTML">ebInterface in
                             HTML Druckansicht anzeigen</a>
 
                         <a class="btn btn-primary" type="submit"
-                           wicket:id="submitButtonVisualizePDF">Instanz als PDF anzeigen</a>
+                           wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen</a>
 
                     </div>
 
@@ -110,9 +110,16 @@
 
 
                     <div class="form-actions">
+                        <select id="zugferdSelector" wicket:id="zugferdSelector">
+                            <option>woo</option>
+                            <option>hoo</option>
+                        </select>
 
+                        <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil,
+                            in welches Sie konvertieren
+                            m&ouml;chten.</p>
                         <a class="btn btn-primary" type="submit"
-                           wicket:id="submitButtonConvertZUGFeRD">Instanz nach ZUGFeRD
+                           wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD
                             konvertieren</a>
 
                     </div>
@@ -151,6 +158,40 @@
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit" wicket:id="showSchematron">
                         Schematrondatei anzeigen
+                    </button>
+                </div>
+
+            </form>
+
+            <br/><br/>
+
+            <form class="well form-horizontal" wicket:id="ublForm">
+                <legend>UBL nach ebInterface 4.1 konvertieren
+                </legend>
+
+                <div class="alert alert-danger" wicket:id="feedback">
+
+                </div>
+
+                <div class="control-group">
+
+                    <h4>Schritt 1: UBL Datei</h4>
+
+                    <div class="controls">
+                        <input class="input-file" id="ublInput" type="file"
+                               wicket:id="ublInput"/>
+
+                        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL
+                            Instanz von Ihrer Festplatte</p>
+                    </div>
+
+
+                </div>
+
+                <div class="form-actions">
+                    <h4>Schritt 2: Konvertieren</h4>
+                    <button class="btn btn-primary" type="submit" wicket:id="convertUbl">
+                        UBL nach ebInterface (4.1) konvertieren
                     </button>
                 </div>
 

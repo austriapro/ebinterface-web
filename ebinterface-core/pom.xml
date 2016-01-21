@@ -9,7 +9,7 @@
 
 
     <parent>
-        <groupId>at.ebinterface</groupId>
+        <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-parent</artifactId>
         <version>1.0.6-SNAPSHOT</version>
     </parent>
