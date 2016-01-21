@@ -15,6 +15,16 @@ The validation contains two main artifacts
  * *ebinterface-core.* This module contains the validation logic for ebInterface instances, the logic for applying stylesheets to ebInterface instances, as well as the Web Service client for the RTR Web Service
  * *ebinterface-web.* This module contains a Web frontend for the *ebinterface-core* module. Currently, this module is being extended to support PDF generation and ebInterface mappings as well.
 
+##Dependencies
+
+*ebinterface-web* is based on several projects.
+
+ * [ebinterface-mappings](https://github.com/austriapro/ebinterface-mappings): PDF rendering
+ * [ebinterface-rendering](https://github.com/austriapro/ebinterface-rendering): mappings in general (e. g. ebInterface -> ZUGFeRD mapping)
+ * [ebinterface-ubl-mapping](https://github.com/austriapro/ebinterface-ubl-mapping): UBL <-> ebInterface mapping
+
+Please note, these projects have to be checked out, to be able to build *ebinterface-web*.
+
 ##Code style
 
 For this project the Google code style is used. Please [download the code style file](https://code.google.com/p/google-styleguide/source/browse/trunk/intellij-java-google-style.xml) and set it in your IDE, before you commit to the repository. 

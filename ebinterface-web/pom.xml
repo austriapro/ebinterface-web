@@ -22,11 +22,9 @@
 		<slf4j-version>1.6.4</slf4j-version>
 		<wicket-version>6.21.0</wicket-version>
 		<ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
-		<ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
-
-
+        <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
+        <ebinterface-ubl-mapping-version>1.0.2</ebinterface-ubl-mapping-version>
 	</properties>
-
 
 
 	<repositories>
@@ -95,7 +93,7 @@
         <dependency>
             <groupId>com.helger</groupId>
             <artifactId>ebinterface-ubl-mapping</artifactId>
-            <version>1.0.2</version>
+            <version>${ebinterface-ubl-mapping-version}</version>
         </dependency>
 
 		<!-- Wicket -->

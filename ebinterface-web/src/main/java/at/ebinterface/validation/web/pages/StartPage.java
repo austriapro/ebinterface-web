@@ -2,8 +2,6 @@ package at.ebinterface.validation.web.pages;
 
 import com.helger.commons.errorlist.ErrorList;
 import com.helger.commons.errorlist.IError;
-import com.helger.commons.io.resource.IReadableResource;
-import com.helger.commons.io.resource.inmemory.ReadableResourceByteArray;
 import com.helger.ebinterface.EbInterface41Marshaller;
 import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface41Converter;
 import com.helger.ebinterface.v41.Ebi41InvoiceType;
