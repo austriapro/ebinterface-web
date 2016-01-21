@@ -45,20 +45,14 @@ import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -66,8 +60,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * First page of the ebInterface Validation Service
@@ -229,7 +221,7 @@ public class StartPage extends BasePage {
         final InputStream inputStream = upload.getInputStream();
         uploadedData = IOUtils.toByteArray(inputStream);
       } catch (final IOException e) {
-        LOG.error("Unable to get content of uploaded file", e);
+        LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
       }
 
       // Read UBL
@@ -256,6 +248,7 @@ public class StartPage extends BasePage {
 
       if(aErrorList.hasErrorsOrWarnings()) {
         validationResult = new ValidationResult();
+        validationResult.setSchemaValidationErrorMessage("Die Schemavalidierung konnte nicht durchgeführt werden.");
 
         sbLog.append("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
         for (IError error : aErrorList.getAllItems()){
@@ -471,7 +464,7 @@ public class StartPage extends BasePage {
         final InputStream inputStream = upload.getInputStream();
         uploadedData = IOUtils.toByteArray(inputStream);
       } catch (final IOException e) {
-        LOG.error("Unable to get content of uploaded file", e);
+        LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
       }
 
       //Validate the XML instance - performed in any case

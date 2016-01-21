@@ -39,8 +39,6 @@ public class ResultPageEbInterface extends BasePage {
                                final byte[] xml,
                                final String log) {
 
-    final byte[] pfd = pdf;
-
     final StringBuffer schemaVersion = new StringBuffer();
 
     if (validationResult.getDeterminedEbInterfaceVersion() != null) {
@@ -52,11 +50,11 @@ public class ResultPageEbInterface extends BasePage {
       }
     }
 
-    if(schemaVersion != null) {
+    if(schemaVersion.length() > 0) {
       //Add a label with the schema version
       add(new Label("schemaVersion", Model.of(schemaVersion.toString())));
     } else {
-      add(new Label("schemaVersion", Model.of("Keine valide Version erkannt.")));
+      add(new Label("schemaVersion", Model.of("Es wurde keine gültige Version erkannt.")));
     }
 
     //Schema OK Container
@@ -69,13 +67,9 @@ public class ResultPageEbInterface extends BasePage {
                                      Model.of(validationResult.getSchemaValidationErrorMessage())));
     add(schemaNOkContainer);
 
-    //Is there a schema validation message?
-    if (selectedSchematron== null) {
-      schemaOkContainer.setVisible(false);
-      schemaNOkContainer.setVisible(false);
-    }
+
     //Schema is OK
-    else if (StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+    if (StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
       schemaOkContainer.setVisible(true);
       schemaNOkContainer.setVisible(false);
     }
