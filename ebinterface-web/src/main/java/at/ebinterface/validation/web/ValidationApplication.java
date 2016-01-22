@@ -110,6 +110,10 @@ public class ValidationApplication extends WebApplication {
     }
     LOG.info("schematron transformer for ZUGFeRD is now stored in application context.");
 
+
+    getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+    getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+
   }
 
   /**

@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h3>ebInterface validieren, konvertieren und visualisieren</h3><br/>
+            <h1>ebInterface Rechnungen prüfen, anzeigen und konvertieren</h1><br/>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
 
                 <fieldset>
 
-                    <legend>W&auml;hlen Sie eine ebInterface-Datei und anschlie&szlig;end eine
+                    <legend>Wählen Sie eine ebInterface-Datei und anschließend eine
                         Funktion:
                     </legend>
 
@@ -30,15 +30,15 @@
 
                     <div class="control-group">
 
-                        <h4>Schritt 1: ebInterface Datei</h4>
+                        <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
 
                         <div class="controls">
                             <input class="input-file" id="fileInput" type="file"
                                    wicket:id="fileInput"/>
 
-                            <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface 3.0,
+                            <p class="help-block">Wählen Sie eine ebInterface 3.0,
                                 3.02, 4.0, 4.1 oder 4.2
-                                Instanz von Ihrer Festplatte</p>
+                                Datei von Ihrer Festplatte</p>
                         </div>
 
                     </div>
@@ -46,38 +46,43 @@
 
                     <div class="control-group">
 
-                        <h4>Schritt 2: Funktion</h4>
+                        <h4 class="functionHeader">Schritt 2: Funktion</h4>
 
                     </div>
 
 
-                    <div class="control-group">
 
-                        <h5>Validieren</h5>
+                    <div class="row">
 
-                        <div class="controls">
+                        <div class="col-md-3">
+
+                            <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
+
+                            <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchemaOnly">ebInterface
+                                gegen Schema
+                                prüfen</a>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
+
                             <select id="ruleSelector" wicket:id="ruleSelector">
                                 <option>woo</option>
                                 <option>hoo</option>
                             </select>
 
-                            <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln,
-                                gegen welches Sie pr&uuml;fen
-                                m&ouml;chten.</p>
+                            <p class="help-block">Wählen Sie ein Set von Schematron Regeln,
+                                gegen welches Sie prüfen
+                                möchten.</p>
+
+                            <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">ebInterface
+                                gegen
+                                Schematronregeln prüfen</a>
+
                         </div>
 
-                    </div>
-
-
-                    <div class="form-actions">
-
-                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchemaOnly">ebInterface
-                            gegen Schema
-                            validieren</a>
-
-                        <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">ebInterface
-                            gegen
-                            Schematronregeln validieren</a>
 
 
                     </div>
@@ -85,7 +90,7 @@
 
                     <div class="control-group">
 
-                        <h5>Visualiseren</h5>
+                        <h5 class="functionHeader">Anzeigen</h5>
 
                     </div>
 
@@ -104,7 +109,7 @@
 
                     <div class="control-group">
 
-                        <h5>Konvertieren</h5>
+                        <h5 class="functionHeader">Konvertieren</h5>
 
                     </div>
 
@@ -175,21 +180,20 @@
 
                 <div class="control-group">
 
-                    <h4>Schritt 1: UBL Datei</h4>
+                    <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
 
                     <div class="controls">
                         <input class="input-file" id="ublInput" type="file"
                                wicket:id="ublInput"/>
 
-                        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL
-                            Instanz von Ihrer Festplatte</p>
+                        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
                     </div>
 
 
                 </div>
 
                 <div class="form-actions">
-                    <h4>Schritt 2: Konvertieren</h4>
+                    <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
                     <button class="btn btn-primary" type="submit" wicket:id="convertUbl">
                         UBL nach ebInterface (4.1) konvertieren
                     </button>
