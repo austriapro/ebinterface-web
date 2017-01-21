@@ -3,7 +3,7 @@
 
     <artifactId>ebinterface-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.7-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <name>ebInterface validation core</name>
 
@@ -11,15 +11,23 @@
     <parent>
         <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-parent</artifactId>
-        <version>1.0.6-SNAPSHOT</version>
+        <version>1.0.7-SNAPSHOT</version>
     </parent>
 
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <commons-logging-version>1.1.1</commons-logging-version>
+        <jaxb-basics-version>0.6.0</jaxb-basics-version>
+        <jaxb-impl-version>2.2.2</jaxb-impl-version>
+        <jaxb-xjc-version>2.2.2</jaxb-xjc-version>
+        <jaxen-version>1.0-FCS</jaxen-version>
         <logback-version>1.0.0</logback-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sax-path-version>1.0-FCS</sax-path-version>
+        <saxon-version>9.5.1-6</saxon-version>
         <slf4j-version>1.6.4</slf4j-version>
-        <commons.logging.version>1.1.1</commons.logging.version>
+        <xerces-version>2.11.0</xerces-version>
+        <xml-resolver-version>1.2</xml-resolver-version>
     </properties>
 
 
@@ -46,52 +54,52 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.11.0</version>
+            <version>${xerces-version}</version>
         </dependency>
         <dependency>
             <groupId>xml-resolver</groupId>
             <artifactId>xml-resolver</artifactId>
-            <version>1.2</version>
+            <version>${xml-resolver-version}</version>
         </dependency>
 
         <!-- Jaxen XPath library -->
         <dependency>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
-            <version>1.0-FCS</version>
+            <version>${jaxen-version}</version>
         </dependency>
 
         <!-- Simple API for XPath -->
         <dependency>
             <groupId>saxpath</groupId>
             <artifactId>saxpath</artifactId>
-            <version>1.0-FCS</version>
+            <version>${sax-path-version}</version>
         </dependency>
 
         <!-- Saxon XSLT processing for Java -->
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
-            <version>9.5.1-6</version>
+            <version>${saxon-version}</version>
         </dependency>
 
         <!-- http://cxf.apache.org/faq.html -->
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-xjc</artifactId>
-            <version>2.2.2</version>
+            <version>${jaxb-xjc-version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>2.2.2</version>
+            <version>${jaxb-impl-version}</version>
         </dependency>
 
         <!-- JAXB Basics plugin -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics</artifactId>
-            <version>0.6.0</version>
+            <version>${jaxb-basics-version}</version>
         </dependency>
 
     </dependencies>
@@ -107,7 +115,6 @@
     </organization>
 
     <build>
-
         <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
         <finalName>${project.artifactId}</finalName>
@@ -135,7 +142,6 @@
                 <filtering>false</filtering>
             </testResource>
         </testResources>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
     </build>
 
 </project>

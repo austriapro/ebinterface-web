@@ -11,7 +11,8 @@ public enum EbInterfaceVersion {
   E3P02("http://www.ebinterface.at/schema/3p02/", "ebInterface 3.02"),
   E4P0("http://www.ebinterface.at/schema/4p0/", "ebInterface 4.0"),
   E4P1("http://www.ebinterface.at/schema/4p1/", "ebInterface 4.1"),
-  E4P2("http://www.ebinterface.at/schema/4p2/", "ebInterface 4.2");
+  E4P2("http://www.ebinterface.at/schema/4p2/", "ebInterface 4.2"),
+  E4P3("http://www.ebinterface.at/schema/4p3/", "ebInterface 4.3");
 
   private final String namespace;
   private final String caption;

@@ -4,12 +4,12 @@
   xmlns:dp="http://www.dpawson.co.uk/ns#"
   queryBinding='xslt2'
   schemaVersion='ISO19757-3'>                  
-  <iso:title>ebInterface 4.2 rules for SV specific extensions</iso:title>
+  <iso:title>ebInterface 4.3 rules for SV specific extensions</iso:title>
   <iso:ns prefix='dp' uri='http://www.dpawson.co.uk/ns#'/> 
-  <iso:ns prefix="n1" uri="http://www.ebinterface.at/schema/4p2/"/>
+  <iso:ns prefix="n1" uri="http://www.ebinterface.at/schema/4p3/"/>
   <iso:ns uri="http://www.w3.org/2000/09/xmldsig#" prefix="dsig"/>
-  <iso:ns uri="http://www.ebinterface.at/schema/4p2/extensions/ext" prefix="ext"/>
-  <iso:ns uri="http://www.ebinterface.at/schema/4p2/extensions/sv" prefix="sv"/>
+  <iso:ns uri="http://www.ebinterface.at/schema/4p3/extensions/ext" prefix="ext"/>
+  <iso:ns uri="http://www.ebinterface.at/schema/4p3/extensions/sv" prefix="sv"/>
   <iso:ns uri="http://www.altova.com/samplexml/other-namespace" prefix="other"/>
     
  

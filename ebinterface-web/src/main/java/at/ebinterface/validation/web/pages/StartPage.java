@@ -484,8 +484,10 @@ public class StartPage extends BasePage {
         //Schematron validation may only be started in case of ebInterface 4p0
         if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0 ||
             validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1 ||
-            validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
+            validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2||
+            validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P3) {
 
+          //Selected rule and selected ebInterface version must match
           Rule rule = rules.getModelObject();
           if (rule != null && !(rule.getEbInterfaceVersion()
                                     .equals(validationResult.getDeterminedEbInterfaceVersion()))) {
@@ -503,7 +505,7 @@ public class StartPage extends BasePage {
         //Wrong ebInterface version
         else {
           error(
-              "Schematronregeln können nur auf ebInterface 4.0/4.1/4.2 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: "
+              "Schematronregeln können nur auf ebInterface 4.0/4.1/4.2/4.3 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: "
               + validationResult.getDeterminedEbInterfaceVersion().getCaption());
           onError();
           return;
@@ -540,11 +542,12 @@ public class StartPage extends BasePage {
               jrReport =
               Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-          LOG.debug("Rendering PDF.");
+          LOG.debug("Rendering PDF from ebInterface file.");
 
           pdf = renderer.renderReport(jrReport, uploadedData, null);
 
         } catch (Exception ex) {
+          LOG.error("Error when generating PDF from ebInterface", ex);
           error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
           onError();
           return;
@@ -583,8 +586,11 @@ public class StartPage extends BasePage {
                                         MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p0);*/
         }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1){
           ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
-        }else /*(validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2)*/ {
+        }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
           ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
+        }
+        else {
+          ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p3;
         }
 
         Mapping zugFeRDMapping = mf.getMapper(zugferdLevel,
@@ -595,7 +601,7 @@ public class StartPage extends BasePage {
 
         //Map to ZUGFeRD Basic
         try {
-          LOG.debug("Mapp ebInterface to ZUGFeRD.");
+          LOG.debug("Map ebInterface to ZUGFeRD.");
           sZugferd = new String(zugFeRDMapping.mapFromebInterface(new String(uploadedData)));
 
           zugferd = sZugferd.getBytes("UTF-8");
@@ -614,6 +620,7 @@ public class StartPage extends BasePage {
                 eh.toString().replace("\n", "<br/>"));
           }
         } catch (Exception e) {
+          LOG.error("ZUGFeRD conversion failed", e);
           error("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
           onError();
           return;

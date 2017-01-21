@@ -96,6 +96,15 @@ public class CustomParserTest {
                 CustomParser.INSTANCE.getEbInterfaceDetails(source));
 
 
+        // 4p3
+        inputStream = this.getClass().getResourceAsStream(
+            "/ebinterface/4p3/ebInterface_4p3_sample.xml");
+        source = new InputSource(inputStream);
+
+        Assert.assertEquals(EbInterfaceVersion.E4P3,
+                            CustomParser.INSTANCE.getEbInterfaceDetails(source));
+
+
     }
 
 }

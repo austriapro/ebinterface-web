@@ -3,7 +3,7 @@
 
 	<artifactId>ebinterface-web</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.6-SNAPSHOT</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
 	<name>ebInterface validation web interface</name>
 
@@ -11,19 +11,19 @@
     <parent>
         <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-parent</artifactId>
-        <version>1.0.6-SNAPSHOT</version>
+        <version>1.0.7-SNAPSHOT</version>
     </parent>
 
 
 	<properties>
-        <commons.logging.version>1.1.1</commons.logging.version>
-        <logback-version>1.0.0</logback-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<slf4j-version>1.6.4</slf4j-version>
-		<wicket-version>6.21.0</wicket-version>
 		<ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
-        <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
-        <ebinterface-ubl-mapping-version>1.0.2</ebinterface-ubl-mapping-version>
+		<slf4j-version>1.6.4</slf4j-version>
+		<wicket-version>6.26.0</wicket-version>
+		<commons.logging.version>1.1.1</commons.logging.version>
+		<ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
+		<ebinterface-ubl-mapping-version>1.0.2</ebinterface-ubl-mapping-version>
+		<logback-version>1.0.0</logback-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 
