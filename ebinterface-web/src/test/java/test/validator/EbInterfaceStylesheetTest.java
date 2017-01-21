@@ -55,6 +55,15 @@ public class EbInterfaceStylesheetTest {
         Assert.assertFalse(hasError(s));
         System.out.print(s);
 
+
+        //4p1
+        input = this.getClass().getResourceAsStream("/ebinterface/4p3/ebInterface_4p3_sample.xml");
+        Assert.assertNotNull(input);
+        inputData = IOUtils.toByteArray(input);
+        s = validator.transformInput(inputData, EbInterfaceVersion.E4P3);
+        Assert.assertFalse(hasError(s));
+        System.out.print(s);
+
     }
 
 

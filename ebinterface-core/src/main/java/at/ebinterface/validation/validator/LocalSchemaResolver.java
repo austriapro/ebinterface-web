@@ -65,6 +65,16 @@ public class LocalSchemaResolver implements LSResourceResolver {
       LOG.debug("Trying to resolve 4p2 SV extension Schema");
       url = "/ebinterface/ext4p2/ebInterfaceExtension_SV.xsd";
     }
+    //Replace the 4p3 extension schema
+    else if ("http://www.ebinterface.at/schema/4p3/extensions/ext".equals(namespaceURI)) {
+      LOG.debug("Trying to resolve 4p3 extension Schema");
+      url = "/ebinterface/ebInterfaceExtension4p3.xsd";
+    }
+    //Replace the 4p2 SV extension schema
+    else if ("http://www.ebinterface.at/schema/4p3/extensions/sv".equals(namespaceURI)) {
+      LOG.debug("Trying to resolve 4p3 SV extension Schema");
+      url = "/ebinterface/ext4p3/ebInterfaceExtension_SV.xsd";
+    }
 
     //Replace with local url
     if (url != null) {

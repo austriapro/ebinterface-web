@@ -37,7 +37,7 @@ public class ValidationApplication extends WebApplication {
   /**
    * Defines wether the application shall be started in develop or deployment mode
    */
-  private static RuntimeConfigurationType CONFIGURATION_TYPE = RuntimeConfigurationType.DEVELOPMENT;
+  private static RuntimeConfigurationType CONFIGURATION_TYPE = RuntimeConfigurationType.DEPLOYMENT;
 
   private static final Logger LOG = LoggerFactory.getLogger(ValidationApplication.class.getName());
 

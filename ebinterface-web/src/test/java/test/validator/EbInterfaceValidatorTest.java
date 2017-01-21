@@ -54,6 +54,37 @@ public class EbInterfaceValidatorTest {
      * @throws IOException
      */
     @Test
+    public void test4p3SchemaValidator() throws IOException {
+
+        // Valid schema
+        InputStream input = this.getClass().getResourceAsStream("/ebinterface/4p3/ebInterface_4p3_sample.xml");
+        byte[] uploadedData = null;
+
+        assertNotNull(input);
+        // Step 1 - validate against the schema
+        uploadedData = IOUtils.toByteArray(input);
+        EbInterfaceValidator validator = new EbInterfaceValidator();
+        ValidationResult result = validator.validateXMLInstanceAgainstSchema(uploadedData);
+        assertTrue(StringUtils.isEmpty(result.getSchemaValidationErrorMessage()));
+
+
+        // Invalid schema
+        input = this.getClass().getResourceAsStream("/ebinterface/4p3/ebInterface_4p3_sample_invalid.xml");
+        uploadedData = IOUtils.toByteArray(input);
+        validator = new EbInterfaceValidator();
+        result = validator.validateXMLInstanceAgainstSchema(uploadedData);
+        assertFalse(StringUtils.isEmpty(result.getSchemaValidationErrorMessage()));
+
+
+    }
+
+
+    /**
+     * Test the schema validator
+     *
+     * @throws IOException
+     */
+    @Test
     public void test4p2SchemaValidator() throws IOException {
 
         // Valid schema

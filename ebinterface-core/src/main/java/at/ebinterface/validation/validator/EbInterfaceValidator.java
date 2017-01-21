@@ -52,6 +52,8 @@ public class EbInterfaceValidator {
 
   private static Validator ebInterface4p2Validator;
 
+  private static Validator ebInterface4p3Validator;
+
   /**
    * Transformer factory
    */
@@ -75,6 +77,7 @@ public class EbInterfaceValidator {
   private static Transformer ebInterface4p0Transformer;
   private static Transformer ebInterface4p1Transformer;
   private static Transformer ebInterface4p2Transformer;
+  private static Transformer ebInterface4p3Transformer;
 
   /**
    * JAXBContext for generating the result
@@ -115,12 +118,18 @@ public class EbInterfaceValidator {
             .getResourceAsStream("/ebinterface/ebInterface4p2.xsd")
     );
 
+    final Source ebInterface4p3schemaFile = new StreamSource(
+        EbInterfaceValidator.class
+            .getResourceAsStream("/ebinterface/ebInterface4p3.xsd")
+    );
+
     try {
       final Schema schema3p0 = factory.newSchema(ebInterface3p0schemaFile);
       final Schema schema3p02 = factory.newSchema(ebInterface3p02schemaFile);
       final Schema schema4p0 = factory.newSchema(ebInterface4p0schemaFile);
       final Schema schema4p1 = factory.newSchema(ebInterface4p1schemaFile);
       final Schema schema4p2 = factory.newSchema(ebInterface4p2schemaFile);
+      final Schema schema4p3 = factory.newSchema(ebInterface4p3schemaFile);
 
       // Create a Validator object, which can be used to validate
       // an instance document.
@@ -129,6 +138,7 @@ public class EbInterfaceValidator {
       ebInterface4p0Validator = schema4p0.newValidator();
       ebInterface4p1Validator = schema4p1.newValidator();
       ebInterface4p2Validator = schema4p2.newValidator();
+      ebInterface4p3Validator = schema4p3.newValidator();
 
     } catch (final Exception e) {
       new RuntimeException(e);
@@ -183,6 +193,11 @@ public class EbInterfaceValidator {
       ebInterface4p2Transformer = tFactory
           .newTransformer(new StreamSource(styleSheetFile));
 
+      styleSheetFile = EbInterfaceValidator.class.getResource(
+          "/stylesheets/ebInterface-4.3.xslt").toString();
+      ebInterface4p3Transformer = tFactory
+          .newTransformer(new StreamSource(styleSheetFile));
+
     } catch (final TransformerConfigurationException e) {
       throw new RuntimeException(e);
     }
@@ -235,8 +250,11 @@ public class EbInterfaceValidator {
         ebInterface4p0Validator.validate(saxSource);
       } else if (version == EbInterfaceVersion.E4P1) {
         ebInterface4p1Validator.validate(saxSource);
-      } else {
+      } else if (version == EbInterfaceVersion.E4P2) {
         ebInterface4p2Validator.validate(saxSource);
+      }
+      else {
+        ebInterface4p3Validator.validate(saxSource);
       }
 
     } catch (final SAXException e) {
@@ -310,8 +328,15 @@ public class EbInterfaceValidator {
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
-      } else {
+      }
+      else if (version == EbInterfaceVersion.E4P2) {
         ebInterface4p2Transformer.transform(new StreamSource(
+                                                new ByteArrayInputStream(uploadedData)),
+                                            new StreamResult(sw)
+        );
+      }
+      else {
+        ebInterface4p3Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
