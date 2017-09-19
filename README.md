@@ -43,3 +43,11 @@ Place the file under `ebinterface-web/src/main/resources/rtr.properties`
 Username and password may be requested from RTR directly, and are not provided in this GitHub repository.
 
 :green_heart: Pull requests are greatly appreciated and welcomed.
+
+
+## Docker
+
+To build a docker image and push it to the docker hub, run the following commands (requires write access to https://hub.docker.com/r/ebinterface/validator-web/):
+
+- `docker build -t ebinterface/validator-web .`
+- `docker push ebinterface/validator-web:latest`
