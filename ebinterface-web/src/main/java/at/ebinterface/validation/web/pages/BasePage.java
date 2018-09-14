@@ -34,10 +34,26 @@ public abstract class BasePage extends WebPage {
   public void renderHead(HtmlHeaderContainer container) {
 
 
-    PackageResourceReference cssFile =
-        new PackageResourceReference(CssReference.class, "style.css");
-    CssHeaderItem cssItem = CssHeaderItem.forReference(cssFile);
-    container.getHeaderResponse().render(cssItem);
+    PackageResourceReference cssFile_one =
+        new PackageResourceReference(CssReference.class, "App.css");
+    CssHeaderItem cssItem_one = CssHeaderItem.forReference(cssFile_one);
+
+    PackageResourceReference cssFile_two =
+            new PackageResourceReference(CssReference.class, "index.css");
+    CssHeaderItem cssItem_two = CssHeaderItem.forReference(cssFile_two);
+
+    PackageResourceReference cssFile_three =
+            new PackageResourceReference(CssReference.class, "wkostyle.css");
+    CssHeaderItem cssItem_three = CssHeaderItem.forReference(cssFile_three);
+
+    PackageResourceReference cssFile_four =
+            new PackageResourceReference(CssReference.class, "bootstrap.css");
+    CssHeaderItem cssItem_four = CssHeaderItem.forReference(cssFile_four);
+
+
+    container.getHeaderResponse().render(cssItem_one);
+    container.getHeaderResponse().render(cssItem_two);
+    container.getHeaderResponse().render(cssItem_three);
 
     super.renderHead(container);
 

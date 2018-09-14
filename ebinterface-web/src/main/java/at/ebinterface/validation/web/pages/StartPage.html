@@ -9,201 +9,133 @@
 
 
     <div class="row">
-
         <div class="col-md-12">
-
-
-            <form class="well form-horizontal" wicket:id="inputForm">
-
-
+            <form class="border" wicket:id="inputForm">
                 <fieldset>
-
                     <legend>Wählen Sie eine ebInterface-Datei und anschließend eine
                         Funktion:
                     </legend>
-
-
                     <div class="alert alert-danger" wicket:id="feedback">
-
                     </div>
-
-
                     <div class="control-group">
-
                         <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
-
+                        <p class="help-block">Wählen Sie eine ebInterface 3.0,
+                            3.02, 4.0, 4.1, 4.2, 4.3 oder 5.0
+                            Datei von Ihrer Festplatte</p>
                         <div class="controls">
-                            <input class="input-file" id="fileInput" type="file"
-                                   wicket:id="fileInput"/>
-
-                            <p class="help-block">Wählen Sie eine ebInterface 3.0,
-                                3.02, 4.0, 4.1, 4.2 oder 4.3
-                                Datei von Ihrer Festplatte</p>
+                            <div class="uploadFile">
+                                <input id="fileInput" type="file"
+                                   wicket:id="fileInput" class="inputfile"/>
+                                <label for="file">Wählen Sie eine ebInterface Datei aus</label>
+                            </div>
                         </div>
-
                     </div>
-
-
                     <div class="control-group">
-
-                        <h4 class="functionHeader">Schritt 2: Funktion</h4>
-
+                        <h4>Schritt 2: Funktion</h4>
                     </div>
-
-
-
                     <div class="row">
-
-                        <div class="col-md-3">
-
+                        <div class="col-md-4">
                             <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
-
+                            <br/>
                             <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchemaOnly">ebInterface
                                 gegen Schema
                                 prüfen</a>
-
                         </div>
-
-                        <div class="col-md-3">
-
+                        <div class="col-md-8">
                             <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
-
-                            <select id="ruleSelector" wicket:id="ruleSelector">
-                                <option>woo</option>
-                                <option>hoo</option>
-                            </select>
-
                             <p class="help-block">Wählen Sie ein Set von Schematron Regeln,
                                 gegen welches Sie prüfen
                                 möchten.</p>
-
-                            <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">ebInterface
-                                gegen
-                                Schematronregeln prüfen</a>
-
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select id="ruleSelector" wicket:id="ruleSelector">
+                                        <option>woo</option>
+                                        <option>hoo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">
+                                        ebInterface gegen Schematronregeln prüfen
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-
-
-
                     </div>
-
-
                     <div class="control-group">
-
                         <h5 class="functionHeader">Anzeigen</h5>
-
                     </div>
-
-
                     <div class="form-actions">
-
                         <a class="btn btn-primary" type="submit"
                            wicket:id="submitButtonVisualizeHTML">ebInterface in
                             HTML Druckansicht anzeigen</a>
-
                         <a class="btn btn-primary" type="submit"
                            wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen</a>
-
                     </div>
-
-
                     <div class="control-group">
-
                         <h5 class="functionHeader">Konvertieren</h5>
-
                     </div>
-
-
                     <div class="form-actions">
+                        <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil,
+                            in welches Sie konvertieren
+                            m&ouml;chten.</p>
                         <select id="zugferdSelector" wicket:id="zugferdSelector">
                             <option>woo</option>
                             <option>hoo</option>
                         </select>
-
-                        <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil,
-                            in welches Sie konvertieren
-                            m&ouml;chten.</p>
                         <a class="btn btn-primary" type="submit"
                            wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD
                             konvertieren</a>
-
                     </div>
-
-
                 </fieldset>
             </form>
-
             <br/><br/>
-
-            <form class="well form-horizontal" wicket:id="showRulesForm">
+            <form class="border" wicket:id="showRulesForm">
                 <legend>Unterst&uuml;tzte ebInterface 4.0/4.1/4.2/4.3 Schematrondateien einsehen
                 </legend>
-
                 <div class="alert alert-danger" wicket:id="feedback">
-
                 </div>
-
                 <div class="control-group">
-
+                    <div class="form-actions">
                     <h5>Unterst&uuml;tzte Schematron Regeln</h5>
-
+                    <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches
+                        sie einsehen m&ouml;chten.</p>
                     <div class="controls">
                         <select id="ruleSelector" wicket:id="ruleSelector">
                             <option>woo</option>
                             <option>hoo</option>
                         </select>
-
-                        <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches
-                            sie einsehen m&ouml;chten.</p>
+                        <button class="btn btn-primary" type="submit" wicket:id="showSchematron">
+                            Schematrondatei anzeigen
+                        </button>
                     </div>
-
-
+                    </div>
                 </div>
 
-                <div class="form-actions">
-                    <button class="btn btn-primary" type="submit" wicket:id="showSchematron">
-                        Schematrondatei anzeigen
-                    </button>
-                </div>
+
 
             </form>
-
             <br/><br/>
-
-            <form class="well form-horizontal" wicket:id="ublForm">
+            <form class="border" wicket:id="ublForm">
                 <legend>UBL nach ebInterface 4.1 konvertieren
                 </legend>
-
                 <div class="alert alert-danger" wicket:id="feedback">
-
                 </div>
-
                 <div class="control-group">
-
                     <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
-
+                    <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
                     <div class="controls">
                         <input class="input-file" id="ublInput" type="file"
                                wicket:id="ublInput"/>
-
-                        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
                     </div>
-
-
                 </div>
-
-                <div class="form-actions">
+                <div clss="form-actions">
                     <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
                     <button class="btn btn-primary" type="submit" wicket:id="convertUbl">
                         UBL nach ebInterface (4.1) konvertieren
                     </button>
                 </div>
-
             </form>
-
-
             <div style="text-align: center;">
-
                 Code lizensiert unter <a
                     href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
                 License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den
@@ -214,14 +146,9 @@
                 Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at"
                                                                 target="_blank">AUSTRIAPRO</a>
                 entwickelt.
-
                 <br/><br/>
-
             </div>
-
-
         </div>
     </div>
-
 
 </wicket:extend>
