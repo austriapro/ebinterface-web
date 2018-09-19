@@ -10,11 +10,12 @@
 
     <div class="row">
         <div class="col-md-12">
+            <hr class="section-line"/>
             <form class="border" wicket:id="inputForm">
                 <fieldset>
-                    <legend>Wählen Sie eine ebInterface-Datei und anschließend eine
+                    <h2>Wählen Sie eine ebInterface-Datei und anschließend eine
                         Funktion:
-                    </legend>
+                    </h2>
                     <div class="alert alert-danger" wicket:id="feedback">
                     </div>
                     <div class="control-group">
@@ -34,41 +35,42 @@
                         <h4>Schritt 2: Funktion</h4>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
-                            <br/>
-                            <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchemaOnly">ebInterface
+                            <a class="btn-wko" type="submit" id="submitButtonSchemaOnly" :wicket:id="submitButtonSchemaOnly">ebInterface
                                 gegen Schema
                                 prüfen</a>
                         </div>
-                        <div class="col-md-8">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
                             <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
                             <p class="help-block">Wählen Sie ein Set von Schematron Regeln,
                                 gegen welches Sie prüfen
                                 möchten.</p>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <select id="ruleSelector" wicket:id="ruleSelector">
-                                        <option>woo</option>
-                                        <option>hoo</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <a class="btn btn-primary" type="submit" wicket:id="submitButtonSchematron">
-                                        ebInterface gegen Schematronregeln prüfen
-                                    </a>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
+                                <option>woo</option>
+                                <option>hoo</option>
+                            </select>
+                            <a class="btn-wko" type="submit" wicket:id="submitButtonSchematron">
+                                ebInterface gegen Schematronregeln prüfen
+                            </a>
+                        </div>
+                    </div>
+
+
                     <div class="control-group">
                         <h5 class="functionHeader">Anzeigen</h5>
                     </div>
                     <div class="form-actions">
-                        <a class="btn btn-primary" type="submit"
+                        <a class="btn-wko" type="submit"
                            wicket:id="submitButtonVisualizeHTML">ebInterface in
                             HTML Druckansicht anzeigen</a>
-                        <a class="btn btn-primary" type="submit"
+                        <a class="btn-wko" type="submit"
                            wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen</a>
                     </div>
                     <div class="control-group">
@@ -78,20 +80,21 @@
                         <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil,
                             in welches Sie konvertieren
                             m&ouml;chten.</p>
-                        <select id="zugferdSelector" wicket:id="zugferdSelector">
+                        <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
                             <option>woo</option>
                             <option>hoo</option>
                         </select>
-                        <a class="btn btn-primary" type="submit"
+                        <a class="btn-wko" type="submit"
                            wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD
                             konvertieren</a>
                     </div>
                 </fieldset>
             </form>
             <br/><br/>
+            <hr class="section-line"/>
             <form class="border" wicket:id="showRulesForm">
-                <legend>Unterst&uuml;tzte ebInterface 4.0/4.1/4.2/4.3 Schematrondateien einsehen
-                </legend>
+                <h2>Unterst&uuml;tzte ebInterface 4.0/4.1/4.2/4.3 Schematrondateien einsehen
+                </h2>
                 <div class="alert alert-danger" wicket:id="feedback">
                 </div>
                 <div class="control-group">
@@ -100,11 +103,11 @@
                     <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches
                         sie einsehen m&ouml;chten.</p>
                     <div class="controls">
-                        <select id="ruleSelector" wicket:id="ruleSelector">
+                        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
                             <option>woo</option>
                             <option>hoo</option>
                         </select>
-                        <button class="btn btn-primary" type="submit" wicket:id="showSchematron">
+                        <button class="btn-wko" type="submit" wicket:id="showSchematron">
                             Schematrondatei anzeigen
                         </button>
                     </div>
@@ -115,9 +118,10 @@
 
             </form>
             <br/><br/>
+            <hr class="section-line"/>
             <form class="border" wicket:id="ublForm">
-                <legend>UBL nach ebInterface 4.1 konvertieren
-                </legend>
+                <h2>UBL nach ebInterface 4.1 konvertieren
+                </h2>
                 <div class="alert alert-danger" wicket:id="feedback">
                 </div>
                 <div class="control-group">
@@ -130,10 +134,11 @@
                 </div>
                 <div clss="form-actions">
                     <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-                    <button class="btn btn-primary" type="submit" wicket:id="convertUbl">
+                    <button class="btn-wko" type="submit" wicket:id="convertUbl">
                         UBL nach ebInterface (4.1) konvertieren
                     </button>
                 </div>
+                <br/><br/>
             </form>
             <div style="text-align: center;">
                 Code lizensiert unter <a

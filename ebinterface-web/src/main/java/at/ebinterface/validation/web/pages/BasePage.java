@@ -23,8 +23,8 @@ public abstract class BasePage extends WebPage {
   public BasePage() {
 
     //Add the ebInterface Logo
-    add(new Image("ebInterfaceLogo",
-                  new PackageResourceReference(ImagesLogoAccessor.class, "ebInterfaceLogo.jpg")));
+    add(new Image("ebInterfacelogo",
+                  new PackageResourceReference(ImagesLogoAccessor.class, "ebInterfacelogo.png")));
 
 
   }

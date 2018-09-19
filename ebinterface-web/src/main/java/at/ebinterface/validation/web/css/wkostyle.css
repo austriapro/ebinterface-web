@@ -2126,11 +2126,9 @@ output {
 
 .form-control {
     display: block;
-    width: 100%;
-    height: 44px;
-    padding: 9px 14px 5.4px 14px;
+    margin: 0;
+    padding: 10px 20px 10px 20px;
     font-size: 17px;
-    line-height: 1.42857;
     color: #536B78;
     background-color: #fff;
     background-image: none;
@@ -8928,7 +8926,7 @@ fieldset[disabled] .btn-ghost.active {
 
 .btn-ghost .badge {
     color: transparent;
-    background-color: #536B78
+    background-color: #304C59;
 }
 
 .btn-ghost:hover,
@@ -8943,7 +8941,6 @@ fieldset[disabled] .btn-ghost.active {
     color: #E20613;
     background: none
 }
-
 .btn-ghost--red:hover,
 .btn-ghost--red:focus {
     border-color: #FFF;
