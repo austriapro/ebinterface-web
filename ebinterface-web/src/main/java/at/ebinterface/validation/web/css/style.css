@@ -1,7 +1,73 @@
-h1 {
-    font-size: 1.9em;
+
+.inputFile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputFile + label {
+  border: 1px solid #304C59;
+  font-size: 17px;
+  color: #304C59;
+  background: none;
+  display: inline-block;
+  padding: 10px 20px 10px 20px;
+}
+
+.inputFile + label:hover {
+  color: white;
+  background-color: #304C59;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .functionHeader {
-    margin-top: 1.5em;
+  font-size: 18px;
+}
+
+
+.btn-wko {
+  display: inline-block;
+  font-size: 17px;
+  border: 1px solid #304C59;
+  color: #304C59;
+  background: none;
+  padding: 10px 20px 10px 20px;
+}
+.btn-wko:hover,
+.btn-wko:focus {
+  border: 1px solid #304C59;
+  background: #304C59;
+  color: #FFF;
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.wko-selector {
+  min-height: 100%;
+  display: inline-block;
+  padding: 10px 20px 10px 20px;
+  font-size: 17px;
+  color: #304C59;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #304C59;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.wko-selector:focus {
+  border-color: #304C59;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(83, 107, 120, 0.6);
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
