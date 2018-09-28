@@ -9,7 +9,7 @@
 
     <div class="row">
 
-        <div class="col-md-12 well">
+        <div class="col-md-12 result-border">
 
 
             <div class="row">
@@ -23,8 +23,6 @@
 
 
             <div wicket:id="schemvalidationOK">
-
-
                 <div class="row">
                     <div class="col-md-12">
                         <br/>
@@ -51,7 +49,6 @@
                     <div class="col-md-12 alert alert-danger">
                         <p>Die gew&auml;hlte ebInterface Instanz entspricht nicht den
                             Vorgaben des ebInterface Schemas.</p>
-
                         <p>
                             <strong>Fehlerdetails: </strong>
                             <wicket:container wicket:id="schemaValidationError"/>
@@ -165,13 +162,13 @@
     <div class="row">
         <div class="col-md-12">
             <br/> <br/>
-            <a class="btn btn-primary" type="submit"
+            <a class="btn btn-ghost btn-ghost--red" type="submit"
                wicket:id="linkXMLDownload">Download XML</a>
-            <a class="btn btn-primary" type="submit"
+            <a class="btn btn-ghost btn-ghost--red" type="submit"
                wicket:id="linkPDFDownload">Download PDF</a>
         </div>
         <div class="col-md-12">
-            <br/> <br/> <a class="btn btn-primary" wicket:id="returnLink">Neue
+            <br/> <br/> <a class="btn btn-ghost btn-ghost--red" wicket:id="returnLink">Neue
             Anfrage starten</a> <br/> <br/> <br/> <br/>
         </div>
     </div>
