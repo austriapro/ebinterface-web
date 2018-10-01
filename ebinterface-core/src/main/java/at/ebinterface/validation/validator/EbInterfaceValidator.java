@@ -1,23 +1,24 @@
 package at.ebinterface.validation.validator;
 
-import at.ebinterface.validation.exception.NamespaceUnknownException;
-import at.ebinterface.validation.parser.CustomParser;
-import at.ebinterface.validation.rtr.VerificationServiceInvoker;
-import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
-import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
-import at.ebinterface.validation.validator.jaxb.Result;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.util.JAXBResult;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -26,10 +27,12 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import at.ebinterface.validation.exception.NamespaceUnknownException;
+import at.ebinterface.validation.parser.CustomParser;
+import at.ebinterface.validation.rtr.VerificationServiceInvoker;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
+import at.ebinterface.validation.validator.jaxb.Result;
 
 /**
  * This class validates a given ebInterface XML instance against a schematron file (already
@@ -324,6 +327,7 @@ public class EbInterfaceValidator {
               at.ebinterface.validation.validator.SAXParserFactory.newInstance().getXMLReader(),
               (new InputSource(new ByteArrayInputStream(uploadedData))));
 
+      LOG.info("Transforming {}", version);
       if (version == EbInterfaceVersion.E3P0) {
         ebInterface3p0Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
@@ -350,6 +354,13 @@ public class EbInterfaceValidator {
                                             new StreamResult(sw)
         );
       }
+      else if (version == EbInterfaceVersion.E5P0) {
+        ebInterface5p0Transformer.transform(new StreamSource(
+                                                new ByteArrayInputStream(uploadedData)),
+                                            new StreamResult(sw)
+        );
+      }
+
       else {
         ebInterface4p3Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
