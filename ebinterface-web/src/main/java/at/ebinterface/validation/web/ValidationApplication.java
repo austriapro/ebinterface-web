@@ -5,9 +5,6 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
-import at.ebinterface.validation.validator.EbInterfaceValidator;
-import at.ebinterface.validation.web.pages.StartPage;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -24,6 +21,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
+import at.ebinterface.validation.validator.EbInterfaceValidator;
+import at.ebinterface.validation.web.pages.LabsPage;
+import at.ebinterface.validation.web.pages.ServicePage;
+import at.ebinterface.validation.web.pages.StartPage;
 
 
 /**
@@ -113,6 +115,9 @@ public class ValidationApplication extends WebApplication {
 
     getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
     getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+
+    mountPage("/service", ServicePage.class);
+    mountPage("/labs", LabsPage.class);
 
   }
 

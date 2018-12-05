@@ -1,0 +1,52 @@
+<wicket:extend>
+
+
+    <h1>ebInterface Rechnungen prüfen, anzeigen und konvertieren</h1>
+
+    <div>
+        <hr class="section-line"/>
+        <form wicket:id="inputForm" class="form-inline">
+            <h2>Wählen Sie eine ebInterface-Datei und anschließend eine Funktion:</h2>
+            <div class="alert alert-danger" wicket:id="feedback"></div>
+            <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
+            <p class="help-block">Wählen Sie eine ebInterface 3.0,
+                3.02, 4.0, 4.1, 4.2, 4.3 oder 5.0
+                Datei von Ihrer Festplatte</p>
+
+            <div class="uploadFile">
+                <input id="fileInput1" type="file"
+                       wicket:id="fileInput" class="inputFile"/>
+                <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+                <p class="upload-label" id="uploadText"></p>
+            </div>
+            <h4>Schritt 2: Funktion</h4>
+
+            <h5 class="functionHeader">Anzeigen</h5>
+            <div class="inline-btn">
+                <button class="btn-wko" type="submit"
+                        wicket:id="submitButtonVisualizeHTML">ebInterface in
+                    HTML Druckansicht anzeigen
+                </button>
+                <button class="btn-wko" type="submit"
+                        wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen
+                </button>
+            </div>
+        </form>
+
+        <hr class="section-line"/>
+        <div style="text-align: center;">
+            Code lizensiert unter <a
+                href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
+            License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den
+            Sourcecode besuchen
+            Sie bitte die <a href="https://github.com/austriapro/ebinterface-web"
+                             target="_blank">Projekthomepage</a>. <br/><br/>
+
+            Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at"
+                                                            target="_blank">AUSTRIAPRO</a>
+            entwickelt.
+            <br/><br/>
+        </div>
+    </div>
+
+</wicket:extend>
