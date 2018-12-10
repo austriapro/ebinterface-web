@@ -2,6 +2,7 @@ package at.ebinterface.validation.web.pages.resultpages;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
@@ -24,12 +25,21 @@ import static at.ebinterface.validation.web.pages.StartPage.ActionType.SCHEMA_AN
 
 public class ResultPanel extends Panel {
 
-  public ResultPanel(String id, final ValidationResult validationResult,
+    public ResultPanel(String id, final ValidationResult validationResult,
                      final String selectedSchematron,
                      final StartPage.ActionType selectedAction,
                      final byte[] pdf,
                      final byte[] xml,
                      final String log) {
+      this(id, validationResult, selectedSchematron, selectedAction, pdf, xml, log, null);
+    }
+
+  public ResultPanel(String id, final ValidationResult validationResult,
+                     final String selectedSchematron,
+                     final StartPage.ActionType selectedAction,
+                     final byte[] pdf,
+                     final byte[] xml,
+                     final String log, Class<? extends WebPage> returnPage) {
     super(id);
 
         final StringBuffer schemaVersion = new StringBuffer();
@@ -179,9 +189,9 @@ public class ResultPanel extends Panel {
     add(new Link<Object>("returnLink") {
       @Override
       public void onClick() {
-        setResponsePage(StartPage.class);
+        setResponsePage(returnPage);
       }
-    }.setVisibilityAllowed(false));
+    }.setVisibilityAllowed(returnPage != null));
 
     Link<Void> pdflink = new Link<Void>("linkPDFDownload") {
       @Override

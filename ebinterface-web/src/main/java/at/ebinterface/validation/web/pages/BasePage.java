@@ -1,17 +1,18 @@
 package at.ebinterface.validation.web.pages;
 
-import at.ebinterface.validation.web.css.CssReference;
-import at.ebinterface.validation.web.js.JsReference;
-import at.ebinterface.validation.web.pages.images.ImagesLogoAccessor;
-
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.request.resource.PackageResourceReference;
+
+import at.ebinterface.validation.web.css.CssReference;
+import at.ebinterface.validation.web.js.JsReference;
+import at.ebinterface.validation.web.pages.images.ImagesLogoAccessor;
 
 /**
  * Base page for all web pages
@@ -31,7 +32,9 @@ public abstract class BasePage extends WebPage {
     add(new Image("wko-logo",
             new PackageResourceReference(ImagesLogoAccessor.class, "wko-logo.png")));
 
-
+    TransparentWebMarkupContainer footer = new TransparentWebMarkupContainer("footer");
+    footer.add(new AttributeModifier("class", getFooterClass()));
+    add(footer);
   }
 
 
@@ -57,5 +60,9 @@ public abstract class BasePage extends WebPage {
     super.renderHead(container);
 
 
+  }
+
+  protected String getFooterClass() {
+    return "footer-section";
   }
 }

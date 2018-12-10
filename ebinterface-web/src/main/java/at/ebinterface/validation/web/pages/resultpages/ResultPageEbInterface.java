@@ -2,6 +2,7 @@ package at.ebinterface.validation.web.pages.resultpages;
 
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.pages.BasePage;
+import at.ebinterface.validation.web.pages.LabsPage;
 import at.ebinterface.validation.web.pages.StartPage.ActionType;
 
 /**
@@ -24,11 +25,15 @@ public class ResultPageEbInterface extends BasePage {
     ResultPanel
         resultPanel =
         new ResultPanel("resultPanel", validationResult, selectedSchematron, selectedAction, pdf,
-                        xml, log);
+                        xml, log, LabsPage.class);
 
     add(resultPanel);
 
 
+  }
+
+  protected String getFooterClass() {
+    return "footer-section navbar-fixed-bottom";
   }
 
 }
