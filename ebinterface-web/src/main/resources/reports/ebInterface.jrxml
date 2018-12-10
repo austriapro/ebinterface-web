@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-01-21T11:15:29 -->
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2018-12-10T16:58:53 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERPEL_STR_INVOICE_TYPE_2" pageWidth="595" pageHeight="852" whenNoDataType="AllSectionsNoDetail" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="85" bottomMargin="26" isSummaryWithPageHeaderAndFooter="true" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="data_adapter\ebinterface_5p0_sample.xml"/>
 	<style name="Default" isDefault="true" forecolor="#000000" backcolor="#FFFFFF" fontName="Open Sans" fontSize="10" isBold="false" pdfFontName="Open Sans"/>
 	<style name="Title" forecolor="#000000" backcolor="#FFFFFF" fontName="Open Sans" fontSize="14" isBold="true" pdfFontName="Open Sans" isPdfEmbedded="true"/>
 	<style name="SubTitle" forecolor="#CCCCCC" backcolor="#FFFFFF" fontName="Open Sans" fontSize="12" isBold="false" pdfFontName="Open Sans"/>
@@ -16,19 +16,22 @@
 	<subDataset name="taxes" uuid="35f8a6c1-8234-457b-8c3c-108d8adf38ef">
 		<parameter name="p_document_currency" class="java.lang.String"/>
 		<queryString language="XPath">
-			<![CDATA[/Invoice/Tax/VAT/VATItem]]>
+			<![CDATA[/Invoice/Tax/TaxItem | /Invoice/Tax/OtherTax]]>
 		</queryString>
 		<field name="tax.taxedamount" class="java.lang.Float">
-			<fieldDescription><![CDATA[TaxedAmount]]></fieldDescription>
+			<fieldDescription><![CDATA[TaxableAmount]]></fieldDescription>
 		</field>
 		<field name="tax.vatrate" class="java.lang.Float">
-			<fieldDescription><![CDATA[VATRate]]></fieldDescription>
+			<fieldDescription><![CDATA[TaxPercent]]></fieldDescription>
 		</field>
 		<field name="tax.amount" class="java.lang.Float">
-			<fieldDescription><![CDATA[Amount]]></fieldDescription>
+			<fieldDescription><![CDATA[TaxAmount]]></fieldDescription>
 		</field>
-		<field name="tax.ex" class="java.lang.String">
-			<fieldDescription><![CDATA[TaxExemption]]></fieldDescription>
+		<field name="tax.code" class="java.lang.String">
+			<fieldDescription><![CDATA[TaxPercent/@TaxCategoryCode]]></fieldDescription>
+		</field>
+		<field name="tax.comment" class="java.lang.String">
+			<fieldDescription><![CDATA[Comment]]></fieldDescription>
 		</field>
 		<variable name="sumvat" class="java.lang.Float" calculation="Sum">
 			<variableExpression><![CDATA[$F{tax.amount}]]></variableExpression>
@@ -53,10 +56,13 @@
 			<fieldDescription><![CDATA[Amount]]></fieldDescription>
 		</field>
 		<field name="reduction.comment" class="java.lang.String">
-			<fieldDescription><![CDATA[Comment]]></fieldDescription>
+			<fieldDescription><![CDATA[concat(Comment, TaxID)]]></fieldDescription>
 		</field>
 		<field name="reduction.vatrate" class="java.lang.Float">
-			<fieldDescription><![CDATA[VATRate]]></fieldDescription>
+			<fieldDescription><![CDATA[concat(TaxItem/TaxPercent, TaxPercent)]]></fieldDescription>
+		</field>
+		<field name="reduction.TaxCategoryCode" class="java.lang.String">
+			<fieldDescription><![CDATA[concat(TaxPercent/@TaxCategoryCode, TaxItem/TaxPercent/@TaxCategoryCode)]]></fieldDescription>
 		</field>
 		<variable name="sumreductions" class="java.lang.Float" calculation="Sum">
 			<variableExpression><![CDATA[($F{reduction.parentname}.equals("Reduction") ? -1 : 1) * ($F{reduction.amount}!= null?$F{reduction.amount}:$F{reduction.percentage}*$F{reduction.baseamount}/100)]]></variableExpression>
@@ -83,6 +89,68 @@
 			<fieldDescription><![CDATA[Comment]]></fieldDescription>
 		</field>
 	</subDataset>
+	<subDataset name="bankaccounts" uuid="7cff166b-abb7-43b7-b559-b21d8f4606f4">
+		<queryString language="XPath">
+			<![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount]]>
+		</queryString>
+		<field name="beneficiaryaccount.name" class="java.lang.String">
+			<fieldDescription><![CDATA[BankAccountOwner]]></fieldDescription>
+		</field>
+		<field name="beneficiaryaccount.IBAN" class="java.lang.String">
+			<fieldDescription><![CDATA[IBAN]]></fieldDescription>
+		</field>
+		<field name="beneficiaryaccount.BIC" class="java.lang.String">
+			<fieldDescription><![CDATA[BIC]]></fieldDescription>
+		</field>
+		<field name="beneficiaryaccount.BankName" class="java.lang.String">
+			<fieldDescription><![CDATA[BankName]]></fieldDescription>
+		</field>
+		<field name="beneficiaryaccount.BankCode" class="java.lang.String">
+			<fieldDescription><![CDATA[BankCode]]></fieldDescription>
+		</field>
+		<field name="beneficiaryaccount.BankAccountNr" class="java.lang.String">
+			<fieldDescription><![CDATA[BankAccountNr]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="PaymentConditions" uuid="2f535fd7-acc9-4e21-857b-3974eaa1b562">
+		<parameter name="p_document_currency" class="java.lang.String"/>
+		<queryString language="XPath">
+			<![CDATA[/Invoice/PaymentConditions/Discount]]>
+		</queryString>
+		<field name="paycond.PaymentDate" class="java.util.Date">
+			<fieldDescription><![CDATA[PaymentDate]]></fieldDescription>
+		</field>
+		<field name="paycond.BaseAmount" class="java.lang.Float">
+			<fieldDescription><![CDATA[BaseAmount]]></fieldDescription>
+		</field>
+		<field name="paycond.Percentage" class="java.lang.Float">
+			<fieldDescription><![CDATA[Percentage]]></fieldDescription>
+		</field>
+		<field name="paycond.Amount" class="java.lang.Float">
+			<fieldDescription><![CDATA[Amount]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="lineZUAB" uuid="2f47d30b-d73b-4b8b-8a75-26d8d927de70">
+		<parameter name="p_document_currency" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="lin.zuab.BaseAmount" class="java.lang.Float">
+			<fieldDescription><![CDATA[BaseAmount]]></fieldDescription>
+		</field>
+		<field name="lin.zuab.Amount" class="java.lang.Float">
+			<fieldDescription><![CDATA[Amount]]></fieldDescription>
+		</field>
+		<field name="lin.zuab.Percentage" class="java.lang.Float">
+			<fieldDescription><![CDATA[Percentage]]></fieldDescription>
+		</field>
+		<field name="lin.zuab.Comment" class="java.lang.String">
+			<fieldDescription><![CDATA[Comment]]></fieldDescription>
+		</field>
+		<field name="lin.zuab.name" class="java.lang.String">
+			<fieldDescription><![CDATA[name(.)]]></fieldDescription>
+		</field>
+	</subDataset>
 	<parameter name="senderLogo" class="java.io.InputStream"/>
 	<queryString language="XPath">
 		<![CDATA[/Invoice/Details/ItemList/ListLineItem]]>
@@ -93,11 +161,26 @@
 	<field name="document.invoicedate" class="java.util.Date">
 		<fieldDescription><![CDATA[/Invoice/InvoiceDate]]></fieldDescription>
 	</field>
+	<field name="document.DueDate" class="java.util.Date">
+		<fieldDescription><![CDATA[/Invoice/PaymentConditions/DueDate]]></fieldDescription>
+	</field>
+	<field name="document.PaymentComment" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentConditions/Comment]]></fieldDescription>
+	</field>
+	<field name="document.MinimumPayment" class="java.lang.Float">
+		<fieldDescription><![CDATA[/Invoice/PaymentConditions/MinimumPayment]]></fieldDescription>
+	</field>
 	<field name="document.currency" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/@InvoiceCurrency]]></fieldDescription>
 	</field>
 	<field name="document.totalgrossamount" class="java.lang.Float">
 		<fieldDescription><![CDATA[/Invoice/TotalGrossAmount]]></fieldDescription>
+	</field>
+	<field name="document.PrepaidAmount" class="java.lang.Float">
+		<fieldDescription><![CDATA[/Invoice/PrepaidAmount]]></fieldDescription>
+	</field>
+	<field name="document.PayableAmount" class="java.lang.Float">
+		<fieldDescription><![CDATA[/Invoice/PayableAmount]]></fieldDescription>
 	</field>
 	<field name="document.headerdescription" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Details/HeaderDescription]]></fieldDescription>
@@ -107,6 +190,9 @@
 	</field>
 	<field name="document.comment" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Comment]]></fieldDescription>
+	</field>
+	<field name="document.FooterDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Details/FooterDescription]]></fieldDescription>
 	</field>
 	<field name="document.hasReductionSurcharge" class="java.lang.Boolean">
 		<fieldDescription><![CDATA[(   boolean(/Invoice/ReductionAndSurchargeDetails/Reduction) 
@@ -131,8 +217,20 @@
 	<field name="delivery.period.todate" class="java.util.Date">
 		<fieldDescription><![CDATA[/Invoice/Delivery/Period/ToDate]]></fieldDescription>
 	</field>
+	<field name="delivery.FurtherIdentification.FBNR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/FurtherIdentification[@IdentificationType="FBNR"]]]></fieldDescription>
+	</field>
+	<field name="delivery.FurtherIdentification.DVR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/FurtherIdentification[@IdentificationType="DVR"]]]></fieldDescription>
+	</field>
 	<field name="delivery.address.gln" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Delivery/Address/AddressIdentifier[@AddressIdentifierType="GLN"]]]></fieldDescription>
+	</field>
+	<field name="delivery.address.ProprietaryAddressID" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Address/AddressIdentifier[@AddressIdentifierType="ProprietaryAddressID"]]]></fieldDescription>
+	</field>
+	<field name="delivery.address.DUNS" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Address/AddressIdentifier[@AddressIdentifierType="DUNS"]]]></fieldDescription>
 	</field>
 	<field name="delivery.address.salutation" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Delivery/Address/Salutation]]></fieldDescription>
@@ -164,6 +262,21 @@
 	<field name="delivery.address.contact" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Delivery/Address/Contact]]></fieldDescription>
 	</field>
+	<field name="delivery.address.AddressExtension" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Address/AddressExtension]]></fieldDescription>
+	</field>
+	<field name="delivery.Contact.Salutation" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Contact/Salutation]]></fieldDescription>
+	</field>
+	<field name="delivery.Contact.Name" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Contact/Name]]></fieldDescription>
+	</field>
+	<field name="delivery.Contact.Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Contact/Phone]]></fieldDescription>
+	</field>
+	<field name="delivery.Contact.Email" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Delivery/Contact/Email]]></fieldDescription>
+	</field>
 	<field name="delivery.description" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Delivery/Description]]></fieldDescription>
 	</field>
@@ -176,8 +289,23 @@
 	<field name="biller.orderdate" class="java.util.Date">
 		<fieldDescription><![CDATA[/Invoice/Biller/OrderReference/ReferenceDate]]></fieldDescription>
 	</field>
+	<field name="biller.orderDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/OrderReference/Description]]></fieldDescription>
+	</field>
+	<field name="biller.FurtherIdentification.FBNR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/FurtherIdentification[@IdentificationType="FBNR"]]]></fieldDescription>
+	</field>
+	<field name="biller.FurtherIdentification.DVR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/FurtherIdentification[@IdentificationType="DVR"]]]></fieldDescription>
+	</field>
 	<field name="biller.address.gln" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Biller/Address/AddressIdentifier[@AddressIdentifierType="GLN"]]]></fieldDescription>
+	</field>
+	<field name="biller.address.ProprietaryAddressID" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Address/AddressIdentifier[@AddressIdentifierType="ProprietaryAddressID"]]]></fieldDescription>
+	</field>
+	<field name="biller.address.DUNS" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Address/AddressIdentifier[@AddressIdentifierType="DUNS"]]]></fieldDescription>
 	</field>
 	<field name="biller.address.salutation" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Biller/Address/Salutation]]></fieldDescription>
@@ -209,6 +337,24 @@
 	<field name="biller.address.contact" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/Biller/Address/Contact]]></fieldDescription>
 	</field>
+	<field name="biller.address.AddressExtension" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Address/AddressExtension]]></fieldDescription>
+	</field>
+	<field name="biller.Contact.Salutation" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Contact/Salutation]]></fieldDescription>
+	</field>
+	<field name="biller.Contact.Name" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Contact/Name]]></fieldDescription>
+	</field>
+	<field name="biller.Contact.Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Contact/Phone]]></fieldDescription>
+	</field>
+	<field name="biller.Contact.Email" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/Contact/Email]]></fieldDescription>
+	</field>
+	<field name="biller.InvoiceRecipientsBillerID" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/Biller/InvoiceRecipientsBillerID]]></fieldDescription>
+	</field>
 	<field name="invoicerecipient.vatid" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/VATIdentificationNumber]]></fieldDescription>
 	</field>
@@ -218,8 +364,23 @@
 	<field name="invoicerecipient.orderdate" class="java.util.Date">
 		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/OrderReference/ReferenceDate]]></fieldDescription>
 	</field>
+	<field name="invoicerecipient.orderDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/OrderReference/Description]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.FurtherIdentification.FBNR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/FurtherIdentification[@IdentificationType="FBNR"]]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.FurtherIdentification.DVR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/FurtherIdentification[@IdentificationType="DVR"]]]></fieldDescription>
+	</field>
 	<field name="invoicerecipient.address.gln" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Address/AddressIdentifier[@AddressIdentifierType="GLN"]]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.address.ProprietaryAddressID" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Address/AddressIdentifier[@AddressIdentifierType="ProprietaryAddressID"]]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.address.DUNS" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Address/AddressIdentifier[@AddressIdentifierType="DUNS"]]]></fieldDescription>
 	</field>
 	<field name="invoicerecipient.address.salutation" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Address/Salutation]]></fieldDescription>
@@ -251,8 +412,29 @@
 	<field name="invoicerecipient.address.contact" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Address/Contact]]></fieldDescription>
 	</field>
+	<field name="invoicerecipient.address.AddressExtension" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Address/AddressExtension]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.Contact.Salutation" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Contact/Salutation]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.Contact.Name" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Contact/Name]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.Contact.Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Contact/Phone]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.Contact.Email" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/Contact/Email]]></fieldDescription>
+	</field>
 	<field name="invoicerecipient.billerid" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/BillersInvoiceRecipientID]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.AccountingArea" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/AccountingArea]]></fieldDescription>
+	</field>
+	<field name="invoicerecipient.SubOrganizationID" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/InvoiceRecipient/SubOrganizationID]]></fieldDescription>
 	</field>
 	<field name="orderingparty.vatid" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/OrderingParty/VATIdentificationNumber]]></fieldDescription>
@@ -263,8 +445,23 @@
 	<field name="orderingparty.orderdate" class="java.util.Date">
 		<fieldDescription><![CDATA[/Invoice/OrderingParty/OrderReference/ReferenceDate]]></fieldDescription>
 	</field>
+	<field name="orderingparty.orderDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/OrderReference/Description]]></fieldDescription>
+	</field>
+	<field name="orderingparty.FurtherIdentification.FBNR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/FurtherIdentification[@IdentificationType="FBNR"]]]></fieldDescription>
+	</field>
+	<field name="orderingparty.FurtherIdentification.DVR" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/FurtherIdentification[@IdentificationType="DVR"]]]></fieldDescription>
+	</field>
 	<field name="orderingparty.address.gln" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/OrderingParty/Address/AddressIdentifier[@AddressIdentifierType="GLN"]]]></fieldDescription>
+	</field>
+	<field name="orderingparty.address.ProprietaryAddressID" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Address/AddressIdentifier[@AddressIdentifierType="ProprietaryAddressID"]]]></fieldDescription>
+	</field>
+	<field name="orderingparty.address.DUNS" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Address/AddressIdentifier[@AddressIdentifierType="DUNS"]]]></fieldDescription>
 	</field>
 	<field name="orderingparty.address.salutation" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/OrderingParty/Address/Salutation]]></fieldDescription>
@@ -296,6 +493,21 @@
 	<field name="orderingparty.address.contact" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/OrderingParty/Address/Contact]]></fieldDescription>
 	</field>
+	<field name="orderingparty.address.AddressExtension" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Address/AddressExtension]]></fieldDescription>
+	</field>
+	<field name="orderingparty.Contact.Salutation" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Contact/Salutation]]></fieldDescription>
+	</field>
+	<field name="orderingparty.Contact.Name" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Contact/Name]]></fieldDescription>
+	</field>
+	<field name="orderingparty.Contact.Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Contact/Phone]]></fieldDescription>
+	</field>
+	<field name="orderingparty.Contact.Email" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/OrderingParty/Contact/Email]]></fieldDescription>
+	</field>
 	<field name="orderingparty.billerid" class="java.lang.String">
 		<fieldDescription><![CDATA[/Invoice/OrderingParty/BillersOrderingPartyID]]></fieldDescription>
 	</field>
@@ -307,6 +519,33 @@
 	</field>
 	<field name="tax.amount" class="java.lang.Float">
 		<fieldDescription><![CDATA[/Invoice/Tax/VAT/VATItem/Amount]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.PaymentReference" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/PaymentReference]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.Comment" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/Comment]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.name" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankAccountOwner]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.IBAN" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/IBAN]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.BIC" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BIC]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.BankName" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankName]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.BankCode" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankCode]]></fieldDescription>
+	</field>
+	<field name="beneficiaryaccount.BankAccountNr" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/PaymentMethod/UniversalBankTransaction/BeneficiaryAccount/BankAccountNr]]></fieldDescription>
+	</field>
+	<field name="additionalinfo" class="java.lang.String">
+		<fieldDescription><![CDATA[/Invoice/AdditionalInformation]]></fieldDescription>
 	</field>
 	<field name="detail.headerdescription" class="java.lang.String">
 		<fieldDescription><![CDATA[../HeaderDescription]]></fieldDescription>
@@ -320,6 +559,9 @@
 	<field name="detail.articlenumber.gtin" class="java.lang.String">
 		<fieldDescription><![CDATA[ArticleNumber[@ArticleNumberType="GTIN"]]]></fieldDescription>
 	</field>
+	<field name="detail.articlenumber.PZN" class="java.lang.String">
+		<fieldDescription><![CDATA[ArticleNumber[@ArticleNumberType="PZN"]]]></fieldDescription>
+	</field>
 	<field name="detail.articlenumber.biller" class="java.lang.String">
 		<fieldDescription><![CDATA[ArticleNumber[@ArticleNumberType="BillersArticleNumber"]]]></fieldDescription>
 	</field>
@@ -327,7 +569,10 @@
 		<fieldDescription><![CDATA[ArticleNumber[@ArticleNumberType="InvoiceRecipientsArticleNumber"]]]></fieldDescription>
 	</field>
 	<field name="detail.vatrate" class="java.lang.Float">
-		<fieldDescription><![CDATA[VATRate]]></fieldDescription>
+		<fieldDescription><![CDATA[TaxItem/TaxPercent]]></fieldDescription>
+	</field>
+	<field name="detail.vatcode" class="java.lang.String">
+		<fieldDescription><![CDATA[TaxItem/TaxPercent/@TaxCategoryCode]]></fieldDescription>
 	</field>
 	<field name="detail.lineitemamount" class="java.lang.Float">
 		<fieldDescription><![CDATA[LineItemAmount]]></fieldDescription>
@@ -346,6 +591,126 @@
 	</field>
 	<field name="detail.quantity" class="java.lang.Float">
 		<fieldDescription><![CDATA[Quantity]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.DeliveryID" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/DeliveryID]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.Date" class="java.util.Date">
+		<fieldDescription><![CDATA[Delivery/Date]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.gln" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/AddressIdentifier[@AddressIdentifierType="GLN"]]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.ProprietaryAddressID" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/AddressIdentifier[@AddressIdentifierType="ProprietaryAddressID"]]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.DUNS" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/AddressIdentifier[@AddressIdentifierType="DUNS"]]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.name" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/Name]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.street" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/Street]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.pobox" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/POBox]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.town" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/Town]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.zip" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/ZIP]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.country" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/Country]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.phone" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/Phone]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.email" class="java.lang.String">
+		<fieldDescription><![CDATA[/Delivery/Address/Email]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.contact" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/Contact]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.address.AddressExtension" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Address/AddressExtension]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.Contact.Salutation" class="java.lang.String">
+		<fieldDescription><![CDATA[/Delivery/Contact/Salutation]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.Contact.Name" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Contact/Name]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.Contact.Phone" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Contact/Phone]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.Contact.Email" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Contact/Email]]></fieldDescription>
+	</field>
+	<field name="detail.Delivery.Description" class="java.lang.String">
+		<fieldDescription><![CDATA[Delivery/Description]]></fieldDescription>
+	</field>
+	<field name="detail.BillersOrderReference.OrderID" class="java.lang.String">
+		<fieldDescription><![CDATA[BillersOrderReference/OrderID]]></fieldDescription>
+	</field>
+	<field name="detail.BillersOrderReference.ReferenceDate" class="java.util.Date">
+		<fieldDescription><![CDATA[BillersOrderReference/ReferenceDate]]></fieldDescription>
+	</field>
+	<field name="detail.BillersOrderReference.Description" class="java.lang.String">
+		<fieldDescription><![CDATA[BillersOrderReference/Description]]></fieldDescription>
+	</field>
+	<field name="detail.BillersOrderReference.OrderPositionNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[BillersOrderReference/OrderPositionNumber]]></fieldDescription>
+	</field>
+	<field name="detail.InvoiceRecipientsOrderReference.OrderID" class="java.lang.String">
+		<fieldDescription><![CDATA[InvoiceRecipientsOrderReference/OrderID]]></fieldDescription>
+	</field>
+	<field name="detail.InvoiceRecipientsOrderReference.ReferenceDate" class="java.util.Date">
+		<fieldDescription><![CDATA[InvoiceRecipientsOrderReference/ReferenceDate]]></fieldDescription>
+	</field>
+	<field name="detail.InvoiceRecipientsOrderReference.Description" class="java.lang.String">
+		<fieldDescription><![CDATA[InvoiceRecipientsOrderReference/Description]]></fieldDescription>
+	</field>
+	<field name="detail.InvoiceRecipientsOrderReference.OrderPositionNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[InvoiceRecipientsOrderReference/OrderPositionNumber]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.SerialNumber1" class="java.lang.String">
+		<fieldDescription><![CDATA[(AdditionalInformation[@Key="SerialNumber"])[1]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.SerialNumber2" class="java.lang.String">
+		<fieldDescription><![CDATA[(AdditionalInformation[@Key="SerialNumber"])[2]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.ChargeNumber1" class="java.lang.String">
+		<fieldDescription><![CDATA[(AdditionalInformation[@Key="ChargeNumber"])[1]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.ChargeNumber2" class="java.lang.String">
+		<fieldDescription><![CDATA[(AdditionalInformation[@Key="ChargeNumber"])[2]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.AlternativeQuantity" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="AlternativeQuantity"]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.Size" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="Size"]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.Weight" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="Weight"]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.Boxes" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="Boxes"]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.Color" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="Color"]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.Skala7" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="Skala 7"]]]></fieldDescription>
+	</field>
+	<field name="detail.AdditionalInformation.Skala8" class="java.lang.String">
+		<fieldDescription><![CDATA[AdditionalInformation[@Key="Skala 8"]]]></fieldDescription>
+	</field>
+	<field name="detail.TAXComment" class="java.lang.String">
+		<fieldDescription><![CDATA[TaxItem/Comment]]></fieldDescription>
 	</field>
 	<variable name="taxablebeforediscount" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{detail.lineitemamount}]]></variableExpression>
@@ -381,7 +746,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="10"/>
+						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{detail.headerdescription}]]></textFieldExpression>
 				</textField>
@@ -397,7 +762,7 @@
 	<title>
 		<band height="104" splitType="Stretch">
 			<frame>
-				<reportElement x="299" y="0" width="180" height="104" uuid="15734038-dd92-4a3a-bc07-f885f74124db">
+				<reportElement x="298" y="0" width="180" height="104" uuid="15734038-dd92-4a3a-bc07-f885f74124db">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<image hAlign="Left">
@@ -420,7 +785,7 @@
 				</staticText>
 			</frame>
 			<frame>
-				<reportElement x="0" y="22" width="482" height="75" uuid="4e287359-799a-4c6c-90a9-c421c2d90b3f">
+				<reportElement x="-1" y="22" width="482" height="75" uuid="4e287359-799a-4c6c-90a9-c421c2d90b3f">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -429,7 +794,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement markup="html">
-						<font size="10" isBold="false"/>
+						<font size="9" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["<html><b>Rechnungssteller:</b><br>"
 + ($F{biller.address.salutation} == null ? "" : ($F{biller.address.salutation}+"<br>"))
@@ -440,11 +805,21 @@
 	(($F{biller.address.zip}==null?"":($F{biller.address.zip}+" "))+($F{biller.address.town}==null?"":$F{biller.address.town})+"<br>")
   )
 + ($F{biller.address.country} == null ? "" : ($F{biller.address.country}+"<br>"))
++ ($F{biller.FurtherIdentification.FBNR} == null ? "" : ("FBNR: "+$F{biller.FurtherIdentification.FBNR}+"<br>"))
++ ($F{biller.FurtherIdentification.DVR} == null ? "" : ("DVR: "+$F{biller.FurtherIdentification.DVR}+"<br>"))
 + ($F{biller.address.gln} == null ? "" : ("GLN: "+$F{biller.address.gln}+"<br>"))
++ ($F{biller.address.DUNS} == null ? "" : ("DUNS: "+$F{biller.address.DUNS}+"<br>"))
++ ($F{biller.address.ProprietaryAddressID} == null ? "" : ("Firmeneigene Kennung: "+$F{biller.address.ProprietaryAddressID}+"<br>"))
 + ($F{biller.address.phone} == null ? "" : ("Telefon: "+$F{biller.address.phone}+"<br>"))
 + ($F{biller.address.email} == null ? "" : ("Email: "+$F{biller.address.email}+"<br>"))
 + ($F{biller.address.contact} == null ? "" : ("Kontakt: "+$F{biller.address.contact}+"<br>"))
 + ($F{biller.vatid} == null ? "" : ("USt.-ID: "+$F{biller.vatid}+"<br>"))
++ ($F{biller.address.AddressExtension} == null ? "" : ($F{biller.address.AddressExtension}+"<br>"))
++ ($F{biller.Contact.Salutation} == null ? "" : ("Kontakt Anrede: "+$F{biller.Contact.Salutation}+"<br>"))
++ ($F{biller.Contact.Name} == null ? "" : ("Kontakt Name: "+$F{biller.Contact.Name}+"<br>"))
++ ($F{biller.Contact.Phone} == null ? "" : ("Kontakt Telefon: "+$F{biller.Contact.Phone}+"<br>"))
++ ($F{biller.Contact.Email} == null ? "" : ("Kontakt Email: "+$F{biller.Contact.Email}+"<br>"))
++ ($F{biller.InvoiceRecipientsBillerID} == null ? "" : ("Kennung beim Rechnungsempfänger: "+$F{biller.InvoiceRecipientsBillerID}+"<br>"))
 +"</html>"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -453,7 +828,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement markup="html">
-						<font size="10" isBold="false"/>
+						<font size="9" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["<html><b>Rechnungsempfänger:</b><br>"
 + ($F{invoicerecipient.address.salutation} == null ? "" : ($F{invoicerecipient.address.salutation}+"<br>"))
@@ -464,12 +839,23 @@
 	(($F{invoicerecipient.address.zip}==null?"":($F{invoicerecipient.address.zip}+" "))+($F{invoicerecipient.address.town}==null?"":$F{invoicerecipient.address.town})+"<br>")
   )
 + ($F{invoicerecipient.address.country} == null ? "" : ($F{invoicerecipient.address.country}+"<br>"))
++ ($F{invoicerecipient.FurtherIdentification.FBNR} == null ? "" : ("FBNR: "+$F{invoicerecipient.FurtherIdentification.FBNR}+"<br>"))
++ ($F{invoicerecipient.FurtherIdentification.DVR} == null ? "" : ("DVR: "+$F{invoicerecipient.FurtherIdentification.DVR}+"<br>"))
 + ($F{invoicerecipient.address.gln} == null ? "" : ("GLN: "+$F{invoicerecipient.address.gln}+"<br>"))
++ ($F{invoicerecipient.address.DUNS} == null ? "" : ("DUNS: "+$F{invoicerecipient.address.DUNS}+"<br>"))
++ ($F{invoicerecipient.address.ProprietaryAddressID} == null ? "" : ("Firmeneigene Kennung: "+$F{invoicerecipient.address.ProprietaryAddressID}+"<br>"))
 + ($F{invoicerecipient.address.phone} == null ? "" : ("Telefon: "+$F{invoicerecipient.address.phone}+"<br>"))
 + ($F{invoicerecipient.address.email} == null ? "" : ("Email: "+$F{invoicerecipient.address.email}+"<br>"))
 + ($F{invoicerecipient.address.contact} == null ? "" : ("Kontakt: "+$F{invoicerecipient.address.contact}+"<br>"))
 + ($F{invoicerecipient.vatid} == null ? "" : ("USt.-ID: "+$F{invoicerecipient.vatid}+"<br>"))
-+ ($F{invoicerecipient.billerid} == null ? "" : ("Kundennummer: "+$F{invoicerecipient.billerid}+"<br>"))
++ ($F{invoicerecipient.address.AddressExtension} == null ? "" : ($F{invoicerecipient.address.AddressExtension}+"<br>"))
++ ($F{invoicerecipient.Contact.Salutation} == null ? "" : ("Kontakt Anrede: "+$F{invoicerecipient.Contact.Salutation}+"<br>"))
++ ($F{invoicerecipient.Contact.Name} == null ? "" : ("Kontakt Name: "+$F{invoicerecipient.Contact.Name}+"<br>"))
++ ($F{invoicerecipient.Contact.Phone} == null ? "" : ("Kontakt Telefon: "+$F{invoicerecipient.Contact.Phone}+"<br>"))
++ ($F{invoicerecipient.Contact.Email} == null ? "" : ("Kontakt Email: "+$F{invoicerecipient.Contact.Email}+"<br>"))
++ ($F{invoicerecipient.billerid} == null ? "" : ("Kennung beim Rechnungssteller: "+$F{invoicerecipient.billerid}+"<br>"))
++ ($F{invoicerecipient.AccountingArea} == null ? "" : ("Einkaufsorganisation: "+$F{invoicerecipient.AccountingArea}+"<br>"))
++ ($F{invoicerecipient.SubOrganizationID} == null ? "" : ("Suborganisation: "+$F{invoicerecipient.SubOrganizationID}+"<br>"))
 +"</html>"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
@@ -479,7 +865,7 @@
 						<printWhenExpression><![CDATA[$F{delivery.address.street} != null]]></printWhenExpression>
 					</reportElement>
 					<textElement markup="html">
-						<font size="10" isBold="false"/>
+						<font size="9" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["<html><b>Lieferadresse:</b><br>"
 + ($F{delivery.address.salutation} == null ? "" : ($F{delivery.address.salutation}+"<br>"))
@@ -490,10 +876,20 @@
 	(($F{delivery.address.zip}==null?"":($F{delivery.address.zip}+" "))+($F{delivery.address.town}==null?"":$F{delivery.address.town})+"<br>")
   )
 + ($F{delivery.address.country} == null ? "" : ($F{delivery.address.country}+"<br>"))
++ ($F{delivery.FurtherIdentification.FBNR} == null ? "" : ("FBNR: "+$F{delivery.FurtherIdentification.FBNR}+"<br>"))
++ ($F{delivery.FurtherIdentification.DVR} == null ? "" : ("DVR: "+$F{delivery.FurtherIdentification.DVR}+"<br>"))
 + ($F{delivery.address.gln} == null ? "" : ("GLN: "+$F{delivery.address.gln}+"<br>"))
++ ($F{delivery.address.DUNS} == null ? "" : ("DUNS: "+$F{delivery.address.DUNS}+"<br>"))
++ ($F{delivery.address.ProprietaryAddressID} == null ? "" : ("Firmeneigene Kennung: "+$F{delivery.address.ProprietaryAddressID}+"<br>"))
 + ($F{delivery.address.phone} == null ? "" : ("Telefon: "+$F{delivery.address.phone}+"<br>"))
 + ($F{delivery.address.email} == null ? "" : ("Email: "+$F{delivery.address.email}+"<br>"))
 + ($F{delivery.address.contact} == null ? "" : ("Kontakt: "+$F{delivery.address.contact}+"<br>"))
++ ($F{delivery.address.AddressExtension} == null ? "" : ($F{delivery.address.AddressExtension}+"<br>"))
++ ($F{delivery.description} == null ? "" : ("Lieferhinweis: "+$F{delivery.description}+"<br>"))
++ ($F{delivery.Contact.Salutation} == null ? "" : ("Kontakt Anrede: "+$F{delivery.Contact.Salutation}+"<br>"))
++ ($F{delivery.Contact.Name} == null ? "" : ("Kontakt Name: "+$F{delivery.Contact.Name}+"<br>"))
++ ($F{delivery.Contact.Phone} == null ? "" : ("Kontakt Telefon: "+$F{delivery.Contact.Phone}+"<br>"))
++ ($F{delivery.Contact.Email} == null ? "" : ("Kontakt Email: "+$F{delivery.Contact.Email}+"<br>"))
 +"</html>"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -503,7 +899,7 @@
 						<printWhenExpression><![CDATA[$F{orderingparty.address.street} != null]]></printWhenExpression>
 					</reportElement>
 					<textElement markup="html">
-						<font size="10" isBold="false"/>
+						<font size="9" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["<html><b>Besteller:</b><br>"
 + ($F{orderingparty.address.salutation} == null ? "" : ($F{orderingparty.address.salutation}+"<br>"))
@@ -514,12 +910,21 @@
 	(($F{orderingparty.address.zip}==null?"":($F{orderingparty.address.zip}+" "))+($F{orderingparty.address.town}==null?"":$F{orderingparty.address.town})+"<br>")
   )
 + ($F{orderingparty.address.country} == null ? "" : ($F{orderingparty.address.country}+"<br>"))
++ ($F{orderingparty.FurtherIdentification.FBNR} == null ? "" : ("FBNR: "+$F{orderingparty.FurtherIdentification.FBNR}+"<br>"))
++ ($F{orderingparty.FurtherIdentification.DVR} == null ? "" : ("DVR: "+$F{orderingparty.FurtherIdentification.DVR}+"<br>"))
 + ($F{orderingparty.address.gln} == null ? "" : ("GLN: "+$F{orderingparty.address.gln}+"<br>"))
++ ($F{orderingparty.address.DUNS} == null ? "" : ("DUNS: "+$F{orderingparty.address.DUNS}+"<br>"))
++ ($F{orderingparty.address.ProprietaryAddressID} == null ? "" : ("Firmeneigene Kennung: "+$F{orderingparty.address.ProprietaryAddressID}+"<br>"))
 + ($F{orderingparty.address.phone} == null ? "" : ("Telefon: "+$F{orderingparty.address.phone}+"<br>"))
 + ($F{orderingparty.address.email} == null ? "" : ("Email: "+$F{orderingparty.address.email}+"<br>"))
 + ($F{orderingparty.address.contact} == null ? "" : ("Kontakt: "+$F{orderingparty.address.contact}+"<br>"))
 + ($F{orderingparty.vatid} == null ? "" : ("USt.-ID: "+$F{orderingparty.vatid}+"<br>"))
-+ ($F{orderingparty.billerid} == null ? "" : ("Kundennummer: "+$F{orderingparty.billerid}+"<br>"))
++ ($F{orderingparty.address.AddressExtension} == null ? "" : ($F{orderingparty.address.AddressExtension}+"<br>"))
++ ($F{orderingparty.Contact.Salutation} == null ? "" : ("Kontakt Anrede: "+$F{orderingparty.Contact.Salutation}+"<br>"))
++ ($F{orderingparty.Contact.Name} == null ? "" : ("Kontakt Name: "+$F{orderingparty.Contact.Name}+"<br>"))
++ ($F{orderingparty.Contact.Phone} == null ? "" : ("Kontakt Telefon: "+$F{orderingparty.Contact.Phone}+"<br>"))
++ ($F{orderingparty.Contact.Email} == null ? "" : ("Kontakt Email: "+$F{orderingparty.Contact.Email}+"<br>"))
++ ($F{orderingparty.billerid} == null ? "" : ("Kennung beim Rechnungssteller: "+$F{orderingparty.billerid}+"<br>"))
 +"</html>"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
@@ -534,7 +939,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement markup="none">
-						<font size="10" isBold="false"/>
+						<font size="9" isBold="false"/>
 						<paragraph tabStopWidth="150"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new String("Währung:\t" + $F{document.currency} + "\n"
@@ -545,19 +950,22 @@
 	) + "\n" : ""
 ) 
 + ($F{biller.orderid}!= null ? "Bestellnummer (R-Steller):\t" + $F{biller.orderid} + (($F{biller.orderdate}!= null) ? "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{biller.orderdate}) : "") + "\n" : "")
++ ($F{biller.orderDescription}== null ? "" : "Bestellhinweis (R-Steller):\t" + $F{biller.orderDescription}+"\n")
 + ($F{invoicerecipient.orderid}!= null ? "Bestellnummer (R-Empfänger):\t" + $F{invoicerecipient.orderid} 
 	+ (($F{invoicerecipient.orderdate}!= null) ? "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{invoicerecipient.orderdate}) : "") + "\n" : ""
 )
++ ($F{invoicerecipient.orderDescription}== null ? "" : "Bestellhinweis (R-Empfänger):\t" + $F{invoicerecipient.orderDescription}+"\n")
 + ($F{orderingparty.orderid}!= null ? "Bestellnummer (Besteller):\t" + $F{orderingparty.orderid} 
 	+ (($F{orderingparty.orderdate}!= null) ? "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{orderingparty.orderdate}) : "") + "\n" : ""
 )
++ ($F{orderingparty.orderDescription}== null ? "" : "Bestellhinweis (Besteller):\t" + $F{orderingparty.orderDescription}+"\n")
 + ($F{document.headerdescription}== null ? "" : $F{document.headerdescription})).trim()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 					<reportElement key="" positionType="Float" x="0" y="60" width="479" height="15" backcolor="#BAAFAF" uuid="55477d48-f66a-4bdc-bf27-909d40e5c247">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$F{document.comment} != null]]></printWhenExpression>
+						<printWhenExpression><![CDATA[$F{document.comment} != null || $F{additionalinfo} != null]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -566,11 +974,11 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement markup="html">
-						<font size="10" isBold="false"/>
+						<font size="9" isBold="false"/>
 						<paragraph tabStopWidth="150"/>
 					</textElement>
-					<textFieldExpression><![CDATA["<br><b>Allgemeine Hinweise zur Rechnung:</b><br>"
-+ $F{document.comment}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<br><b>Allgemeine Hinweise zur Rechnung:</b><br>" + ($F{document.comment}!=null?$F{document.comment} + " " : "") + ($F{additionalinfo}!=null?$F{additionalinfo} : "")
++($F{document.FooterDescription}== null?"":"<br><br>" + $F{document.footerdescription})]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -586,7 +994,7 @@
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="394" y="2" width="55" height="12" uuid="3fbe5634-ca81-4f6d-89ef-a718cc9a8162">
+				<reportElement x="389" y="2" width="55" height="12" uuid="3fbe5634-ca81-4f6d-89ef-a718cc9a8162">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -628,7 +1036,7 @@
 				<text><![CDATA[Beschreibung]]></text>
 			</staticText>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="393" y="1" width="1" height="14" uuid="bdfa4c8d-de57-4547-8274-e139d48062dc">
+				<reportElement stretchType="RelativeToBandHeight" x="388" y="1" width="1" height="14" uuid="bdfa4c8d-de57-4547-8274-e139d48062dc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -711,9 +1119,9 @@
 				</reportElement>
 			</line>
 			<textField isStretchWithOverflow="true" pattern="###,###,##0.00" isBlankWhenNull="true">
-				<reportElement key="" x="338" y="2" width="55" height="12" uuid="1d4c62cf-844c-40ae-b7e6-c09855a54f88">
+				<reportElement key="" x="338" y="2" width="50" height="12" uuid="1d4c62cf-844c-40ae-b7e6-c09855a54f88">
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -740,7 +1148,7 @@
 				<text><![CDATA[Einheit]]></text>
 			</staticText>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="449" y="1" width="1" height="14" uuid="0670b91e-ba13-481d-9f43-126b0872fefb">
+				<reportElement stretchType="RelativeToBandHeight" x="444" y="1" width="1" height="14" uuid="0670b91e-ba13-481d-9f43-126b0872fefb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -748,7 +1156,7 @@
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="450" y="2" width="32" height="12" uuid="1da85305-fa1c-4a0a-a986-4a70a315a65a">
+				<reportElement x="445" y="2" width="37" height="12" uuid="1da85305-fa1c-4a0a-a986-4a70a315a65a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -768,22 +1176,23 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="14" splitType="Prevent">
+		<band height="41" splitType="Prevent">
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="482" y="0" width="1" height="13" uuid="2259bf6d-39d7-482b-84ce-653c2a87e6a9">
+				<reportElement stretchType="RelativeToBandHeight" x="482" y="0" width="1" height="40" uuid="2259bf6d-39d7-482b-84ce-653c2a87e6a9">
 					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="281" y="0" width="1" height="13" uuid="95042e9b-26f1-4cd9-b2ac-4ee3e80524fd">
+				<reportElement stretchType="RelativeToBandHeight" x="281" y="0" width="1" height="40" uuid="95042e9b-26f1-4cd9-b2ac-4ee3e80524fd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
 			<textField isStretchWithOverflow="true" pattern="###,###,##0.00" isBlankWhenNull="true">
-				<reportElement key="" x="338" y="1" width="53" height="11" uuid="2e8361ea-547b-46d9-b001-1b6df02b1b50">
+				<reportElement key="" x="338" y="1" width="48" height="24" uuid="2e8361ea-547b-46d9-b001-1b6df02b1b50">
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8"/>
@@ -793,24 +1202,25 @@
 + ($F{detail.baseqty}==null ? "" : "\n" + String.format($P{REPORT_LOCALE}, "%,1.2f", $F{detail.baseqty}))]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="337" y="0" width="1" height="13" uuid="7e86ae00-cd02-4fbf-8b4f-de61484e78d4">
+				<reportElement x="337" y="0" width="1" height="25" uuid="7e86ae00-cd02-4fbf-8b4f-de61484e78d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="388" y="0" width="1" height="25" uuid="7586a86c-5275-4ee3-8a77-2e038e232936">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="393" y="0" width="1" height="13" uuid="7586a86c-5275-4ee3-8a77-2e038e232936">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</line>
-			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="225" y="0" width="1" height="13" uuid="84cbca50-da6d-4036-9d3d-217a907a1579">
+				<reportElement stretchType="RelativeToBandHeight" x="225" y="0" width="1" height="40" uuid="84cbca50-da6d-4036-9d3d-217a907a1579">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
 			<textField pattern="###,###,##0.00" isBlankWhenNull="true">
-				<reportElement key="" x="394" y="1" width="53" height="11" uuid="bb58d91d-a3e4-4c07-ada4-332fbd37ecd5">
+				<reportElement key="" x="389" y="1" width="53" height="24" uuid="bb58d91d-a3e4-4c07-ada4-332fbd37ecd5">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8"/>
@@ -826,19 +1236,68 @@
 				<textElement textAlignment="Left" verticalAlignment="Top" markup="none">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new String(($F{detail.description}!=null ? $F{detail.description}+"\n" : "")
+				<textFieldExpression><![CDATA[new String(
+	  ($F{detail.TAXComment}!=null ? "Steuerkommentar: " + $F{detail.TAXComment} + "\n\n" : "")
+  + ($F{detail.description}!=null ? $F{detail.description}+"\n" : "")
   + ($F{detail.articlenumber.gtin}!=null ? "GTIN: "+$F{detail.articlenumber.gtin}+"\n" : "")
+  + ($F{detail.articlenumber.PZN}!=null ? "PZN: "+$F{detail.articlenumber.PZN}+"\n" : "")
   + ($F{detail.articlenumber.biller}!=null ? "Artikelnr. (R-Steller): " + $F{detail.articlenumber.biller}+"\n" : "")
   + ($F{detail.articlenumber.invoicerecipient}!=null ? "Artikelnr. (R-Empfänger): " + $F{detail.articlenumber.invoicerecipient}+"\n" : "")
-  ).trim()]]></textFieldExpression>
+  + ($F{detail.AdditionalInformation.SerialNumber1}!=null ? "Seriennummer: " + $F{detail.AdditionalInformation.SerialNumber1}+"\n" : "")
+  + ($F{detail.AdditionalInformation.SerialNumber2}!=null ? "Seriennummer: " + $F{detail.AdditionalInformation.SerialNumber2}+"\n" : "")
+  + ($F{detail.AdditionalInformation.ChargeNumber1}!=null ? "Charge: " + $F{detail.AdditionalInformation.ChargeNumber1}+"\n" : "")
+  + ($F{detail.AdditionalInformation.ChargeNumber2}!=null ? "Charge: " + $F{detail.AdditionalInformation.ChargeNumber2}+"\n" : "")
+  + ($F{detail.AdditionalInformation.AlternativeQuantity}!=null ? "Alternative Menge: " + $F{detail.AdditionalInformation.AlternativeQuantity}+"\n" : "")
+  + ($F{detail.AdditionalInformation.Size}!=null ? "Größe: " + $F{detail.AdditionalInformation.Size}+"\n" : "")
+  + ($F{detail.AdditionalInformation.Weight}!=null ? "Gewicht: " + $F{detail.AdditionalInformation.Weight}+"\n" : "")
+  + ($F{detail.AdditionalInformation.Boxes}!=null ? "Anzahl Versandeinheiten: " + $F{detail.AdditionalInformation.Boxes}+"\n" : "")
+  + ($F{detail.AdditionalInformation.Color}!=null ? "Farbe: " + $F{detail.AdditionalInformation.Color}+"\n" : "")
+  + ($F{detail.AdditionalInformation.Skala7}!=null ? "Skala 7: " + $F{detail.AdditionalInformation.Skala7}+"\n" : "")
+  + ($F{detail.AdditionalInformation.Skala8}!=null ? "Skala 8: " + $F{detail.AdditionalInformation.Skala8}+"\n" : "")
+  + ""
+  +"\n"
+  + ($F{detail.Delivery.address.AddressExtension} == null ? "" : ($F{detail.Delivery.address.AddressExtension}+"\n"))
+  + ($F{detail.Delivery.DeliveryID} == null ? "" : ("Liefernummer: " + $F{detail.Delivery.DeliveryID}+"\n"))
+  + ($F{detail.Delivery.Date} == null ? "" : ("Lieferdatum: " + new SimpleDateFormat("dd.MM.yyyy").format($F{detail.Delivery.Date})+"\n"))
+  + ($F{detail.Delivery.address.name} == null ? "" : ($F{detail.Delivery.address.name}+"\n"))
+  + ($F{detail.Delivery.address.pobox} == null ? "" : ($F{detail.Delivery.address.pobox}+"\n"))
+  + ($F{detail.Delivery.address.street} == null ? "" : ($F{detail.Delivery.address.street}+"\n"))
+  + (($F{detail.Delivery.address.zip} == null && $F{detail.Delivery.address.town} == null) ? "" : 
+  	(($F{detail.Delivery.address.zip}==null?"":($F{detail.Delivery.address.zip}+" "))+($F{detail.Delivery.address.town}==null?"":$F{detail.Delivery.address.town})+"\n")
+    )
+  + ($F{detail.Delivery.address.country} == null ? "" : ($F{detail.Delivery.address.country}+"\n"))
+  + ($F{detail.Delivery.address.gln} == null ? "" : ("GLN: "+$F{detail.Delivery.address.gln}+"\n"))
+  + ($F{detail.Delivery.address.DUNS} == null ? "" : ("DUNS: "+$F{detail.Delivery.address.DUNS}+"\n"))
+  + ($F{detail.Delivery.address.ProprietaryAddressID} == null ? "" : ("Firmeneigene Kennung: "+$F{detail.Delivery.address.ProprietaryAddressID}+"\n"))
+  + ($F{detail.Delivery.address.phone} == null ? "" : ("Telefon: "+$F{detail.Delivery.address.phone}+"\n"))
+  + ($F{detail.Delivery.address.email} == null ? "" : ("Email: "+$F{detail.Delivery.address.email}+"\n"))
+  + ($F{detail.Delivery.address.contact} == null ? "" : ("Kontakt: "+$F{detail.Delivery.address.contact}+"\n"))
+  + ($F{detail.Delivery.Contact.Salutation} == null ? "" : ("Kontakt Anrede: "+$F{detail.Delivery.Contact.Salutation}+"\n"))
+  + ($F{detail.Delivery.Contact.Name} == null ? "" : ("Kontakt Name: "+$F{detail.Delivery.Contact.Name}+"\n"))
+  + ($F{detail.Delivery.Contact.Phone} == null ? "" : ("Kontakt Telefon: "+$F{detail.Delivery.Contact.Phone}+"\n"))
+  + ($F{detail.Delivery.Contact.Email} == null ? "" : ("Kontakt Email: "+$F{detail.Delivery.Contact.Email}+"\n"))
+  + ($F{detail.Delivery.Description}== null ? "" : ($F{detail.Delivery.Description}+"\n"))
+  + ""
+  +"\n"
+  + ($F{detail.BillersOrderReference.OrderID} == null ? "" : ("BestellNr. (R-Steller): " + $F{detail.BillersOrderReference.OrderID}+"\n"))
+  + ($F{detail.BillersOrderReference.ReferenceDate} == null ? "" : ("Bestelldatum: " + new SimpleDateFormat("dd.MM.yyyy").format($F{detail.BillersOrderReference.ReferenceDate})+"\n"))
+  + ($F{detail.BillersOrderReference.OrderPositionNumber} == null ? "" : ("Bestellposition: " + $F{detail.BillersOrderReference.OrderPositionNumber}+"\n"))
+  + ($F{detail.BillersOrderReference.Description} == null ? "" : ($F{detail.BillersOrderReference.Description}+"\n"))
+  + ""
+  +"\n"
+  + ($F{detail.InvoiceRecipientsOrderReference.OrderID} == null ? "" : ("BestellNr. (R-Empfänger): " + $F{detail.InvoiceRecipientsOrderReference.OrderID}+"\n"))
+  + ($F{detail.InvoiceRecipientsOrderReference.ReferenceDate} == null ? "" : ("Bestelldatum: " + new SimpleDateFormat("dd.MM.yyyy").format($F{detail.InvoiceRecipientsOrderReference.ReferenceDate})+"\n"))
+  + ($F{detail.InvoiceRecipientsOrderReference.OrderPositionNumber} == null ? "" : ("Bestellposition: " + $F{detail.InvoiceRecipientsOrderReference.OrderPositionNumber}+"\n"))
+  + ($F{detail.InvoiceRecipientsOrderReference.Description} == null ? "" : ($F{detail.InvoiceRecipientsOrderReference.Description}+"\n"))
+ ).trim()]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="13" uuid="4fb6ad0a-2bb0-4537-822a-2f4a62888645">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="40" uuid="4fb6ad0a-2bb0-4537-822a-2f4a62888645">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement positionType="Float" x="0" y="13" width="483" height="1" uuid="d0bf1f3b-c9c4-4714-a7d9-77dba9b499fa"/>
+				<reportElement positionType="Float" x="0" y="40" width="483" height="1" uuid="d0bf1f3b-c9c4-4714-a7d9-77dba9b499fa"/>
 			</line>
 			<textField isBlankWhenNull="true">
 				<reportElement key="" x="1" y="1" width="23" height="11" isPrintInFirstWholeBand="true" uuid="c81796e2-d726-4714-80ad-53ba6c4e702a">
@@ -871,34 +1330,59 @@
 				<textFieldExpression><![CDATA[at.austriapro.rendering.Translator.translate($F{detail.unit}, $P{REPORT_LOCALE})]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="24" y="0" width="1" height="13" uuid="bf190b1b-03b5-454d-8df4-0de382e37438">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement stretchType="RelativeToBandHeight" x="24" y="0" width="1" height="40" uuid="bf190b1b-03b5-454d-8df4-0de382e37438">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement stretchType="RelativeToBandHeight" x="449" y="0" width="1" height="13" uuid="66aafcb1-3b6a-403f-a7e6-a263fbca2209">
+				<reportElement x="444" y="0" width="1" height="25" uuid="66aafcb1-3b6a-403f-a7e6-a263fbca2209">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
 			<textField pattern="###,###,##0.00" isBlankWhenNull="true">
-				<reportElement key="" x="450" y="1" width="30" height="11" uuid="8e23d48d-61b3-4405-9b0d-7ac016a85c77">
+				<reportElement key="" x="445" y="1" width="35" height="11" uuid="8e23d48d-61b3-4405-9b0d-7ac016a85c77">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{detail.vatrate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{detail.vatcode}!=null?"(" + $F{detail.vatcode} +") " :"") + String.format($P{REPORT_LOCALE}, "%,1.2f", $F{detail.vatrate})]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="282" y="25" width="200" height="1" uuid="c468ce49-4df9-4a4b-8335-811d5bb5bf8d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<componentElement>
+				<reportElement x="286" y="26" width="193" height="13" uuid="4605ccc7-c2b3-4b01-a441-a124349e03b0"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="lineZUAB" uuid="5999ccab-db03-4ac4-a867-dc733c62a2ed">
+						<datasetParameter name="p_document_currency">
+							<datasetParameterExpression><![CDATA[$F{document.currency}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JRXmlDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("/ListLineItem/ReductionAndSurchargeListLineItemDetails/ReductionListLineItem | /ListLineItem/ReductionAndSurchargeListLineItemDetails/SurchargeListLineItem")]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="13" width="193">
+						<textField isStretchWithOverflow="true">
+							<reportElement x="0" y="0" width="190" height="13" uuid="8c055d03-c942-448e-b9c7-d3b470b3b8fc"/>
+							<textElement>
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{lin.zuab.name}.equals("ReductionListLineItem")?"Abschlag ": "Zuschlag ") + ($F{lin.zuab.Comment}!=null?": "+$F{lin.zuab.Comment} : "")
++ "\nBasis: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{lin.zuab.BaseAmount}) + "          " +  String.format($P{REPORT_LOCALE},"%,1.2f", $F{lin.zuab.Percentage})+ "%          Betrag: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{lin.zuab.Amount})
++ "\n"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="15" splitType="Stretch">
-			<line>
-				<reportElement positionType="Float" x="0" y="0" width="483" height="1" uuid="6d4ae5f0-64eb-4b16-aa5b-d92987876dbf"/>
-			</line>
+		<band height="98" splitType="Stretch">
 			<textField>
-				<reportElement positionType="Float" x="263" y="3" width="180" height="12" uuid="b17bd2fe-9e41-469a-9368-522aa5285c81">
+				<reportElement positionType="Float" x="260" y="80" width="180" height="12" uuid="b17bd2fe-9e41-469a-9368-522aa5285c81">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -908,7 +1392,7 @@
 				<textFieldExpression><![CDATA["Seite " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement positionType="Float" x="443" y="3" width="39" height="12" uuid="63ceb5e0-0a2e-4f40-9482-ee3d408bcb08">
+				<reportElement positionType="Float" x="440" y="80" width="39" height="12" uuid="63ceb5e0-0a2e-4f40-9482-ee3d408bcb08">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -917,10 +1401,57 @@
 				</textElement>
 				<textFieldExpression><![CDATA[" von " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<rectangle radius="5">
+				<reportElement x="408" y="7" width="70" height="70" uuid="13cca521-f64c-45d3-bdd7-2d8d5b8be319"/>
+			</rectangle>
+			<componentElement>
+				<reportElement x="411" y="10" width="65" height="65" uuid="9d176ed8-12dd-4285-98d8-5ac580c20444">
+					<property name="com.jaspersoft.studio.unit.margin" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" errorCorrectionLevel="M">
+					<jr:codeExpression><![CDATA["BCD\n"+
+"001\n"+
+"1\n"+
+"SCT\n"+
+$F{beneficiaryaccount.BIC}+"\n"+
+$F{beneficiaryaccount.name}+"\n"+
+$F{beneficiaryaccount.IBAN}+"\n"+
+$F{document.currency}+$F{document.PayableAmount}+"\n"+
+"\n"+
+$F{beneficiaryaccount.PaymentReference}+
+"\n"]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<staticText>
+				<reportElement x="394" y="10" width="13" height="64" uuid="032fb036-1d3c-4da5-8fee-a1568f179b54"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Zahlen mit Code]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="200" y="9" width="184" height="68" forecolor="#000000" uuid="badd6521-bd68-4023-8db0-b8d3058a8b2f"/>
+				<box>
+					<pen lineColor="#969696"/>
+				</box>
+				<textElement>
+					<font fontName="Open Sans" size="7"/>
+					<paragraph tabStopWidth="75"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Überweisung an:\n"+
+"Kontoinhaber:\t"+$F{beneficiaryaccount.name}+"\n"+
+"IBAN\t"+$F{beneficiaryaccount.IBAN}+"\n"+
+"BIC:\t"+$F{beneficiaryaccount.BIC}+"\n"+
+"Währung:\t"+$F{document.currency}+"\n"+
+"Betrag:\t"+$F{document.PayableAmount}+"\n"+
+"Zahlungsreferenz:\t"+$F{beneficiaryaccount.PaymentReference}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="183" splitType="Immediate">
+		<band height="352" splitType="Immediate">
 			<line>
 				<reportElement x="0" y="0" width="483" height="1" uuid="c7c1f4ff-0ee9-4fcf-9e78-731286346213">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -943,7 +1474,7 @@
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="10"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Warenwert"]]></textFieldExpression>
 			</textField>
@@ -953,7 +1484,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="10"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[String.format($P{REPORT_LOCALE},"%,1.2f", $V{taxablebeforediscount})]]></textFieldExpression>
 			</textField>
@@ -977,14 +1508,18 @@
 				</reportElement>
 			</line>
 			<textField>
-				<reportElement positionType="Float" x="61" y="49" width="300" height="25" uuid="dfd96c31-9174-444b-b0dc-61a164406860"/>
+				<reportElement positionType="Float" x="1" y="49" width="280" height="25" uuid="dfd96c31-9174-444b-b0dc-61a164406860">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA["Rechnungssumme Netto (exkl. USt.)"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Band">
@@ -997,11 +1532,13 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $V{taxablebeforediscount} + $V{sumsurcharge})]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement key="" positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="27" y="74" width="456" height="17" isRemoveLineWhenBlank="true" backcolor="#FFFFFF" uuid="341c14e7-8d90-4c59-8ea6-d79f897ef1a4">
+				<reportElement key="" style="Title" positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="1" y="74" width="482" height="17" isRemoveLineWhenBlank="true" backcolor="#FFFFFF" uuid="341c14e7-8d90-4c59-8ea6-d79f897ef1a4">
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -1036,18 +1573,9 @@
 						</datasetParameter>
 						<returnValue fromVariable="sumvat" toVariable="sumvat" calculation="Sum"/>
 					</datasetRun>
-					<jr:listContents height="17" width="456">
-						<textField>
-							<reportElement x="120" y="0" width="214" height="15" uuid="81f2e819-bd58-4c27-af4c-9f8c6017c526">
-								<property name="local_mesure_unitwidth" value="pixel"/>
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<printWhenExpression><![CDATA[$F{tax.ex} == null]]></printWhenExpression>
-							</reportElement>
-							<textElement textAlignment="Right"/>
-							<textFieldExpression><![CDATA["zzgl. Umsatzsteuer " + String.format($P{REPORT_LOCALE},"%1.2f", $F{tax.vatrate}) + "%"]]></textFieldExpression>
-						</textField>
+					<jr:listContents height="17" width="482">
 						<textField pattern="">
-							<reportElement x="346" y="0" width="110" height="15" uuid="8a881e90-263e-4f18-99f9-1e714266a071">
+							<reportElement x="370" y="0" width="110" height="17" uuid="8a881e90-263e-4f18-99f9-1e714266a071">
 								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							</reportElement>
 							<box>
@@ -1056,19 +1584,25 @@
 								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
-							<textElement textAlignment="Right"/>
+							<textElement textAlignment="Right">
+								<font size="9"/>
+							</textElement>
 							<textFieldExpression><![CDATA[$P{p_document_currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{tax.amount})]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true">
-							<reportElement key="" isPrintRepeatedValues="false" x="0" y="0" width="334" height="15" isRemoveLineWhenBlank="true" uuid="6731afc3-8abf-414b-acc5-b5b0e908033a">
-								<property name="local_mesure_unitwidth" value="pixel"/>
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="local_mesure_unitheight" value="pixel"/>
-								<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-								<printWhenExpression><![CDATA[$F{tax.ex} != null]]></printWhenExpression>
+						<textField>
+							<reportElement x="0" y="0" width="280" height="17" uuid="aca45b0d-21fa-4103-82d8-106baa767f93"/>
+							<textElement textAlignment="Right">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[($F{tax.comment}!=null ? $F{tax.comment} + " ": "zzgl. Umsatzsteuer ")]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="280" y="0" width="80" height="17" uuid="e2d0904f-bf5a-4b90-ab07-7e40ced6f3d0">
+								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							</reportElement>
 							<textElement textAlignment="Right"/>
-							<textFieldExpression><![CDATA[$F{tax.ex}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[($F{tax.code} != null ? "(" + $F{tax.code} + ") " : "") 
++ ($F{tax.vatrate}!=null?String.format($P{REPORT_LOCALE},"%1.2f", $F{tax.vatrate}) + "% " : "")]]></textFieldExpression>
 						</textField>
 					</jr:listContents>
 				</jr:list>
@@ -1084,11 +1618,13 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $V{sumvat})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" x="181" y="91" width="180" height="20" uuid="212e06e8-4ea0-4bca-a4e2-5e93e0fb619c">
+				<reportElement positionType="Float" x="1" y="91" width="280" height="20" uuid="212e06e8-4ea0-4bca-a4e2-5e93e0fb619c">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -1100,11 +1636,13 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA["Summe Umsatzsteuer"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" x="121" y="111" width="240" height="25" uuid="f039c200-696a-4044-a5e1-17d861699e0e">
+				<reportElement positionType="Float" x="1" y="111" width="280" height="25" uuid="f039c200-696a-4044-a5e1-17d861699e0e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1117,7 +1655,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font isBold="true"/>
+					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Rechnungssumme Brutto (inkl. USt.)"]]></textFieldExpression>
 			</textField>
@@ -1133,7 +1671,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font isBold="true"/>
+					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{document.totalgrossamount})]]></textFieldExpression>
 			</textField>
@@ -1161,7 +1699,7 @@
 					<text><![CDATA[Zu-/Abschläge]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="240" y="1" width="69" height="12" uuid="1e6fa029-a23d-4e73-be92-9b787b1490e2">
+					<reportElement x="230" y="1" width="69" height="12" uuid="1e6fa029-a23d-4e73-be92-9b787b1490e2">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1178,7 +1716,7 @@
 					<text><![CDATA[Basisbetrag]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="310" y="1" width="69" height="12" uuid="557e3d85-b297-435c-8481-55e85652418c">
+					<reportElement x="300" y="1" width="69" height="12" uuid="557e3d85-b297-435c-8481-55e85652418c">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1195,7 +1733,7 @@
 					<text><![CDATA[Prozentsatz]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="380" y="1" width="69" height="12" uuid="1f7e46b4-8a38-4db7-b6b0-805a95663ef2">
+					<reportElement x="370" y="1" width="69" height="12" uuid="1f7e46b4-8a38-4db7-b6b0-805a95663ef2">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
@@ -1231,10 +1769,10 @@
 					<reportElement x="70" y="1" width="1" height="12" uuid="d1a695dc-da0b-47b5-8cfc-1a57dc002463"/>
 				</line>
 				<line>
-					<reportElement x="309" y="1" width="1" height="12" uuid="74b20e7a-676a-4967-a48f-78af6fc25bdd"/>
+					<reportElement x="299" y="1" width="1" height="12" uuid="74b20e7a-676a-4967-a48f-78af6fc25bdd"/>
 				</line>
 				<line>
-					<reportElement x="379" y="1" width="1" height="12" uuid="a1f40c82-21d4-4b46-9fe7-140525fa974b"/>
+					<reportElement x="369" y="1" width="1" height="12" uuid="a1f40c82-21d4-4b46-9fe7-140525fa974b"/>
 				</line>
 				<line>
 					<reportElement x="482" y="1" width="1" height="12" uuid="13317f38-8994-4fc8-8de4-7f2dbb673f7c"/>
@@ -1292,22 +1830,22 @@
 								<reportElement x="70" y="0" width="1" height="12" uuid="de330f67-e004-43e7-8c3e-9be8190bee7d"/>
 							</line>
 							<line>
-								<reportElement x="309" y="0" width="1" height="12" uuid="1f509252-ea86-4fdc-bd84-189d5dc058c1"/>
+								<reportElement x="299" y="0" width="1" height="12" uuid="1f509252-ea86-4fdc-bd84-189d5dc058c1"/>
 							</line>
 							<line>
-								<reportElement x="379" y="0" width="1" height="12" uuid="95f9c2dc-d493-48d4-b2dc-7f381da9f845"/>
+								<reportElement x="369" y="0" width="1" height="12" uuid="95f9c2dc-d493-48d4-b2dc-7f381da9f845"/>
 							</line>
 							<line>
 								<reportElement x="482" y="0" width="1" height="12" uuid="38252631-01c5-486f-9b90-ebc0942f4405"/>
 							</line>
 							<line>
-								<reportElement x="449" y="0" width="1" height="12" uuid="08fbc5cb-214e-488c-abac-cb9ca860a48f"/>
+								<reportElement x="439" y="0" width="1" height="12" uuid="08fbc5cb-214e-488c-abac-cb9ca860a48f"/>
 							</line>
 							<line>
-								<reportElement x="239" y="0" width="1" height="12" uuid="5ef5efe6-d70a-4393-a50c-ef14d6234c17"/>
+								<reportElement x="229" y="0" width="1" height="12" uuid="5ef5efe6-d70a-4393-a50c-ef14d6234c17"/>
 							</line>
 							<textField isBlankWhenNull="true">
-								<reportElement key="" x="73" y="0" width="166" height="12" isPrintInFirstWholeBand="true" uuid="e19823dc-76fc-4c46-9775-dceaa0dab799">
+								<reportElement key="" x="73" y="0" width="156" height="12" isPrintInFirstWholeBand="true" uuid="e19823dc-76fc-4c46-9775-dceaa0dab799">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -1319,7 +1857,7 @@
 								<textFieldExpression><![CDATA[$F{reduction.comment}]]></textFieldExpression>
 							</textField>
 							<textField isBlankWhenNull="true">
-								<reportElement key="" x="310" y="0" width="67" height="12" isPrintInFirstWholeBand="true" printWhenGroupChanges="ItemGroup" uuid="fa823bc9-8da7-4586-b9fb-0376a65cfc48">
+								<reportElement key="" x="300" y="0" width="67" height="12" isPrintInFirstWholeBand="true" printWhenGroupChanges="ItemGroup" uuid="fa823bc9-8da7-4586-b9fb-0376a65cfc48">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -1331,7 +1869,7 @@
 								<textFieldExpression><![CDATA[String.format($P{REPORT_LOCALE},"%,1.2f", $F{reduction.percentage})]]></textFieldExpression>
 							</textField>
 							<textField isBlankWhenNull="true">
-								<reportElement key="" x="380" y="0" width="67" height="12" isPrintInFirstWholeBand="true" uuid="be3ebcb8-b16d-4267-99be-750fe670a29b">
+								<reportElement key="" x="370" y="0" width="67" height="12" isPrintInFirstWholeBand="true" uuid="be3ebcb8-b16d-4267-99be-750fe670a29b">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -1342,15 +1880,16 @@
 								<textFieldExpression><![CDATA[String.format($P{REPORT_LOCALE},"%,1.2f", ($F{reduction.amount}!= null?$F{reduction.amount}:$F{reduction.percentage}*$F{reduction.baseamount}/100))]]></textFieldExpression>
 							</textField>
 							<textField isBlankWhenNull="true">
-								<reportElement key="" x="450" y="0" width="30" height="12" isPrintInFirstWholeBand="true" uuid="6961e85e-c82b-4d25-964b-aca1b1ae601f">
+								<reportElement key="" x="440" y="0" width="40" height="12" isPrintInFirstWholeBand="true" uuid="6961e85e-c82b-4d25-964b-aca1b1ae601f">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 									<printWhenExpression><![CDATA[$F{reduction.vatrate} != null]]></printWhenExpression>
 								</reportElement>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[String.format($P{REPORT_LOCALE},"%,1.2f", $F{reduction.vatrate})]]></textFieldExpression>
+								<textFieldExpression><![CDATA["(" +$F{reduction.TaxCategoryCode} + ") " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{reduction.vatrate})]]></textFieldExpression>
 							</textField>
 							<textField isBlankWhenNull="true">
 								<reportElement key="" x="1" y="0" width="69" height="12" isPrintInFirstWholeBand="true" uuid="450c8982-4769-45af-b962-003213127b0d">
@@ -1364,7 +1903,7 @@
 								<textFieldExpression><![CDATA[$F{reduction.parentname}.equals("Reduction") ? "Abschlag" : "Zuschlag"]]></textFieldExpression>
 							</textField>
 							<textField isBlankWhenNull="true">
-								<reportElement key="" x="240" y="0" width="67" height="12" isPrintInFirstWholeBand="true" printWhenGroupChanges="ItemGroup" uuid="de4036ef-6e7e-4f90-9bee-2e1838dda50b">
+								<reportElement key="" x="230" y="0" width="67" height="12" isPrintInFirstWholeBand="true" printWhenGroupChanges="ItemGroup" uuid="de4036ef-6e7e-4f90-9bee-2e1838dda50b">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -1379,9 +1918,9 @@
 					</jr:list>
 				</componentElement>
 				<staticText>
-					<reportElement x="450" y="1" width="32" height="12" uuid="6d842036-5e5d-4bd1-9ef1-ad7c97b1bd15">
+					<reportElement x="440" y="1" width="42" height="12" uuid="6d842036-5e5d-4bd1-9ef1-ad7c97b1bd15">
 						<property name="local_mesure_unitwidth" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 					</reportElement>
@@ -1397,16 +1936,16 @@
 					<text><![CDATA[USt.]]></text>
 				</staticText>
 				<line>
-					<reportElement x="449" y="1" width="1" height="12" uuid="a11903fe-94c4-40f3-8570-61a2a56ed40e"/>
+					<reportElement x="439" y="1" width="1" height="12" uuid="a11903fe-94c4-40f3-8570-61a2a56ed40e"/>
 				</line>
 				<line>
-					<reportElement x="239" y="1" width="1" height="12" uuid="da9cb82f-8384-4c2c-9c64-d873beb421cd"/>
+					<reportElement x="229" y="1" width="1" height="12" uuid="da9cb82f-8384-4c2c-9c64-d873beb421cd"/>
 				</line>
 				<staticText>
-					<reportElement x="71" y="1" width="168" height="12" uuid="c968300a-09ba-40d5-9b18-f9a421aaa448">
+					<reportElement x="71" y="1" width="158" height="12" uuid="c968300a-09ba-40d5-9b18-f9a421aaa448">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<box rightPadding="4">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1421,7 +1960,7 @@
 				</staticText>
 			</frame>
 			<frame>
-				<reportElement key="" positionType="Float" x="0" y="136" width="483" height="47" uuid="ff532e8f-ad24-4cca-a95d-d54612b5eb3a">
+				<reportElement key="" positionType="Float" x="0" y="176" width="483" height="47" uuid="ff532e8f-ad24-4cca-a95d-d54612b5eb3a">
 					<printWhenExpression><![CDATA[$F{document.hasRelatedDocuments}]]></printWhenExpression>
 				</reportElement>
 				<staticText>
@@ -1677,6 +2216,209 @@
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 				</line>
+			</frame>
+			<textField>
+				<reportElement positionType="Float" x="1" y="136" width="280" height="20" uuid="9f3f16db-6709-4e01-97c3-f572faa85402">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bereits beglichener Betrag"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="1" y="156" width="280" height="25" uuid="f46badb9-acb0-488d-918a-5746b6d7a100">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Offener Betrag"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="373" y="156" width="110" height="25" uuid="a264149c-5bb4-44dc-9350-f25343aed37b">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{document.PayableAmount})]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="373" y="136" width="110" height="19" uuid="8f1c96ba-4476-4c63-b909-1bbd15139887">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{document.PrepaidAmount})]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" x="0" y="223" width="483" height="68" uuid="7324bf48-ecf8-4fa5-bcc4-3ddb2a3c56b6"/>
+				<textField>
+					<reportElement positionType="Float" x="0" y="16" width="482" height="30" forecolor="#000000" uuid="d7e78f5c-91f7-4602-ae8a-39f49cb9c897">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#969696"/>
+					</box>
+					<textElement>
+						<font fontName="Open Sans" size="9"/>
+						<paragraph tabStopWidth="75"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{beneficiaryaccount.Comment}+"\n"+
+"Zahlungsreferenz: "+$F{beneficiaryaccount.PaymentReference}]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement x="1" y="46" width="479" height="23" uuid="c744a127-31bc-43f0-97e7-1a7340a3c612">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="bankaccounts" uuid="2275fdd6-2861-4250-b2d8-843b4f7d0a03">
+							<datasetParameter name="XML_DATA_DOCUMENT">
+								<datasetParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_NUMBER_PATTERN">
+								<datasetParameterExpression><![CDATA[$P{XML_NUMBER_PATTERN}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_LOCALE">
+								<datasetParameterExpression><![CDATA[$P{XML_LOCALE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_INPUT_STREAM">
+								<datasetParameterExpression><![CDATA[$P{XML_INPUT_STREAM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_FILE">
+								<datasetParameterExpression><![CDATA[$P{XML_FILE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="net.sf.jasperreports.xml.source">
+								<datasetParameterExpression><![CDATA[$P{net.sf.jasperreports.xml.source}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_DATE_PATTERN">
+								<datasetParameterExpression><![CDATA[$P{XML_DATE_PATTERN}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_TIME_ZONE">
+								<datasetParameterExpression><![CDATA[$P{XML_TIME_ZONE}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+						<jr:listContents height="23" width="479">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+								<reportElement x="0" y="0" width="479" height="20" forecolor="#000000" uuid="8acf9087-2288-4915-9b07-fea408ae4dde"/>
+								<box>
+									<pen lineColor="#969696"/>
+								</box>
+								<textElement>
+									<font fontName="Open Sans" size="9"/>
+									<paragraph tabStopWidth="75"/>
+								</textElement>
+								<textFieldExpression><![CDATA["\nName der Bank: "+$F{beneficiaryaccount.BankName}+"\n"+
+"BLZ: "+$F{beneficiaryaccount.BankCode}+"\n"+
+"Kontoinhaber: "+$F{beneficiaryaccount.name}+"\n"+
+"Kontonummer: "+$F{beneficiaryaccount.BankAccountNr}+"\n"+
+"IBAN: "+$F{beneficiaryaccount.IBAN}+"\n"+
+"BIC: "+$F{beneficiaryaccount.BIC}]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="292" width="483" height="60" isRemoveLineWhenBlank="true" uuid="a82374d1-6394-4ef2-a46a-3c8a797eb805"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="1" y="0" width="482" height="30" forecolor="#000000" uuid="7d1c6f2d-cd86-41db-9d3a-e3b7adcc07dc">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#969696"/>
+					</box>
+					<textElement>
+						<font fontName="Open Sans" size="9"/>
+						<paragraph tabStopWidth="75"/>
+					</textElement>
+					<textFieldExpression><![CDATA["\n"
++ $F{document.PaymentComment} + "\n"
++ "Fälligkeitsdatum: "+new SimpleDateFormat("dd.MM.yyyy").format($F{document.DueDate})+"\n" 
++ "Mindestbetrag der Überweisung: " + $F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{document.MinimumPayment})
++ "\n"
++ "\n Zu den folgenden Zahlungszielen werden entsprechende Konditionen gewährt:"]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement positionType="Float" x="1" y="30" width="480" height="30" uuid="657d9e92-31f6-44c3-9f44-17fb42dc1ec3"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="PaymentConditions" uuid="3ac857bb-91f7-4c56-9f92-140b7e03f107">
+							<datasetParameter name="XML_DATA_DOCUMENT">
+								<datasetParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_NUMBER_PATTERN">
+								<datasetParameterExpression><![CDATA[$P{XML_NUMBER_PATTERN}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_LOCALE">
+								<datasetParameterExpression><![CDATA[$P{XML_LOCALE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_INPUT_STREAM">
+								<datasetParameterExpression><![CDATA[$P{XML_INPUT_STREAM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_FILE">
+								<datasetParameterExpression><![CDATA[$P{XML_FILE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="net.sf.jasperreports.xml.source">
+								<datasetParameterExpression><![CDATA[$P{net.sf.jasperreports.xml.source}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_DATE_PATTERN">
+								<datasetParameterExpression><![CDATA[$P{XML_DATE_PATTERN}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_TIME_ZONE">
+								<datasetParameterExpression><![CDATA[$P{XML_TIME_ZONE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="p_document_currency">
+								<datasetParameterExpression><![CDATA[$F{document.currency}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+						<jr:listContents height="30" width="480">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="480" height="30" uuid="3c11f961-9e3b-444e-aeba-fcd8a7c46714"/>
+								<textElement>
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA["\nZahlungsziel: " + new SimpleDateFormat("dd.MM.yyyy").format($F{paycond.PaymentDate})
++ "\nBasisbetrag: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.BaseAmount})
++ "\nRabatt: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.Percentage}) + "%" 
++ "\nRabattbetrag: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.Amount})]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
 			</frame>
 		</band>
 	</summary>
