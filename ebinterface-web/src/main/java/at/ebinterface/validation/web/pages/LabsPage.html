@@ -1,12 +1,19 @@
 <wicket:extend>
 
 
-    <h1>ebInterface Rechnungen prüfen, anzeigen und konvertieren</h1>
+    <h1>ebInterface Rechnungen erstellen, prüfen und anzeigen</h1>
+    <h3>Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im Format
+        ebInterface.</h3>
 
     <div>
-        <hr class="section-line"/>
+       <hr class="section-line"/>
         <form wicket:id="inputForm" class="form-inline">
-            <h2>Wählen Sie eine ebInterface-Datei und anschließend eine Funktion:</h2>
+            <h2 ebInterface Rechnung prüfen und als PDF anzeigen</h2>
+            <p>
+                Dieses Tool prüft die Gültigkeit der ebInterface Rechnung und wandelt sie in eine leicht lesbare PDF-Datei um. Der
+                QR-Code, der bei dieser Konvertierung auf der Rechnung generiert wird, ermöglicht die automatische Übernahme der
+                Daten ins Mobile Banking.
+            </p>
             <div class="alert alert-danger" wicket:id="feedback"></div>
             <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
             <p class="help-block">Wählen Sie eine ebInterface 3.0,
@@ -22,9 +29,11 @@
             <h4>Schritt 2: Funktion</h4>
 
             <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
-            <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" :wicket:id="submitButtonSchemaOnly">ebInterface
+            <button class="btn-wko" type="submit" id="submitButtonSchemaOnly"
+                    :wicket:id="submitButtonSchemaOnly">ebInterface
                 gegen Schema
-                prüfen</button>
+                prüfen
+            </button>
 
             <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
             <p class="help-block">Wählen Sie ein Set von Schematron Regeln,
@@ -40,7 +49,7 @@
                 </button>
             </div>
 
-           <h5 class="functionHeader">Konvertieren</h5>
+            <h5 class="functionHeader">Konvertieren</h5>
             <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil,
                 in welches Sie konvertieren
                 m&ouml;chten.</p>
@@ -50,7 +59,8 @@
             </select>
             <button class="btn-wko" type="submit"
                     wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD
-                konvertieren</button>
+                konvertieren
+            </button>
         </form>
 
         <br/><br/>
@@ -79,9 +89,10 @@
             <h2>UBL nach ebInterface 4.1 konvertieren</h2>
             <div class="alert alert-danger" wicket:id="feedback">
             </div>
-            <div >
+            <div>
                 <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
-                <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
+                <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer
+                    Festplatte</p>
 
                 <div class="uploadFile">
                     <input class="inputFile" id="ublInput" type="file"

@@ -1,0 +1,161 @@
+<wicket:panel>
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div wicket:id="schemvalidationOK">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            <p>Diese Datei ist gültig gemäß ebInterface Standard <span
+                                    wicket:id="schemaVersion"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div wicket:id="schemvalidationNOK">
+                <div class="row">
+                    <div class="col-md-12">
+                        <br/>
+                        <h4>Schemavalidierung</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 alert alert-danger">
+                        <p>Die gew&auml;hlte ebInterface Instanz entspricht nicht den
+                            Vorgaben des ebInterface Schemas <span wicket:id="schemaVersion"/></p>
+                        <p>
+                            <strong>Fehlerdetails: </strong>
+                            <wicket:container wicket:id="schemaValidationError"/>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div wicket:id="signatureResultContainer">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <br/>
+                        <h4>Validierung der XML Signatur</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <h5>Signatur</h5>
+
+                        <div wicket:id="signatureDetails"/>
+
+                        <h5>Zertifikat:</h5>
+
+                        <div wicket:id="certificateDetails"/>
+
+                        <h5>Manifest:</h5>
+
+                        <div wicket:id="manifestDetails"/>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div wicket:id="schematronOK">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <br/>
+                        <h4>
+                            Schematronvalidierung
+                            <wicket:container wicket:id="selectedSchematron"/>
+                        </h4>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-12 alert alert-success">
+
+                        <p>Die gew&auml;hlte ebInterface Instanz verletzt keine der
+                            Schematronregeln</p>
+                    </div>
+                </div>
+            </div>
+
+            <div wicket:id="schematronNOK">
+
+                <div class="row">
+
+
+                    <div class="col-md-12">
+                        <br/>
+                        <h4>
+                            Schematronvalidierung
+                            <wicket:container wicket:id="selectedSchematron"/>
+                        </h4>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-12 alert alert-danger">
+
+                        <p>Die gew&auml;hlte ebInterface Instanz verletzt Schematron
+                            Regeln:</p>
+
+                        <div wicket:id="errorDetailsPanel"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div wicket:id="mappingLog">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <br/>
+                        <h4>
+                            Konvertierung
+                        </h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div wicket:id="mappingLogError">
+                        <div class="col-md-12 alert alert-danger">
+                            <div wicket:id="logErrorPanel"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a class="btn btn-ghost btn-ghost--red" type="submit"
+               wicket:id="linkXMLDownload">Download XML</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a class="btn btn-ghost btn-ghost--red" type="submit"
+               wicket:id="linkPDFDownload">PDF herunterladen</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-ghost btn-ghost--red" wicket:id="returnLink">Neue
+                Anfrage starten</a>
+        </div>
+    </div>
+
+
+</wicket:panel>

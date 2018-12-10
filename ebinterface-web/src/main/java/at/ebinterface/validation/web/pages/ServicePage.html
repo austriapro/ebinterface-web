@@ -1,52 +1,88 @@
 <wicket:extend>
 
+    <div class="row">
+        <div class="col-md-12">
 
-    <h1>ebInterface Rechnungen prüfen, anzeigen und konvertieren</h1>
 
-    <div>
-        <hr class="section-line"/>
-        <form wicket:id="inputForm" class="form-inline">
-            <h2>Wählen Sie eine ebInterface-Datei und anschließend eine Funktion:</h2>
-            <div class="alert alert-danger" wicket:id="feedback"></div>
-            <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
-            <p class="help-block">Wählen Sie eine ebInterface 3.0,
-                3.02, 4.0, 4.1, 4.2, 4.3 oder 5.0
-                Datei von Ihrer Festplatte</p>
+            <h1>ebInterface Rechnungen erstellen, prüfen und anzeigen</h1>
+            <h3>Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im
+                Format
+                ebInterface.</h3>
 
-            <div class="uploadFile">
-                <input id="fileInput1" type="file"
-                       wicket:id="fileInput" class="inputFile"/>
-                <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-                <p class="upload-label" id="uploadText"></p>
+            <div>
+                <hr class="section-line"/>
+
+                <h2>ebinterface Rechnung erstellen</h2>
+
+                <p>
+                    Wenn Sie keine M&ouml;glichkeit haben, mit Ihrer eigenen Software ebInterface
+                    Rechnungen
+                    zu erstellen bzw. nur sel-
+                    ten Rechnungen im Format ebInterface ben&ouml;tigen, k&ouml;nnen Sie unser
+                    Online-Rechnungsformular verwenden. Soft-
+                    ware-Hersteller und Dienstleister, die nach eigenen Angaben den
+                    Rechnungsstandard
+                    ebInterface in ihren Produkten
+                    bzw. Services umgesetzt haben, finden Sie unter partner.ebinterface.at
+                </p>
+                <a href="TODO" class="btn-wko">Rechnung online erstellen</a>
+
+                <p style="font-size:12px; color: grey; margin-top: 15px;">
+                    Dieser Button führt Sie direkt zum ebInterface Online-Formular.
+                </p>
+
+                <hr class="section-line"/>
+                <form wicket:id="inputForm" class="form-inline">
+                    <h2>ebInterface Rechnung prüfen und als PDF anzeigen</h2>
+                    <p>
+                        Dieses Tool prüft die Gültigkeit der ebInterface Rechnung und wandelt sie in
+                        eine leicht lesbare PDF-Datei um. Der
+                        QR-Code, der bei dieser Konvertierung auf der Rechnung generiert wird,
+                        ermöglicht die automatische Übernahme der
+                        Daten ins Mobile Banking.
+                    </p>
+
+                    <div class="alert alert-danger" wicket:id="feedback"></div>
+                    <div class="uploadFile">
+                        <input id="fileInput1" type="file"
+                               wicket:id="fileInput" class="inputFile"/>
+                        <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+                        <p class="upload-label" id="uploadText"></p>
+                    </div>
+
+                    <div class="inline-btn">
+                        <button class="btn-wko" type="submit"
+                                wicket:id="submitButtonVisualizeHTML">ebInterface in
+                            HTML Druckansicht anzeigen
+                        </button>
+                        <button class="btn-wko" type="submit"
+                                wicket:id="submitButtonVisualizePDF">Rechnung als PDF anzeigen
+                        </button>
+                    </div>
+
+                    <p style="font-size:12px; color: grey; margin-top: 15px;">
+                        Wählen Sie eine ebInterface Datei von Ihrer Festplatte aus (unterstützt
+                        Versionen ab ebInterface 3.0 bis 5.0).
+                    </p>
+
+
+                </form>
+
+
+                <hr class="section-line"/>
             </div>
-            <h4>Schritt 2: Funktion</h4>
-
-            <h5 class="functionHeader">Anzeigen</h5>
-            <div class="inline-btn">
-                <button class="btn-wko" type="submit"
-                        wicket:id="submitButtonVisualizeHTML">ebInterface in
-                    HTML Druckansicht anzeigen
-                </button>
-                <button class="btn-wko" type="submit"
-                        wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen
-                </button>
-            </div>
-        </form>
-
-        <hr class="section-line"/>
-        <div style="text-align: center;">
-            Code lizensiert unter <a
-                href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
-            License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den
-            Sourcecode besuchen
-            Sie bitte die <a href="https://github.com/austriapro/ebinterface-web"
-                             target="_blank">Projekthomepage</a>. <br/><br/>
-
-            Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at"
-                                                            target="_blank">AUSTRIAPRO</a>
-            entwickelt.
-            <br/><br/>
         </div>
     </div>
+    <div wicket:id="resultPanel"/>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                Weiterführende Services und Toolsets für Entwickler finden Sie unter
+                <a href="https://labs.ebinterface.at" target="_blank">labs.ebinterface.at.</a>
+            </p>
+        </div>
+    </div>
+
 
 </wicket:extend>

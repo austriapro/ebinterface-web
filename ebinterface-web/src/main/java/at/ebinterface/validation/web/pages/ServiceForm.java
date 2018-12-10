@@ -19,7 +19,6 @@ import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 
 /**
  * The input form class
@@ -61,7 +60,8 @@ class ServiceForm extends Form {
       public void onSubmit() {
         submit(StartPage.ActionType.VISUALIZATION_HTML);
       }
-    });
+      // latest requirements: only pdf visualization
+    }.setVisibilityAllowed(false));
 
     //Add a button to visualize it as PDF
     add(new SubmitLink("submitButtonVisualizePDF") {
@@ -161,8 +161,7 @@ class ServiceForm extends Form {
 
     //Redirect to the ebInterface result page
     setResponsePage(
-        new ResultPageEbInterface(validationResult, selectedSchematronRule, selectedAction,
-                                  pdf, null, null));
+        new ServicePage(validationResult, selectedSchematronRule, selectedAction, pdf));
 
   }
 
