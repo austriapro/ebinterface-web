@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
-<!-- 2018-12-10T16:58:53 -->
+<!-- 2018-12-20T14:52:54 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ERPEL_STR_INVOICE_TYPE_2" pageWidth="595" pageHeight="852" whenNoDataType="AllSectionsNoDetail" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="85" bottomMargin="26" isSummaryWithPageHeaderAndFooter="true" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
@@ -195,13 +195,13 @@
 		<fieldDescription><![CDATA[/Invoice/Details/FooterDescription]]></fieldDescription>
 	</field>
 	<field name="document.hasReductionSurcharge" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[(   boolean(/Invoice/ReductionAndSurchargeDetails/Reduction) 
+		<fieldDescription><![CDATA[(   boolean(/Invoice/ReductionAndSurchargeDetails/Reduction)
 		                            or boolean(/Invoice/ReductionAndSurchargeDetails/Surcharge)
 		                            or boolean(/Invoice/ReductionAndSurchargeDetails/OtherVATableTax)
 		                           )]]></fieldDescription>
 	</field>
 	<field name="document.hasRelatedDocuments" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[(   boolean(/Invoice/CancelledOriginalDocument) 
+		<fieldDescription><![CDATA[(   boolean(/Invoice/CancelledOriginalDocument)
 		                            or boolean(/Invoice/RelatedDocument)
 		                           )]]></fieldDescription>
 	</field>
@@ -773,15 +773,15 @@
 					<imageExpression><![CDATA[$P{senderLogo}]]></imageExpression>
 				</image>
 				<staticText>
-					<reportElement style="Title" x="0" y="71" width="159" height="33" uuid="b5b3486f-72e9-4ff9-b541-d98e41286371">
+					<reportElement style="Title" x="0" y="71" width="180" height="33" uuid="b5b3486f-72e9-4ff9-b541-d98e41286371">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
 					<box rightPadding="4"/>
 					<textElement textAlignment="Left" verticalAlignment="Top">
-						<font size="24"/>
+						<font size="20"/>
 					</textElement>
-					<text><![CDATA[Rechnung]]></text>
+					<text><![CDATA[Rechnungskopie]]></text>
 				</staticText>
 			</frame>
 			<frame>
@@ -801,7 +801,7 @@
 + ($F{biller.address.name} == null ? "" : ($F{biller.address.name}+"<br>"))
 + ($F{biller.address.pobox} == null ? "" : ($F{biller.address.pobox}+"<br>"))
 + ($F{biller.address.street} == null ? "" : ($F{biller.address.street}+"<br>"))
-+ (($F{biller.address.zip} == null && $F{biller.address.town} == null) ? "" : 
++ (($F{biller.address.zip} == null && $F{biller.address.town} == null) ? "" :
 	(($F{biller.address.zip}==null?"":($F{biller.address.zip}+" "))+($F{biller.address.town}==null?"":$F{biller.address.town})+"<br>")
   )
 + ($F{biller.address.country} == null ? "" : ($F{biller.address.country}+"<br>"))
@@ -835,7 +835,7 @@
 + ($F{invoicerecipient.address.name} == null ? "" : ($F{invoicerecipient.address.name}+"<br>"))
 + ($F{invoicerecipient.address.pobox} == null ? "" : ($F{invoicerecipient.address.pobox}+"<br>"))
 + ($F{invoicerecipient.address.street} == null ? "" : ($F{invoicerecipient.address.street}+"<br>"))
-+ (($F{invoicerecipient.address.zip} == null && $F{invoicerecipient.address.town} == null) ? "" : 
++ (($F{invoicerecipient.address.zip} == null && $F{invoicerecipient.address.town} == null) ? "" :
 	(($F{invoicerecipient.address.zip}==null?"":($F{invoicerecipient.address.zip}+" "))+($F{invoicerecipient.address.town}==null?"":$F{invoicerecipient.address.town})+"<br>")
   )
 + ($F{invoicerecipient.address.country} == null ? "" : ($F{invoicerecipient.address.country}+"<br>"))
@@ -872,7 +872,7 @@
 + ($F{delivery.address.name} == null ? "" : ($F{delivery.address.name}+"<br>"))
 + ($F{delivery.address.pobox} == null ? "" : ($F{delivery.address.pobox}+"<br>"))
 + ($F{delivery.address.street} == null ? "" : ($F{delivery.address.street}+"<br>"))
-+ (($F{delivery.address.zip} == null && $F{delivery.address.town} == null) ? "" : 
++ (($F{delivery.address.zip} == null && $F{delivery.address.town} == null) ? "" :
 	(($F{delivery.address.zip}==null?"":($F{delivery.address.zip}+" "))+($F{delivery.address.town}==null?"":$F{delivery.address.town})+"<br>")
   )
 + ($F{delivery.address.country} == null ? "" : ($F{delivery.address.country}+"<br>"))
@@ -906,7 +906,7 @@
 + ($F{orderingparty.address.name} == null ? "" : ($F{orderingparty.address.name}+"<br>"))
 + ($F{orderingparty.address.pobox} == null ? "" : ($F{orderingparty.address.pobox}+"<br>"))
 + ($F{orderingparty.address.street} == null ? "" : ($F{orderingparty.address.street}+"<br>"))
-+ (($F{orderingparty.address.zip} == null && $F{orderingparty.address.town} == null) ? "" : 
++ (($F{orderingparty.address.zip} == null && $F{orderingparty.address.town} == null) ? "" :
 	(($F{orderingparty.address.zip}==null?"":($F{orderingparty.address.zip}+" "))+($F{orderingparty.address.town}==null?"":$F{orderingparty.address.town})+"<br>")
   )
 + ($F{orderingparty.address.country} == null ? "" : ($F{orderingparty.address.country}+"<br>"))
@@ -944,18 +944,18 @@
 					</textElement>
 					<textFieldExpression><![CDATA[new String("Währung:\t" + $F{document.currency} + "\n"
 + "Rechnungsnummer:\t" + $F{document.invoicenumber} + "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{document.invoicedate}) + "\n"
-+ ($F{delivery.deliveryid}!= null ? "Liefernummer:\t" + $F{delivery.deliveryid} 
-	+ (($F{delivery.deliverydate}!= null) ? "\tAm: " + new SimpleDateFormat("dd.MM.yyyy").format($F{delivery.deliverydate}) : 
++ ($F{delivery.deliveryid}!= null ? "Liefernummer:\t" + $F{delivery.deliveryid}
+	+ (($F{delivery.deliverydate}!= null) ? "\tAm: " + new SimpleDateFormat("dd.MM.yyyy").format($F{delivery.deliverydate}) :
 		("\tVon: " + new SimpleDateFormat("dd.MM.yyyy").format($F{delivery.period.fromdate}) + "    Bis:" + new SimpleDateFormat("dd.MM.yyyy").format($F{delivery.period.todate}))
 	) + "\n" : ""
-) 
+)
 + ($F{biller.orderid}!= null ? "Bestellnummer (R-Steller):\t" + $F{biller.orderid} + (($F{biller.orderdate}!= null) ? "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{biller.orderdate}) : "") + "\n" : "")
 + ($F{biller.orderDescription}== null ? "" : "Bestellhinweis (R-Steller):\t" + $F{biller.orderDescription}+"\n")
-+ ($F{invoicerecipient.orderid}!= null ? "Bestellnummer (R-Empfänger):\t" + $F{invoicerecipient.orderid} 
++ ($F{invoicerecipient.orderid}!= null ? "Bestellnummer (R-Empfänger):\t" + $F{invoicerecipient.orderid}
 	+ (($F{invoicerecipient.orderdate}!= null) ? "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{invoicerecipient.orderdate}) : "") + "\n" : ""
 )
 + ($F{invoicerecipient.orderDescription}== null ? "" : "Bestellhinweis (R-Empfänger):\t" + $F{invoicerecipient.orderDescription}+"\n")
-+ ($F{orderingparty.orderid}!= null ? "Bestellnummer (Besteller):\t" + $F{orderingparty.orderid} 
++ ($F{orderingparty.orderid}!= null ? "Bestellnummer (Besteller):\t" + $F{orderingparty.orderid}
 	+ (($F{orderingparty.orderdate}!= null) ? "\tVom: " + new SimpleDateFormat("dd.MM.yyyy").format($F{orderingparty.orderdate}) : "") + "\n" : ""
 )
 + ($F{orderingparty.orderDescription}== null ? "" : "Bestellhinweis (Besteller):\t" + $F{orderingparty.orderDescription}+"\n")
@@ -1198,7 +1198,7 @@
 					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[String.format($P{REPORT_LOCALE}, "%,1.2f", $F{detail.unitprice}) 
+				<textFieldExpression><![CDATA[String.format($P{REPORT_LOCALE}, "%,1.2f", $F{detail.unitprice})
 + ($F{detail.baseqty}==null ? "" : "\n" + String.format($P{REPORT_LOCALE}, "%,1.2f", $F{detail.baseqty}))]]></textFieldExpression>
 			</textField>
 			<line>
@@ -1262,7 +1262,7 @@
   + ($F{detail.Delivery.address.name} == null ? "" : ($F{detail.Delivery.address.name}+"\n"))
   + ($F{detail.Delivery.address.pobox} == null ? "" : ($F{detail.Delivery.address.pobox}+"\n"))
   + ($F{detail.Delivery.address.street} == null ? "" : ($F{detail.Delivery.address.street}+"\n"))
-  + (($F{detail.Delivery.address.zip} == null && $F{detail.Delivery.address.town} == null) ? "" : 
+  + (($F{detail.Delivery.address.zip} == null && $F{detail.Delivery.address.town} == null) ? "" :
   	(($F{detail.Delivery.address.zip}==null?"":($F{detail.Delivery.address.zip}+" "))+($F{detail.Delivery.address.town}==null?"":$F{detail.Delivery.address.town})+"\n")
     )
   + ($F{detail.Delivery.address.country} == null ? "" : ($F{detail.Delivery.address.country}+"\n"))
@@ -1601,7 +1601,7 @@ $F{beneficiaryaccount.PaymentReference}+
 								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							</reportElement>
 							<textElement textAlignment="Right"/>
-							<textFieldExpression><![CDATA[($F{tax.code} != null ? "(" + $F{tax.code} + ") " : "") 
+							<textFieldExpression><![CDATA[($F{tax.code} != null ? "(" + $F{tax.code} + ") " : "")
 + ($F{tax.vatrate}!=null?String.format($P{REPORT_LOCALE},"%1.2f", $F{tax.vatrate}) + "% " : "")]]></textFieldExpression>
 						</textField>
 					</jr:listContents>
@@ -2368,7 +2368,7 @@ $F{beneficiaryaccount.PaymentReference}+
 					</textElement>
 					<textFieldExpression><![CDATA["\n"
 + $F{document.PaymentComment} + "\n"
-+ "Fälligkeitsdatum: "+new SimpleDateFormat("dd.MM.yyyy").format($F{document.DueDate})+"\n" 
++ "Fälligkeitsdatum: "+new SimpleDateFormat("dd.MM.yyyy").format($F{document.DueDate})+"\n"
 + "Mindestbetrag der Überweisung: " + $F{document.currency} + " " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{document.MinimumPayment})
 + "\n"
 + "\n Zu den folgenden Zahlungszielen werden entsprechende Konditionen gewährt:"]]></textFieldExpression>
@@ -2413,7 +2413,7 @@ $F{beneficiaryaccount.PaymentReference}+
 								</textElement>
 								<textFieldExpression><![CDATA["\nZahlungsziel: " + new SimpleDateFormat("dd.MM.yyyy").format($F{paycond.PaymentDate})
 + "\nBasisbetrag: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.BaseAmount})
-+ "\nRabatt: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.Percentage}) + "%" 
++ "\nRabatt: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.Percentage}) + "%"
 + "\nRabattbetrag: " + String.format($P{REPORT_LOCALE},"%,1.2f", $F{paycond.Amount})]]></textFieldExpression>
 							</textField>
 						</jr:listContents>
