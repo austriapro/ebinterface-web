@@ -1,3 +1,31 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.content {
+  min-height: 100%;
+}
+.content-inside {
+  padding-bottom: 40px;
+}
+
+.footer {
+  height: 40px !important;
+  margin-top: -40px !important;
+  padding: 0 !important;
+  background-color: #e6e6e6 !important;
+  color: #304C59 !important;
+  font-size: 13px;
+}
+.footer-inner {
+  padding-top: 12px;
+  padding-left: 45px;
+}
+
+.footer a {
+  color: #304C59 !important;
+  font-size: 13px !important;
+}
 
 .inputFile {
   width: 0.1px;

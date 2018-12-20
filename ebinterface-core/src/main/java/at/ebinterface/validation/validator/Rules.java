@@ -23,11 +23,14 @@ public class Rules {
     //Initialize the set of rules
     rules = new ArrayList<Rule>();
 
+    //  https://github.com/austriapro/ebinterface-web/issues/11
+    /*
     Rule
         rule1 =
         new Rule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0,
                  "/schematron/sv/sv-rules-4p0.sch");
     rules.add(rule1);
+    */
 
     Rule
         rule2 =

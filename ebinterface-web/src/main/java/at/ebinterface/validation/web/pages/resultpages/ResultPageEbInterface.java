@@ -32,9 +32,5 @@ public class ResultPageEbInterface extends BasePage {
 
   }
 
-  protected String getFooterClass() {
-    return "footer-section navbar-fixed-bottom";
-  }
-
 }
 

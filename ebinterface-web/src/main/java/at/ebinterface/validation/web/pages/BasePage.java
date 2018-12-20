@@ -1,10 +1,8 @@
 package at.ebinterface.validation.web.pages;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -30,11 +28,8 @@ public abstract class BasePage extends WebPage {
     add(new Image("ebInterface-logo",
                   new PackageResourceReference(ImagesLogoAccessor.class, "ebinterface-logo.png")));
     add(new Image("wko-logo",
-            new PackageResourceReference(ImagesLogoAccessor.class, "wko-logo.png")));
+                  new PackageResourceReference(ImagesLogoAccessor.class, "wko-logo.png")));
 
-    TransparentWebMarkupContainer footer = new TransparentWebMarkupContainer("footer");
-    footer.add(new AttributeModifier("class", getFooterClass()));
-    add(footer);
   }
 
 
@@ -42,19 +37,20 @@ public abstract class BasePage extends WebPage {
   public void renderHead(HtmlHeaderContainer container) {
 
     PackageResourceReference cssFile_one =
-            new PackageResourceReference(CssReference.class, "style.css");
+        new PackageResourceReference(CssReference.class, "style.css");
     CssHeaderItem cssItem_one = CssHeaderItem.forReference(cssFile_one);
 
     PackageResourceReference cssFile_three =
-            new PackageResourceReference(CssReference.class, "wkostyle.css");
+        new PackageResourceReference(CssReference.class, "wkostyle.css");
     CssHeaderItem cssItem_three = CssHeaderItem.forReference(cssFile_three);
-
 
     container.getHeaderResponse().render(cssItem_one);
     //container.getHeaderResponse().render(cssItem_two);
     container.getHeaderResponse().render(cssItem_three);
 
-    PackageResourceReference jsReference = new PackageResourceReference(JsReference.class, "fileLabelChecker.js");
+    PackageResourceReference
+        jsReference =
+        new PackageResourceReference(JsReference.class, "fileLabelChecker.js");
     JavaScriptReferenceHeaderItem headerItem = JavaScriptHeaderItem.forReference(jsReference);
     container.getHeaderResponse().render(headerItem);
     super.renderHead(container);
@@ -62,7 +58,4 @@ public abstract class BasePage extends WebPage {
 
   }
 
-  protected String getFooterClass() {
-    return "footer-section";
-  }
 }

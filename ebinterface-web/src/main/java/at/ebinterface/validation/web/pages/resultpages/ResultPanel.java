@@ -25,14 +25,14 @@ import static at.ebinterface.validation.web.pages.StartPage.ActionType.SCHEMA_AN
 
 public class ResultPanel extends Panel {
 
-    public ResultPanel(String id, final ValidationResult validationResult,
+  public ResultPanel(String id, final ValidationResult validationResult,
                      final String selectedSchematron,
                      final StartPage.ActionType selectedAction,
                      final byte[] pdf,
                      final byte[] xml,
                      final String log) {
-      this(id, validationResult, selectedSchematron, selectedAction, pdf, xml, log, null);
-    }
+    this(id, validationResult, selectedSchematron, selectedAction, pdf, xml, log, null);
+  }
 
   public ResultPanel(String id, final ValidationResult validationResult,
                      final String selectedSchematron,
@@ -42,16 +42,19 @@ public class ResultPanel extends Panel {
                      final String log, Class<? extends WebPage> returnPage) {
     super(id);
 
-        final StringBuffer schemaVersion = new StringBuffer();
+    final StringBuffer schemaVersion = new StringBuffer();
 
     Label schemaVersionLabel;
     Label schemaVersionLabelNoOk;
     if (validationResult.getDeterminedEbInterfaceVersion() != null) {
       schemaVersion.append(validationResult.getDeterminedEbInterfaceVersion().getCaption());
-      if (validationResult.getDeterminedEbInterfaceVersion().isSigned()) {
-        schemaVersion.append(" (signiert)");
-      } else {
-        schemaVersion.append(" (unsigniert)");
+
+      if (validationResult.getDeterminedEbInterfaceVersion().supportsSignign()) {
+        if (validationResult.getDeterminedEbInterfaceVersion().isSigned()) {
+          schemaVersion.append(" (signiert)");
+        } else {
+          schemaVersion.append(" (unsigniert)");
+        }
       }
     }
 
@@ -60,8 +63,10 @@ public class ResultPanel extends Panel {
       schemaVersionLabel = new Label("schemaVersion", Model.of(schemaVersion.toString()));
       schemaVersionLabelNoOk = new Label("schemaVersion", Model.of(schemaVersion.toString()));
     } else {
-      schemaVersionLabel = new Label("schemaVersion", Model.of("Es wurde keine gültige Version erkannt."));
-      schemaVersionLabelNoOk = new Label("schemaVersion", Model.of("Es wurde keine gültige Version erkannt."));
+      schemaVersionLabel =
+          new Label("schemaVersion", Model.of("Es wurde keine gültige Version erkannt."));
+      schemaVersionLabelNoOk =
+          new Label("schemaVersion", Model.of("Es wurde keine gültige Version erkannt."));
     }
 
     //Schema OK Container

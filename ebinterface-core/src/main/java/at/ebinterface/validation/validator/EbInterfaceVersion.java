@@ -55,4 +55,8 @@ public enum EbInterfaceVersion {
     return caption;
   }
 
+  public boolean supportsSignign() {
+    return !this.equals(E5P0);
+  }
+
 }
