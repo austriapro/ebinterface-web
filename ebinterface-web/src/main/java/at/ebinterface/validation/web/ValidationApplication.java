@@ -158,7 +158,7 @@ public class ValidationApplication extends WebApplication {
       }
 
       switch (appPath) {
-        case "services":
+        case "service":
           LOG.debug("Homepage is ServicePage");
           homePage = ServicePage.class;
           break;
