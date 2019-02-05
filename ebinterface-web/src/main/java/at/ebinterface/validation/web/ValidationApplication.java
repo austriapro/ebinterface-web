@@ -1,5 +1,7 @@
 package at.ebinterface.validation.web;
 
+import com.google.common.base.Strings;
+
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -63,21 +65,27 @@ public class ValidationApplication extends WebApplication {
 
     try {
       LOG.info("Compiling JasperReport template for ebInterface");
-      JasperDesign jrDesign = JRXmlLoader.load(this.getClass().getClassLoader().getResourceAsStream("reports/ebInterface.jrxml"));
+      JasperDesign
+          jrDesign =
+          JRXmlLoader.load(
+              this.getClass().getClassLoader().getResourceAsStream("reports/ebInterface.jrxml"));
       JasperReport jrReport = JasperCompileManager.compileReport(jrDesign);
       setMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE, jrReport);
       LOG.info("JasperReport template for ebInterface is now stored in application context.");
-    }catch(Exception ex){
+    } catch (Exception ex) {
       LOG.error("Could not load ebInterface PDF template!");
     }
 
     try {
       LOG.info("Compiling JasperReport template for ZUGFeRD");
-      JasperDesign jrDesign = JRXmlLoader.load(this.getClass().getClassLoader().getResourceAsStream("reports/ZUGFeRD.jrxml"));
+      JasperDesign
+          jrDesign =
+          JRXmlLoader
+              .load(this.getClass().getClassLoader().getResourceAsStream("reports/ZUGFeRD.jrxml"));
       JasperReport jrReport = JasperCompileManager.compileReport(jrDesign);
       setMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE, jrReport);
       LOG.info("JasperReport template for ZUGFeRD is now stored in application context.");
-    }catch(Exception ex){
+    } catch (Exception ex) {
       LOG.error("Could not load ZUGFeRD PDF template!");
     }
 
@@ -112,7 +120,6 @@ public class ValidationApplication extends WebApplication {
     }
     LOG.info("schematron transformer for ZUGFeRD is now stored in application context.");
 
-
     getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
     getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 
@@ -137,7 +144,39 @@ public class ValidationApplication extends WebApplication {
    */
   @Override
   public Class<? extends Page> getHomePage() {
-    return StartPage.class;
+
+    // https://gitlab.ecosio.com/misc/austriapro/issues/11
+    Class<? extends Page> homePage = StartPage.class;
+
+    try {
+
+      String appPath = System.getenv("APPLICATION_PATH");
+
+      if (Strings.isNullOrEmpty(appPath)) {
+        LOG.debug("APPLICATION_PATH not set, returning default homepage");
+        return homePage;
+      }
+
+      switch (appPath) {
+        case "services":
+          LOG.debug("Homepage is ServicePage");
+          homePage = ServicePage.class;
+          break;
+        case "labs":
+          LOG.debug("Homepage is LabsPage");
+          homePage = LabsPage.class;
+          break;
+        default:
+          LOG.info("Could not determine type of landing page, using startpage");
+          homePage = StartPage.class;
+
+      }
+
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
+    }
+
+    return homePage;
   }
 
 }
