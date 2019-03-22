@@ -17,13 +17,10 @@
                 <p>
                     Wenn Sie keine M&ouml;glichkeit haben, mit Ihrer eigenen Software ebInterface
                     Rechnungen
-                    zu erstellen bzw. nur sel-
-                    ten Rechnungen im Format ebInterface ben&ouml;tigen, k&ouml;nnen Sie unser
-                    Online-Rechnungsformular verwenden. Soft-
-                    ware-Hersteller und Dienstleister, die nach eigenen Angaben den
-                    Rechnungsstandard
-                    ebInterface in ihren Produkten
-                    bzw. Services umgesetzt haben, finden Sie unter partner.ebinterface.at
+                    zu erstellen bzw. nur selten Rechnungen im Format ebInterface ben&ouml;tigen, k&ouml;nnen Sie unser
+                    Online-Rechnungsformular verwenden. Software-Hersteller und Dienstleister, die nach eigenen Angaben den
+                    Rechnungsstandard ebInterface in ihren Produkten bzw. Services umgesetzt haben, finden Sie unter
+                    <a href="https://partner.ebinterface.at">partner.ebinterface.at</a>.
                 </p>
                 <a href="http://formular.ebinterface.at" target="_blank" class="btn-wko">Rechnung online erstellen</a>
 
@@ -45,9 +42,9 @@
                     <div class="alert alert-danger" wicket:id="feedback"></div>
                     <div class="uploadFile">
                         <input id="fileInput1" type="file"
-                               wicket:id="fileInput" class="inputFile"/>
+                               wicket:id="fileInput" class="inputFile" onchange="getFileName()"/>
                         <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-                        <p class="upload-label" id="uploadText"></p>
+                        <p class="upload-label" id="uploadText">Keine Datei ausgewählt</p>
                     </div>
 
                     <div class="inline-btn">

@@ -52,6 +52,13 @@ html, body {
   -moz-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  display: inline-block;
+}
+
+#uploadText {
+  display: inline-block;
+  border: 1px solid #304C59;
+  padding: 10px;
 }
 
 .functionHeader {
