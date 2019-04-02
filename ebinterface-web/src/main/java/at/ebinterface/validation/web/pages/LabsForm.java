@@ -7,6 +7,7 @@ import net.sf.saxon.serialize.MessageWarner;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -110,6 +111,12 @@ class LabsForm extends Form {
 
     add(rules);
 
+    TransparentWebMarkupContainer
+        zugferdWrapper =
+        new TransparentWebMarkupContainer("zugferdWrapper");
+    zugferdWrapper.setVisibilityAllowed(false);
+    add(zugferdWrapper);
+
     //Add the drop down choice for the different ZUGFeRD levels which are currently supported
     zugferdlevels =
         new DropDownChoice<String>(
@@ -126,7 +133,8 @@ class LabsForm extends Form {
               }
             });
 
-    add(zugferdlevels);
+    zugferdWrapper.add(zugferdlevels);
+    // add(zugferdlevels);
 
     //Add a second submit button
     add(new SubmitLink("submitButtonSchemaOnly") {
@@ -144,9 +152,8 @@ class LabsForm extends Form {
       }
     });
 
-
     //Add a button to convert to ZUGFerD
-    add(new SubmitLink("submitButtonConvertZUGFeRD") {
+    zugferdWrapper.add(new SubmitLink("submitButtonConvertZUGFeRD") {
       @Override
       public void onSubmit() {
         submit(StartPage.ActionType.CONVERSION_ZUGFERD);
@@ -277,41 +284,41 @@ class LabsForm extends Form {
     }
     //Conversion ZUGFerD?
     else if (selectedAction == StartPage.ActionType.CONVERSION_ZUGFERD) {
-      if (zugferdlevels.getModelObject() == null){
+      if (zugferdlevels.getModelObject() == null) {
         error("Bitte wählen Sie ein ZUGFeRD Profil zur Konvertierung aus.");
         onError();
         return;
       }
 
-      sbLog.append("<b>Ausgewähltes ZUGFeRD Profil: ").append(zugferdlevels.getModelObject()).append("</b><br/><br/>");
+      sbLog.append("<b>Ausgewähltes ZUGFeRD Profil: ").append(zugferdlevels.getModelObject())
+          .append("</b><br/><br/>");
 
       MappingFactory mf = new MappingFactory();
 
       MappingFactory.ZugferdMappingType zugferdLevel;
 
-      if (zugferdlevels.getModelObject().endsWith("Basic")){
+      if (zugferdlevels.getModelObject().endsWith("Basic")) {
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0;
-      } else if (zugferdlevels.getModelObject().endsWith("Comfort")){
+      } else if (zugferdlevels.getModelObject().endsWith("Comfort")) {
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0;
-      } else /*if (selectedZugferdLevel.startsWith("Extended"))*/{
+      } else /*if (selectedZugferdLevel.startsWith("Extended"))*/ {
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0;
       }
 
       MappingFactory.EbInterfaceMappingType ebType;
 
-      if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0){
+      if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0) {
         error("ZUGFeRD Konvertierung für ebInterface 4.0 nicht unterstützt.");
         onError();
         return;
 
         /*zugFeRDMapping = mf.getMapper(MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0,
                                       MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p0);*/
-      }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1){
+      } else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1) {
         ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
-      }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
+      } else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
         ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
-      }
-      else {
+      } else {
         ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p3;
       }
 
@@ -332,7 +339,8 @@ class LabsForm extends Form {
             new ByteArrayInputStream(zugferd)));
 
         Validator
-            zugSchemaValidator = Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator();
+            zugSchemaValidator =
+            Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator();
         MappingErrorHandler eh = new MappingErrorHandler();
         zugSchemaValidator.setErrorHandler(eh);
         zugSchemaValidator.validate(saxSource);
