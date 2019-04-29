@@ -18,9 +18,9 @@
             <p class="help-block">Wählen Sie eine ebInterface Datei von Ihrer Festplatte</p>
             <div class="uploadFile">
                 <input id="fileInput1" type="file"
-                       wicket:id="fileInput" class="inputFile"/>
+                       wicket:id="fileInput" class="inputFile" onchange="getFileName()" />
                 <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-                <p class="upload-label" id="uploadText"></p>
+                <p class="upload-label" id="uploadText">Keine Datei ausgewählt</p>
             </div>
             <h4>Schritt 2: Funktion</h4>
 

@@ -16,7 +16,6 @@ document.addEventListener("load", function () {
 });
 
 function getFileName() {
-    console.log('get it1');
     var x = document.getElementById('fileInput1');
     document.getElementById('uploadText').innerHTML = x.value.split('\\').pop();
 }
