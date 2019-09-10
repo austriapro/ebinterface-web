@@ -1,70 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<artifactId>ebinterface-web</artifactId>
-	<packaging>war</packaging>
-	<version>1.0.7-SNAPSHOT</version>
-	<modelVersion>4.0.0</modelVersion>
-	<name>ebInterface validation web interface</name>
-
-
+  <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-parent</artifactId>
         <version>1.0.7-SNAPSHOT</version>
     </parent>
 
+	<artifactId>ebinterface-web</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.7-SNAPSHOT</version>
+	<name>ebInterface validation web interface</name>
 
 	<properties>
+    <commons.logging.version>1.1.1</commons.logging.version>
+    <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
 		<ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
-		<slf4j-version>1.6.4</slf4j-version>
-		<wicket-version>6.26.0</wicket-version>
-		<commons.logging.version>1.1.1</commons.logging.version>
-		<ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
-		<ebinterface-ubl-mapping-version>1.0.2</ebinterface-ubl-mapping-version>
-		<logback-version>1.0.0</logback-version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <ebinterface-ubl-mapping-version>4.0.0-SNAPSHOT</ebinterface-ubl-mapping-version>
+    <logback-version>1.2.3</logback-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<slf4j-version>1.7.26</slf4j-version>
+		<wicket-version>6.30.0</wicket-version>
 	</properties>
-
-
-	<repositories>
-		<!-- Apache repository -->
-		<repository>
-			<id>apache.snapshots</id>
-			<name>Apache Development Snapshot Repository</name>
-			<url>https://repository.apache.org/content/repositories/
-			</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-
-
-		<!-- Wicket Stuff Repository -->
-		<repository>
-			<id>wicket-snaps</id>
-			<url>http://wicketstuff.org/maven/repository</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-
-		<!-- Wicket Wiquery Components Repository -->
-		<repository>
-			<id>wiquery repository</id>
-			<name>wiQuery repository</name>
-			<url>http://wiquery.googlecode.com/svn/repo/</url>
-			<layout>default</layout>
-		</repository>
-
-	</repositories>
-
 
 
 	<dependencies>
@@ -90,11 +48,11 @@
 			<version>${ebinterface-mapping-version}</version>
 		</dependency>
 
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ebinterface-ubl-mapping</artifactId>
-            <version>${ebinterface-ubl-mapping-version}</version>
-        </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ebinterface-ubl-mapping</artifactId>
+      <version>${ebinterface-ubl-mapping-version}</version>
+    </dependency>
 
 		<!-- Wicket -->
 		<dependency>
@@ -102,7 +60,13 @@
 			<artifactId>wicket-core</artifactId>
 			<version>${wicket-version}</version>
 		</dependency>
-
+    
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-oton-jetty</artifactId>
+      <version>8.2.0</version>
+      <scope>test</scope>
+    </dependency>
 	</dependencies>
 
 
@@ -114,55 +78,41 @@
 	</organization>
 
 	<build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <targetPath>${project.build.directory}/classes</targetPath>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/main/webapp</directory>
+        <targetPath>${project.build.directory}/webapp-classes</targetPath>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/test/resources</directory>
+        <targetPath>${project.build.directory}/test-classes</targetPath>
+      </resource>
+    </resources>
+
 		<plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <webResources>
-                        <webResource>
-                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
-                            <includes>
-                                <include>web.xml</include>
-                            </includes>
-                            <targetPath>WEB-INF</targetPath>
-                        </webResource>
-                    </webResources>
-                </configuration>
-            </plugin>
-
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.3</version>
+        <!-- 
+        <configuration>
+          <webResources>
+            <webResource>
+              <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+              <includes>
+                <include>web.xml</include>
+              </includes>
+              <targetPath>WEB-INF</targetPath>
+            </webResource>
+          </webResources>
+        </configuration>
+         -->
+      </plugin>
 		</plugins>
-
-		<directory>target</directory>
-		<outputDirectory>target/classes</outputDirectory>
-		<finalName>${project.artifactId}</finalName>
-		<testOutputDirectory>target/test-classes</testOutputDirectory>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<scriptSourceDirectory>src/main/java</scriptSourceDirectory>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.*</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>false</filtering>
-			</testResource>
-		</testResources>
-		<testSourceDirectory>src/test/java</testSourceDirectory>
 	</build>
 
 </project>
