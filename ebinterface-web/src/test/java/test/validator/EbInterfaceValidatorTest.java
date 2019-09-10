@@ -2,6 +2,7 @@ package test.validator;
 
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.EbInterfaceVersion;
+import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.validator.Rules;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.validator.jaxb.Result;
@@ -354,7 +355,9 @@ public class EbInterfaceValidatorTest {
         // Test a file with no SVNR - no rule shall be fired
         InputStream input = this.getClass().getResourceAsStream("/ebinterface/4p0/testinstance-no-svnr.xml");
         byte[] uploadedData = IOUtils.toByteArray(input);
-        final String schematronFile = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0).getFileReference();
+        Rule rule = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0);
+        assertNotNull(rule);
+        final String schematronFile = rule.getFileReference();
         assertNotNull(input);
 
         final EbInterfaceValidator validator = new EbInterfaceValidator();
@@ -400,7 +403,9 @@ public class EbInterfaceValidatorTest {
         InputStream input = this.getClass()
                 .getResourceAsStream("/ebinterface/4p0/testinstance-no-billerscontractpartnernumberpresent.xml");
         byte[] uploadedData = IOUtils.toByteArray(input);
-        final String schematronFile = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0).getFileReference();
+        Rule rule = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0);
+        assertNotNull(rule);
+        final String schematronFile = rule.getFileReference();
         assertNotNull(input);
 
         // No rule must fire in this case and no error must be produced
