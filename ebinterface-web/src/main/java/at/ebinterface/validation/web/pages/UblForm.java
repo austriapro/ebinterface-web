@@ -1,13 +1,9 @@
 package at.ebinterface.validation.web.pages;
 
-import com.helger.commons.errorlist.ErrorList;
-import com.helger.commons.errorlist.IError;
-import com.helger.ebinterface.EbInterface41Marshaller;
-import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface41Converter;
-import com.helger.ebinterface.v41.Ebi41InvoiceType;
-import com.helger.ubl21.UBL21Reader;
-
-import net.sf.jasperreports.engine.JasperReport;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -18,16 +14,24 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.io.IOUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
+import com.helger.commons.error.IError;
+import com.helger.commons.error.list.ErrorList;
+import com.helger.ebinterface.EbInterface41Marshaller;
+import com.helger.ebinterface.ubl.from.IToEbinterfaceSettings;
+import com.helger.ebinterface.ubl.from.ToEbinterfaceSettings;
+import com.helger.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface41Converter;
+import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface41Converter;
+import com.helger.ebinterface.v41.Ebi41InvoiceType;
+import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
+import com.helger.ubl21.UBL21Reader;
 
 import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
+import net.sf.jasperreports.engine.JasperReport;
+import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 /**
@@ -35,10 +39,10 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  *
  * @author pl
  */
-class UblForm extends Form {
+class UblForm extends Form<Object> {
 
   /**
-   * Panel for providing feedback in case of errorneous input
+   * Panel for providing feedback in case of erroneous input
    */
   FeedbackPanel feedbackPanel;
 
@@ -81,42 +85,57 @@ class UblForm extends Form {
       StartPage.LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
-    // Read UBL
-    final InvoiceType aUBLInvoice = UBL21Reader.invoice().read(uploadedData);
+    final Locale aDisplayLocale = Locale.GERMANY;
+    final Locale aContentLocale = Locale.GERMANY;
 
-    if (aUBLInvoice == null){
+    // Read UBL
+    ErrorList aReadErrors = new ErrorList ();
+    final InvoiceType aUBLInvoice = UBL21Reader.invoice().setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors)).read(uploadedData);
+    final CreditNoteType aUBLCreditNote;
+    if (aUBLInvoice == null)
+      aUBLCreditNote = UBL21Reader.creditNote ().setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors)).read (uploadedData);
+    else
+      aUBLCreditNote = null;
+
+    if (aUBLInvoice == null && aUBLCreditNote == null){
       error(
-          "Das UBL kann nicht verarbeitet werden.");
+          "Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice und CreditNote Dokumente verarbeitet werden.");
+      // Log errors in case somebody cares
+      for (final IError aError: aReadErrors.getAllFailures ())
+        StartPage.LOG.warn ("UBL parsing: " + aError.getAsString (aDisplayLocale));
       onError();
       return;
     }
 
     // Convert to ebInterface
+    final IToEbinterfaceSettings aToEbiSettings = new ToEbinterfaceSettings ();
     final ErrorList aErrorList = new ErrorList ();
-    final Ebi41InvoiceType aEbInvoice = new InvoiceToEbInterface41Converter(Locale.GERMANY,
-                                                                            Locale.GERMANY,
-                                                                            false).convertToEbInterface (aUBLInvoice, aErrorList);
+    final Ebi41InvoiceType aEb41Invoice;
+    if (aUBLInvoice != null) {
+      // It's an invoice
+      aEb41Invoice = new InvoiceToEbInterface41Converter(aDisplayLocale, aContentLocale, aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+    }
+    else {
+      // It' a credit note 
+      aEb41Invoice = new CreditNoteToEbInterface41Converter(aDisplayLocale, aContentLocale, aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+    }
+    
     byte[] ebInterface = null;
-    ValidationResult
-        validationResult = null;
+    ValidationResult validationResult = null;
     byte[] pdf = null;
 
-    StringBuilder sbLog = new StringBuilder();
+    final StringBuilder sbLog = new StringBuilder();
 
-    if(aErrorList.hasErrorsOrWarnings()) {
+    if(aErrorList.containsAtLeastOneError ()) {
       validationResult = new ValidationResult();
       validationResult.setSchemaValidationErrorMessage("Die Schemavalidierung konnte nicht durchgeführt werden.");
 
       sbLog.append("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
-      for (IError error : aErrorList.getAllItems()){
-        sbLog.append(error.getErrorFieldName()).append(":<br/>").append(error.getErrorText()).append("<br/><br/>");
+      for (IError error : aErrorList.getAllErrors ()){
+        sbLog.append(error.getErrorFieldName()).append(":<br/>").append(error.getErrorText(Locale.GERMANY)).append("<br/><br/>");
       }
     } else {
-      ByteArrayOutputStream bo = new ByteArrayOutputStream();
-
-      new EbInterface41Marshaller().write(aEbInvoice, bo);
-
-      ebInterface = bo.toByteArray();
+      ebInterface = new EbInterface41Marshaller().getAsBytes (aEb41Invoice);
 
       //Validate the XML instance - performed in any case
       final EbInterfaceValidator validator = Application.get().getMetaData(
@@ -151,7 +170,7 @@ class UblForm extends Form {
     }
 
     String log = null;
-    if (sbLog.toString().length()>0){
+    if (sbLog.length()>0){
       log = sbLog.toString();
     }
 
