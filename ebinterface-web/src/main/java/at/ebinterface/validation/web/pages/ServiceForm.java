@@ -25,7 +25,7 @@ import at.ebinterface.validation.web.Constants;
  *
  * @author pl
  */
-class ServiceForm extends Form {
+class ServiceForm extends Form<Object> {
 
 
   /**
@@ -85,8 +85,6 @@ class ServiceForm extends Form {
     //Schematron set must be selected
 
     byte[] pdf = null;
-    byte[] zugferd = null;
-    StringBuilder sbLog = new StringBuilder();
 
     //Get the file input
     final FileUpload upload = fileUploadField.getFileUpload();
