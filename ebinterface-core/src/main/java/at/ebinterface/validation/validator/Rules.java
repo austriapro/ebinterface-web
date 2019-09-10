@@ -21,7 +21,7 @@ public class Rules {
   static {
 
     //Initialize the set of rules
-    rules = new ArrayList<Rule>();
+    rules = new ArrayList<>();
 
     //  https://github.com/austriapro/ebinterface-web/issues/11
     /*

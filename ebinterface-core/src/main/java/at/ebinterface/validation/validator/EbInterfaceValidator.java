@@ -1,10 +1,5 @@
 package at.ebinterface.validation.validator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,6 +21,11 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.ws.soap.SOAPFaultException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
@@ -154,11 +154,11 @@ public class EbInterfaceValidator {
       ebInterface5p0Validator = schema5p0.newValidator();
 
     } catch (final Exception e) {
-      new RuntimeException(e);
+      throw new RuntimeException(e);
     }
 
     // Get a transformer factory
-    tFactory = net.sf.saxon.TransformerFactoryImpl.newInstance();
+    tFactory = TransformerFactory.newInstance();
 
     /*
      * Initialize the XSLT Transformer for generating the interim XSLTs
@@ -278,7 +278,7 @@ public class EbInterfaceValidator {
     } catch (final SAXException e) {
       result.setSchemaValidationErrorMessage(e.getMessage());
     } catch (final IOException e) {
-      new RuntimeException(e);
+      throw new RuntimeException(e);
     }
 
     // Step 3 - in case the document is signed, check the signature as well
@@ -402,13 +402,9 @@ public class EbInterfaceValidator {
 
       return (Result) jaxbResult.getResult();
 
-    } catch (final TransformerException e) {
-      new RuntimeException(e);
-    } catch (final JAXBException e) {
-      new RuntimeException(e);
+    } catch (final TransformerException | JAXBException e) {
+      throw new RuntimeException(e);
     }
-
-    return null;
   }
 
   /**

@@ -9,6 +9,7 @@ import at.ebinterface.validation.validator.jaxb.Result;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.util.io.IOUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -349,6 +350,7 @@ public class EbInterfaceValidatorTest {
      * @throws IOException
      */
     @Test
+    @Ignore ("Old ebInterface 4.0")
     public void testSchematronValidatorSVNR() throws IOException {
 
         // CASE 1
@@ -396,6 +398,7 @@ public class EbInterfaceValidatorTest {
      * @throws IOException
      */
     @Test
+    @Ignore ("Old ebInterface 4.0")
     public void testSchematronValidatorSVBillersContractPartnerNumber() throws IOException {
 
         // CASE 1

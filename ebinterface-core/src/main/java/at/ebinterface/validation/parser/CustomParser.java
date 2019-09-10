@@ -1,15 +1,12 @@
 package at.ebinterface.validation.parser;
 
-import at.ebinterface.validation.exception.NamespaceUnknownException;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
+import java.io.InputStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.InputSource;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import java.io.InputStream;
+import at.ebinterface.validation.exception.NamespaceUnknownException;
+import at.ebinterface.validation.validator.EbInterfaceVersion;
 
 /**
  * Custom parser for XML instances. Used to determine the used XML Schema based on the namespace
