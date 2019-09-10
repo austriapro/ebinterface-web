@@ -1,6 +1,5 @@
 package at.ebinterface.validation.web.pages;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -13,6 +12,8 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.error.IError;
 import com.helger.commons.error.list.ErrorList;
@@ -40,7 +41,8 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  * @author pl
  */
 class UblForm extends Form<Object> {
-
+  private static final Logger LOG = LoggerFactory.getLogger (UblForm.class);
+  
   /**
    * Panel for providing feedback in case of erroneous input
    */
@@ -82,7 +84,7 @@ class UblForm extends Form<Object> {
       final InputStream inputStream = upload.getInputStream();
       uploadedData = IOUtils.toByteArray(inputStream);
     } catch (final IOException e) {
-      StartPage.LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     final Locale aDisplayLocale = Locale.GERMANY;
@@ -102,7 +104,7 @@ class UblForm extends Form<Object> {
           "Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice und CreditNote Dokumente verarbeitet werden.");
       // Log errors in case somebody cares
       for (final IError aError: aReadErrors.getAllFailures ())
-        StartPage.LOG.warn ("UBL parsing: " + aError.getAsString (aDisplayLocale));
+        LOG.warn ("UBL parsing: " + aError.getAsString (aDisplayLocale));
       onError();
       return;
     }
@@ -138,10 +140,8 @@ class UblForm extends Form<Object> {
       ebInterface = new EbInterface41Marshaller().getAsBytes (aEb41Invoice);
 
       //Validate the XML instance - performed in any case
-      final EbInterfaceValidator validator = Application.get().getMetaData(
-          Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
-      validationResult =
-          validator.validateXMLInstanceAgainstSchema(ebInterface);
+      final EbInterfaceValidator validator = Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+      validationResult = validator.validateXMLInstanceAgainstSchema(ebInterface);
 
       if (validationResult.getDeterminedEbInterfaceVersion() == null) {
         error(
@@ -153,12 +153,12 @@ class UblForm extends Form<Object> {
       BaseRenderer renderer = new BaseRenderer();
 
       try {
-        StartPage.LOG.debug("Load ebInterface JasperReport template from application context.");
+        LOG.debug("Load ebInterface JasperReport template from application context.");
         JasperReport
             jrReport =
             Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-        StartPage.LOG.debug("Rendering PDF.");
+        LOG.debug("Rendering PDF.");
 
         pdf = renderer.renderReport(jrReport, ebInterface, null);
 

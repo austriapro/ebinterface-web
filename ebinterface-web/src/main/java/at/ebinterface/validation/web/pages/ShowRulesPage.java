@@ -1,7 +1,7 @@
 package at.ebinterface.validation.web.pages;
 
-import at.ebinterface.validation.validator.Rule;
-import at.ebinterface.validation.web.components.CodeBox;
+import java.io.IOException;
+import java.io.StringWriter;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -9,8 +9,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.io.IOUtils;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import at.ebinterface.validation.validator.Rule;
+import at.ebinterface.validation.web.components.CodeBox;
 
 
 /**

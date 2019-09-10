@@ -1,8 +1,18 @@
 package at.ebinterface.validation.web.pages;
 
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.saxon.Controller;
-import net.sf.saxon.serialize.MessageWarner;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Validator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
@@ -17,21 +27,9 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Validator;
 
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
@@ -48,22 +46,25 @@ import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageZugferd;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.saxon.Controller;
+import net.sf.saxon.serialize.MessageWarner;
 
 /**
  * The input form class
  *
  * @author pl
  */
-class InputForm extends Form {
-
+class InputForm extends Form<Object> {
+  private static final Logger LOG = LoggerFactory.getLogger (InputForm.class);
 
   /**
-   * Panel for providing feedback in case of errorneous input
+   * Panel for providing feedback in case of erroneous input
    */
   FeedbackPanel feedbackPanel;
 
   /**
-   * Dropdown choice for the schmeatrno rules
+   * Dropdown choice for the Schematron rules
    */
   DropDownChoice<Rule> rules;
 
@@ -95,7 +96,7 @@ class InputForm extends Form {
 
     //Add the drop down choice for the different rules which are currently supported
     rules =
-        new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
+        new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
                                  new IChoiceRenderer<Rule>() {
                                    @Override
                                    public Object getDisplayValue(Rule object) {
@@ -112,7 +113,7 @@ class InputForm extends Form {
 
     //Add the drop down choice for the different ZUGFeRD levels which are currently supported
     zugferdlevels =
-        new DropDownChoice<String>(
+        new DropDownChoice<>(
             "zugferdSelector", Model.of(new String()), StartPage.ZUGFERD_LEVELS,
             new IChoiceRenderer<String>() {
               @Override
@@ -199,7 +200,7 @@ class InputForm extends Form {
       final InputStream inputStream = upload.getInputStream();
       uploadedData = IOUtils.toByteArray(inputStream);
     } catch (final IOException e) {
-      StartPage.LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     //Validate the XML instance - performed in any case
@@ -274,17 +275,17 @@ class InputForm extends Form {
       BaseRenderer renderer = new BaseRenderer();
 
       try {
-        StartPage.LOG.debug("Load ebInterface JasperReport template from application context.");
+        LOG.debug("Load ebInterface JasperReport template from application context.");
         JasperReport
             jrReport =
             Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-        StartPage.LOG.debug("Rendering PDF from ebInterface file.");
+        LOG.debug("Rendering PDF from ebInterface file.");
 
         pdf = renderer.renderReport(jrReport, uploadedData, null);
 
       } catch (Exception ex) {
-        StartPage.LOG.error("Error when generating PDF from ebInterface", ex);
+        LOG.error("Error when generating PDF from ebInterface", ex);
         error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
         onError();
         return;
@@ -338,7 +339,7 @@ class InputForm extends Form {
 
       //Map to ZUGFeRD Basic
       try {
-        StartPage.LOG.debug("Map ebInterface to ZUGFeRD.");
+        LOG.debug("Map ebInterface to ZUGFeRD.");
         sZugferd = new String(zugFeRDMapping.mapFromebInterface(new String(uploadedData)));
 
         zugferd = sZugferd.getBytes("UTF-8");
@@ -358,7 +359,7 @@ class InputForm extends Form {
               eh.toString().replace("\n", "<br/>"));
         }
       } catch (Exception e) {
-        StartPage.LOG.error("ZUGFeRD conversion failed", e);
+        LOG.error("ZUGFeRD conversion failed", e);
         error("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
         onError();
         return;
@@ -398,12 +399,12 @@ class InputForm extends Form {
             ZugferdRenderer renderer = new ZugferdRenderer();
 
             try {
-              StartPage.LOG.debug("Load ZUGFeRD JasperReport template from application context.");
+              LOG.debug("Load ZUGFeRD JasperReport template from application context.");
               JasperReport
                   jrReport =
                   Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE);
 
-              StartPage.LOG.debug("Rendering PDF.");
+              LOG.debug("Rendering PDF.");
 
               pdf = renderer.renderReport(jrReport, zugferd, null);
 

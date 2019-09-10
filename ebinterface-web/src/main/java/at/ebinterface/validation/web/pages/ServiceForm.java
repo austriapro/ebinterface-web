@@ -1,6 +1,7 @@
 package at.ebinterface.validation.web.pages;
 
-import net.sf.jasperreports.engine.JasperReport;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
@@ -11,14 +12,14 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  * The input form class
@@ -26,7 +27,7 @@ import at.ebinterface.validation.web.Constants;
  * @author pl
  */
 class ServiceForm extends Form<Object> {
-
+private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
 
   /**
    * Panel for providing feedback in case of errorneous input
@@ -94,7 +95,7 @@ class ServiceForm extends Form<Object> {
       final InputStream inputStream = upload.getInputStream();
       uploadedData = IOUtils.toByteArray(inputStream);
     } catch (final IOException e) {
-      StartPage.LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     //Validate the XML instance - performed in any case
@@ -138,17 +139,17 @@ class ServiceForm extends Form<Object> {
       BaseRenderer renderer = new BaseRenderer();
 
       try {
-        StartPage.LOG.debug("Load ebInterface JasperReport template from application context.");
+        LOG.debug("Load ebInterface JasperReport template from application context.");
         JasperReport
             jrReport =
             Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-        StartPage.LOG.debug("Rendering PDF from ebInterface file.");
+        LOG.debug("Rendering PDF from ebInterface file.");
 
         pdf = renderer.renderReport(jrReport, uploadedData, null);
 
       } catch (Exception ex) {
-        StartPage.LOG.error("Error when generating PDF from ebInterface", ex);
+        LOG.error("Error when generating PDF from ebInterface", ex);
         error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
         onError();
         return;

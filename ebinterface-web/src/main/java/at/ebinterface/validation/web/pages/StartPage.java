@@ -1,10 +1,8 @@
 package at.ebinterface.validation.web.pages;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 import java.util.List;
+
+import com.helger.commons.collection.impl.CommonsArrayList;
 
 /**
  * First page of the ebInterface Validation Service
@@ -21,13 +19,11 @@ public class StartPage extends BasePage {
   }
 
   //choices in dropdown box ZUGFeRD
-  public static final List<String> ZUGFERD_LEVELS = Arrays.asList(new String[]{
-      "ZUGFeRD (1.0) Basic", "ZUGFeRD (1.0) Comfort", "ZUGFeRD (1.0) Extended"});
-
-  public static final Logger LOG = LoggerFactory.getLogger(StartPage.class.getName());
+  static final List<String> ZUGFERD_LEVELS = new CommonsArrayList<> 
+                    ("ZUGFeRD (1.0) Basic", "ZUGFeRD (1.0) Comfort", "ZUGFeRD (1.0) Extended").getAsUnmodifiable ();
 
   /**
-   * Construc the start page
+   * Construct the start page
    */
   public StartPage() {
 
@@ -39,12 +35,8 @@ public class StartPage extends BasePage {
     final ShowRulesForm showRulesForm = new ShowRulesForm("showRulesForm");
     add(showRulesForm);
 
-    //Add the form for showing the supported rules
+    //Add the form for convert UBL to ebInterface
     final UblForm ublForm = new UblForm("ublForm");
     add(ublForm);
-
-
   }
-
-
 }
