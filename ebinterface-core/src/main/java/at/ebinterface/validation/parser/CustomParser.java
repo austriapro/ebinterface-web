@@ -2,11 +2,12 @@ package at.ebinterface.validation.parser;
 
 import java.io.InputStream;
 
-import org.apache.commons.lang.StringUtils;
 import org.xml.sax.InputSource;
 
+import com.helger.commons.string.StringHelper;
+import com.helger.ebinterface.EEbInterfaceVersion;
+
 import at.ebinterface.validation.exception.NamespaceUnknownException;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
 
 /**
  * Custom parser for XML instances. Used to determine the used XML Schema based on the namespace
@@ -17,7 +18,7 @@ public enum CustomParser {
 
   INSTANCE;
 
-  private static CustomHandler customHandler;
+  private static final CustomHandler customHandler;
 
   static {
     customHandler = new CustomHandler();
@@ -28,10 +29,10 @@ public enum CustomParser {
    *
    * @return version
    */
-  public EbInterfaceVersion getEbInterfaceDetails(final InputSource source)
+  public EbiVersion getEbInterfaceDetails(final InputSource source)
       throws NamespaceUnknownException {
 
-    //Get the namespace from the instace
+    //Get the namespace from the instance
     try {
       at.ebinterface.validation.validator.SAXParserFactory.newInstance()
           .parse(source, customHandler);
@@ -41,14 +42,12 @@ public enum CustomParser {
     }
 
     //Map it to an enumeration
-    if (!StringUtils.isEmpty(customHandler.getFoundNameSpace())) {
-      for (final EbInterfaceVersion v : EbInterfaceVersion.values()) {
-        if (v.getNamespace().equals(customHandler.getFoundNameSpace())) {
+    if (StringHelper.hasText(customHandler.getFoundNameSpace())) {
+      for (final EEbInterfaceVersion v : EEbInterfaceVersion.values()) {
+        if (v.getNamespaceURI ().equals(customHandler.getFoundNameSpace())) {
           //Set whether its signed or not
-          v.setSigned(customHandler.isContainsSignature());
           //Set the NS of the Signature element
-          v.setSignatureNamespacePrefix(customHandler.getSignatureNamespacePrefix());
-          return v;
+          return new EbiVersion (v, customHandler.isContainsSignature(), customHandler.getSignatureNamespacePrefix());
         }
       }
     }
@@ -64,7 +63,7 @@ public enum CustomParser {
    *
    * @return version
    */
-  public EbInterfaceVersion getEbInterfaceDetails(final InputStream inputStream)
+  public EbiVersion getEbInterfaceDetails(final InputStream inputStream)
       throws NamespaceUnknownException {
     return getEbInterfaceDetails(new InputSource(inputStream));
   }

@@ -127,7 +127,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
       final String
           s =
           validator
-              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion());
+              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion().getVersion ());
       //Redirect to the printview page
       setResponsePage(new PrintViewPage(s));
       return;

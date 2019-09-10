@@ -1,20 +1,23 @@
 package test.rtr;
 
 
-import at.ebinterface.validation.dto.SignatureValidationResult;
-import at.ebinterface.validation.rtr.VerificationServiceInvoker;
-import at.ebinterface.validation.rtr.generated.VerificationFault;
-import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
-import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
-import org.apache.commons.io.IOUtils;
+import static org.junit.Assert.fail;
+
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URL;
+import com.helger.commons.io.stream.StreamHelper;
 
-import static org.junit.Assert.fail;
+import at.ebinterface.validation.dto.SignatureValidationResult;
+import at.ebinterface.validation.rtr.VerificationServiceInvoker;
+import at.ebinterface.validation.rtr.generated.VerificationFault;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
 
 public class ValidationServiceTest {
 
@@ -39,7 +42,7 @@ public class ValidationServiceTest {
     public void testValidationService() throws Exception {
 
         //Get an invoice instance
-        String invoice = IOUtils.toString(this.getClass().getResourceAsStream("/ebinterface/3p02/valid_and_signed.xml"));
+        String invoice = StreamHelper.getAllBytesAsString (getClass().getResourceAsStream("/ebinterface/3p02/valid_and_signed.xml"), StandardCharsets.UTF_8);
 
         //Create a verification request
         VerifyDocumentRequest request = new VerifyDocumentRequest();
@@ -78,7 +81,7 @@ public class ValidationServiceTest {
 
 
         //Get an invalid invoice
-        invoice = IOUtils.toString(this.getClass().getResourceAsStream("/ebinterface/3p02/mesonic1-corrupted.xml"));
+        invoice = StreamHelper.getAllBytesAsString(this.getClass().getResourceAsStream("/ebinterface/3p02/mesonic1-corrupted.xml"), StandardCharsets.UTF_8);
         request = new VerifyDocumentRequest();
         //Set the document
         request.setDocument(invoice.getBytes());

@@ -1,11 +1,16 @@
 package test.validator;
 
-import at.ebinterface.validation.validator.EbInterfaceValidator;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
-import at.ebinterface.validation.validator.Rule;
-import at.ebinterface.validation.validator.Rules;
-import at.ebinterface.validation.validator.ValidationResult;
-import at.ebinterface.validation.validator.jaxb.Result;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.util.io.IOUtils;
 import org.junit.Assert;
@@ -14,13 +19,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
+import com.helger.ebinterface.EEbInterfaceVersion;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import at.ebinterface.validation.validator.EbInterfaceValidator;
+import at.ebinterface.validation.validator.Rule;
+import at.ebinterface.validation.validator.Rules;
+import at.ebinterface.validation.validator.ValidationResult;
+import at.ebinterface.validation.validator.jaxb.Result;
 
 /**
  * Test class for testing the schematron validator
@@ -53,7 +58,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schema validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     public void test4p3SchemaValidator() throws IOException {
@@ -84,7 +89,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schema validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     public void test4p2SchemaValidator() throws IOException {
@@ -114,7 +119,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schema validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     public void test4p1SchemaValidator() throws IOException {
@@ -145,7 +150,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schema validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     public void test4p0SchemaValidator() throws IOException {
@@ -202,9 +207,9 @@ public class EbInterfaceValidatorTest {
         validator = new EbInterfaceValidator();
         result = validator.validateXMLInstanceAgainstSchema(uploadedData);
         //Must be ebinterface 4p0
-        assertEquals(EbInterfaceVersion.E4P0, result.getDeterminedEbInterfaceVersion());
+        assertEquals(EEbInterfaceVersion.V40, result.getDeterminedEbInterfaceVersion().getVersion ());
         //Must be signed
-        assertEquals(true, result.getDeterminedEbInterfaceVersion().isSigned());
+        assertTrue(result.getDeterminedEbInterfaceVersion().isSigned());
         //Signature is invalid - thus no response
         assertNull(result.getVerifyDocumentResponse());
         //Signature validation exception message must be present
@@ -219,10 +224,10 @@ public class EbInterfaceValidatorTest {
         result = validator.validateXMLInstanceAgainstSchema(uploadedData);
 
         //Must be ebinterface 4p0
-        assertEquals(EbInterfaceVersion.E4P0, result.getDeterminedEbInterfaceVersion());
+        assertEquals(EEbInterfaceVersion.V40, result.getDeterminedEbInterfaceVersion().getVersion ());
 
         //Must be signed
-        assertEquals(true, result.getDeterminedEbInterfaceVersion().isSigned());
+        assertTrue(result.getDeterminedEbInterfaceVersion().isSigned());
 
         //Signature must be valid - i.e. there must be an answer from the signature service
         //Enable this line in order to check if the signature validation correct
@@ -238,7 +243,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schema validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     public void test3p02SchemaValidator() throws IOException {
@@ -281,7 +286,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schema validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     public void test3p0SchemaValidator() throws IOException {
@@ -347,7 +352,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the SVNR numbers
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     @Ignore ("Old ebInterface 4.0")
@@ -357,7 +362,7 @@ public class EbInterfaceValidatorTest {
         // Test a file with no SVNR - no rule shall be fired
         InputStream input = this.getClass().getResourceAsStream("/ebinterface/4p0/testinstance-no-svnr.xml");
         byte[] uploadedData = IOUtils.toByteArray(input);
-        Rule rule = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0);
+        Rule rule = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EEbInterfaceVersion.V40);
         assertNotNull(rule);
         final String schematronFile = rule.getFileReference();
         assertNotNull(input);
@@ -395,7 +400,7 @@ public class EbInterfaceValidatorTest {
     /**
      * Test the schematron validator
      *
-     * @throws IOException
+     * @throws IOException on error
      */
     @Test
     @Ignore ("Old ebInterface 4.0")
@@ -406,7 +411,7 @@ public class EbInterfaceValidatorTest {
         InputStream input = this.getClass()
                 .getResourceAsStream("/ebinterface/4p0/testinstance-no-billerscontractpartnernumberpresent.xml");
         byte[] uploadedData = IOUtils.toByteArray(input);
-        Rule rule = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EbInterfaceVersion.E4P0);
+        Rule rule = Rules.getRule("Sozialversicherung (ebInterface 4p0)", EEbInterfaceVersion.V40);
         assertNotNull(rule);
         final String schematronFile = rule.getFileReference();
         assertNotNull(input);

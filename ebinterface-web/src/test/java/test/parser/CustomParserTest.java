@@ -1,13 +1,17 @@
 package test.parser;
 
-import at.ebinterface.validation.exception.NamespaceUnknownException;
-import at.ebinterface.validation.parser.CustomParser;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.InputStream;
+
 import org.junit.Test;
 import org.xml.sax.InputSource;
 
-import java.io.InputStream;
+import com.helger.ebinterface.EEbInterfaceVersion;
+
+import at.ebinterface.validation.exception.NamespaceUnknownException;
+import at.ebinterface.validation.parser.CustomParser;
 
 /**
  * Used to test the custom parser class
@@ -28,7 +32,7 @@ public class CustomParserTest {
         try {
             CustomParser.INSTANCE.getEbInterfaceDetails(source);
         } catch (NamespaceUnknownException ne) {
-            Assert.assertNotNull(ne);
+            assertNotNull(ne);
             System.out.println(ne.getMessage());
         }
 
@@ -40,7 +44,7 @@ public class CustomParserTest {
         try {
             CustomParser.INSTANCE.getEbInterfaceDetails(source);
         } catch (NamespaceUnknownException ne) {
-            Assert.assertNotNull(ne);
+            assertNotNull(ne);
             System.out.println(ne.getMessage());
         }
 
@@ -52,7 +56,7 @@ public class CustomParserTest {
         try {
             CustomParser.INSTANCE.getEbInterfaceDetails(source);
         } catch (NamespaceUnknownException ne) {
-            Assert.assertNotNull(ne);
+            assertNotNull(ne);
             System.out.println(ne.getMessage());
         }
 
@@ -61,39 +65,39 @@ public class CustomParserTest {
                 "/ebinterface/3p0/ebInterface_Instance_withExtension.xml");
         source = new InputSource(inputStream);
 
-        Assert.assertEquals(EbInterfaceVersion.E3P0,
-                CustomParser.INSTANCE.getEbInterfaceDetails(source));
+        assertEquals(EEbInterfaceVersion.V30,
+                CustomParser.INSTANCE.getEbInterfaceDetails(source).getVersion ());
 
         // 3p02
         inputStream = this.getClass().getResourceAsStream(
                 "/ebinterface/3p02/InvoiceExample2.xml");
         source = new InputSource(inputStream);
 
-        Assert.assertEquals(EbInterfaceVersion.E3P02,
-                CustomParser.INSTANCE.getEbInterfaceDetails(source));
+        assertEquals(EEbInterfaceVersion.V302,
+                CustomParser.INSTANCE.getEbInterfaceDetails(source).getVersion ());
 
         inputStream = this.getClass().getResourceAsStream(
                 "/ebinterface/3p02/InvoiceExample1.xml");
         source = new InputSource(inputStream);
 
-        Assert.assertEquals(EbInterfaceVersion.E3P02,
-                CustomParser.INSTANCE.getEbInterfaceDetails(source));
+        assertEquals(EEbInterfaceVersion.V302,
+                CustomParser.INSTANCE.getEbInterfaceDetails(source).getVersion ());
 
         // 4p0
         inputStream = this.getClass().getResourceAsStream(
                 "/ebinterface/4p0/testinstance-valid-schema.xml");
         source = new InputSource(inputStream);
 
-        Assert.assertEquals(EbInterfaceVersion.E4P0,
-                CustomParser.INSTANCE.getEbInterfaceDetails(source));
+        assertEquals(EEbInterfaceVersion.V40,
+                CustomParser.INSTANCE.getEbInterfaceDetails(source).getVersion ());
 
         // 4p1
         inputStream = this.getClass().getResourceAsStream(
                 "/ebinterface/4p1/ebInterface_4p1_sample.xml");
         source = new InputSource(inputStream);
 
-        Assert.assertEquals(EbInterfaceVersion.E4P1,
-                CustomParser.INSTANCE.getEbInterfaceDetails(source));
+        assertEquals(EEbInterfaceVersion.V41,
+                CustomParser.INSTANCE.getEbInterfaceDetails(source).getVersion ());
 
 
         // 4p3
@@ -101,8 +105,8 @@ public class CustomParserTest {
             "/ebinterface/4p3/ebInterface_4p3_sample.xml");
         source = new InputSource(inputStream);
 
-        Assert.assertEquals(EbInterfaceVersion.E4P3,
-                            CustomParser.INSTANCE.getEbInterfaceDetails(source));
+        assertEquals(EEbInterfaceVersion.V43,
+                            CustomParser.INSTANCE.getEbInterfaceDetails(source).getVersion ());
 
 
     }

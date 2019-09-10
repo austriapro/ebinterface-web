@@ -27,8 +27,11 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.helger.ebinterface.EEbInterfaceVersion;
+
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
+import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.rtr.VerificationServiceInvoker;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
@@ -239,7 +242,7 @@ public class EbInterfaceValidator {
     final ValidationResult result = new ValidationResult();
 
     // Step 1 - determine the correct ebInterface version
-    EbInterfaceVersion version;
+    EbiVersion version;
     try {
       version = CustomParser.INSTANCE
           .getEbInterfaceDetails(new InputSource(
@@ -248,7 +251,6 @@ public class EbInterfaceValidator {
     } catch (final NamespaceUnknownException e1) {
       result.setSchemaValidationErrorMessage(e1.getMessage());
       return result;
-
     }
 
     // Step 2 - invoke the correct parser for the determined ebInterface
@@ -260,17 +262,18 @@ public class EbInterfaceValidator {
           new javax.xml.transform.sax.SAXSource(new InputSource(
               new ByteArrayInputStream(uploadedData)));
 
-      if (version == EbInterfaceVersion.E3P0) {
+      final EEbInterfaceVersion v = version.getVersion ();
+      if (v == EEbInterfaceVersion.V30) {
         ebInterface3p0Validator.validate(saxSource);
-      } else if (version == EbInterfaceVersion.E3P02) {
+      } else if (v == EEbInterfaceVersion.V302) {
         ebInterface3p02Validator.validate(saxSource);
-      } else if (version == EbInterfaceVersion.E4P0) {
+      } else if (v == EEbInterfaceVersion.V40) {
         ebInterface4p0Validator.validate(saxSource);
-      } else if (version == EbInterfaceVersion.E4P1) {
+      } else if (v == EEbInterfaceVersion.V41) {
         ebInterface4p1Validator.validate(saxSource);
-      } else if (version == EbInterfaceVersion.E4P2) {
+      } else if (v == EEbInterfaceVersion.V42) {
         ebInterface4p2Validator.validate(saxSource);
-      } else if (version == EbInterfaceVersion.E5P0) {
+      } else if (v == EEbInterfaceVersion.V50) {
         ebInterface5p0Validator.validate(saxSource);
       } else {
         ebInterface4p3Validator.validate(saxSource);
@@ -316,7 +319,7 @@ public class EbInterfaceValidator {
    *
    * @return the string representation
    */
-  public String transformInput(final byte[] uploadedData, final EbInterfaceVersion version) {
+  public String transformInput(final byte[] uploadedData, final EEbInterfaceVersion version) {
 
     try {
       final StringWriter sw = new StringWriter();
@@ -328,33 +331,33 @@ public class EbInterfaceValidator {
               (new InputSource(new ByteArrayInputStream(uploadedData))));
 
       LOG.info("Transforming {}", version);
-      if (version == EbInterfaceVersion.E3P0) {
+      if (version == EEbInterfaceVersion.V30) {
         ebInterface3p0Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
-      } else if (version == EbInterfaceVersion.E3P02) {
+      } else if (version == EEbInterfaceVersion.V302) {
         ebInterface3p02Transformer.transform(new StreamSource(
                                                  new ByteArrayInputStream(uploadedData)),
                                              new StreamResult(sw)
         );
-      } else if (version == EbInterfaceVersion.E4P0) {
+      } else if (version == EEbInterfaceVersion.V40) {
         ebInterface4p0Transformer.transform(saxSource,
                                             new StreamResult(sw)
         );
-      } else if (version == EbInterfaceVersion.E4P1) {
+      } else if (version == EEbInterfaceVersion.V41) {
         ebInterface4p1Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
       }
-      else if (version == EbInterfaceVersion.E4P2) {
+      else if (version == EEbInterfaceVersion.V42) {
         ebInterface4p2Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
       }
-      else if (version == EbInterfaceVersion.E5P0) {
+      else if (version == EEbInterfaceVersion.V50) {
         ebInterface5p0Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)

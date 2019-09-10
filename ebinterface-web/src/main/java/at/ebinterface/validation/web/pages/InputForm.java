@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -31,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
+import com.helger.ebinterface.EEbInterfaceVersion;
+
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
 import at.austriapro.MappingErrorListener;
@@ -38,7 +41,6 @@ import at.austriapro.MappingFactory;
 import at.austriapro.rendering.BaseRenderer;
 import at.austriapro.rendering.ZugferdRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.validator.Rules;
 import at.ebinterface.validation.validator.ValidationResult;
@@ -220,15 +222,15 @@ class InputForm extends Form<Object> {
     //Schematron validation too?
     if (selectedAction == StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
       //Schematron validation may only be started in case of ebInterface 4p0
-      if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0 ||
-          validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1 ||
-          validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2 ||
-          validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P3) {
+      if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V40 ||
+          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V41 ||
+          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V42 ||
+          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V43) {
 
         //Selected rule and selected ebInterface version must match
         Rule rule = rules.getModelObject();
         if (rule != null && !(rule.getEbInterfaceVersion()
-                                  .equals(validationResult.getDeterminedEbInterfaceVersion()))) {
+                                  .equals(validationResult.getDeterminedEbInterfaceVersion().getVersion ()))) {
           error(new ResourceModel("schematron.version.mismatch").getObject());
           onError();
           return;
@@ -244,7 +246,7 @@ class InputForm extends Form<Object> {
       else {
         error(
             "Schematronregeln können nur auf ebInterface 4.0/4.1/4.2/4.3 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: "
-            + validationResult.getDeterminedEbInterfaceVersion().getCaption());
+            + validationResult.getDeterminedEbInterfaceVersion().getCaption ());
         onError();
         return;
       }
@@ -263,7 +265,7 @@ class InputForm extends Form<Object> {
       final String
           s =
           validator
-              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion());
+              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion().getVersion ());
       //Redirect to the printview page
       setResponsePage(new PrintViewPage(s));
       return;
@@ -315,19 +317,22 @@ class InputForm extends Form<Object> {
 
       MappingFactory.EbInterfaceMappingType ebType;
 
-      if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0){
+      if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V40){
         error("ZUGFeRD Konvertierung für ebInterface 4.0 nicht unterstützt.");
         onError();
         return;
 
         /*zugFeRDMapping = mf.getMapper(MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0,
                                       MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p0);*/
-      }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1){
+      }else if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V41){
         ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
-      }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
+      }else if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V42) {
         ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
-      }
-      else {
+      }else if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V50){
+        error("ZUGFeRD Konvertierung für ebInterface 5.0 nicht unterstützt.");
+        onError();
+        return;
+      } else {
         ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p3;
       }
 
@@ -342,7 +347,7 @@ class InputForm extends Form<Object> {
         LOG.debug("Map ebInterface to ZUGFeRD.");
         sZugferd = new String(zugFeRDMapping.mapFromebInterface(new String(uploadedData)));
 
-        zugferd = sZugferd.getBytes("UTF-8");
+        zugferd = sZugferd.getBytes(StandardCharsets.UTF_8);
 
         saxSource = new SAXSource(new InputSource(
             new ByteArrayInputStream(zugferd)));
