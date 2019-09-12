@@ -73,7 +73,7 @@ public class ValidationApplication extends WebApplication {
       setMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE, jrReport);
       LOG.info("JasperReport template for ebInterface is now stored in application context.");
     } catch (Exception ex) {
-      LOG.error("Could not load ebInterface PDF template!");
+      LOG.error("Could not load ebInterface PDF template!", ex);
     }
 
     try {
@@ -86,7 +86,7 @@ public class ValidationApplication extends WebApplication {
       setMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE, jrReport);
       LOG.info("JasperReport template for ZUGFeRD is now stored in application context.");
     } catch (Exception ex) {
-      LOG.error("Could not load ZUGFeRD PDF template!");
+      LOG.error("Could not load ZUGFeRD PDF template!", ex);
     }
 
     LOG.info("Initializing XML schema validator for ebInterface");
