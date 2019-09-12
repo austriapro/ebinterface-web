@@ -1,5 +1,12 @@
 package at.ebinterface.validation.web.pages.resultpages;
 
+import static at.ebinterface.validation.web.pages.StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -11,9 +18,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.validator.jaxb.Result;
@@ -21,28 +25,17 @@ import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.panels.ErrorDetailsPanel;
 import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
 
-import static at.ebinterface.validation.web.pages.StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION;
-
 public class ResultPanel extends Panel {
-
   public ResultPanel(String id, final ValidationResult validationResult,
                      final String selectedSchematron,
                      final StartPage.ActionType selectedAction,
                      final byte[] pdf,
                      final byte[] xml,
-                     final String log) {
-    this(id, validationResult, selectedSchematron, selectedAction, pdf, xml, log, null);
-  }
-
-  public ResultPanel(String id, final ValidationResult validationResult,
-                     final String selectedSchematron,
-                     final StartPage.ActionType selectedAction,
-                     final byte[] pdf,
-                     final byte[] xml,
-                     final String log, Class<? extends WebPage> returnPage) {
+                     final String log, 
+                     @Nullable Class<? extends WebPage> returnPage) {
     super(id);
 
-    final StringBuffer schemaVersion = new StringBuffer();
+    final StringBuilder schemaVersion = new StringBuilder();
 
     Label schemaVersionLabel;
     Label schemaVersionLabelNoOk;

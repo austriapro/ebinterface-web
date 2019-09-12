@@ -25,16 +25,10 @@
             <h4>Schritt 2: Funktion</h4>
 
             <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
-            <button class="btn-wko" type="submit" id="submitButtonSchemaOnly"
-                    :wicket:id="submitButtonSchemaOnly">ebInterface
-                gegen Schema
-                prüfen
-            </button>
+            <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" wicket:id="submitButtonSchemaOnly">ebInterface gegen Schema prüfen</button>
 
             <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
-            <p class="help-block">Wählen Sie ein Set von Schematron Regeln,
-                gegen welches Sie prüfen
-                möchten.</p>
+            <p class="help-block">Wählen Sie ein Set von Schematron Regeln, gegen welches Sie prüfen möchten.</p>
             <div class="inline-btn">
                 <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
                     <option>woo</option>
@@ -47,81 +41,68 @@
 
             <div wicket:id="zugferdWrapper">
             <h5 class="functionHeader">Konvertieren</h5>
-            <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil,
-                in welches Sie konvertieren
-                m&ouml;chten.</p>
+            <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
             <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
                 <option>woo</option>
                 <option>hoo</option>
             </select>
-            <button class="btn-wko" type="submit"
-                    wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD
-                konvertieren
-            </button>
+            <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
             </div>
-
         </form>
-
         <br/><br/>
+
         <hr class="section-line"/>
         <form wicket:id="showRulesForm">
             <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
             <div class="alert alert-danger" wicket:id="feedback"></div>
             <div class="form-actions">
                 <h5 class="functionHeader">Unterst&uuml;tzte Schematron Regeln</h5>
-                <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches
-                    sie einsehen m&ouml;chten.
-                </p>
+                <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches sie einsehen m&ouml;chten.</p>
                 <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
                     <option>woo</option>
                     <option>hoo</option>
                 </select>
-                <button class="btn-wko" type="submit" wicket:id="showSchematron">
-                    Schematrondatei anzeigen
-                </button>
+                <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
             </div>
 
         </form>
         <br/><br/>
         <hr class="section-line"/>
         <form class="border" wicket:id="ublForm">
-            <h2>UBL nach ebInterface 4.1 konvertieren</h2>
-            <div class="alert alert-danger" wicket:id="feedback">
-            </div>
+            <h2>UBL nach ebInterface konvertieren</h2>
+            <div class="alert alert-danger" wicket:id="feedback"></div>
             <div>
                 <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
-                <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer
-                    Festplatte</p>
+                <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
 
                 <div class="uploadFile">
-                    <input class="inputFile" id="ublInput" type="file"
-                           wicket:id="ublInput"/>
+                    <input class="inputFile" id="ublInput" type="file" wicket:id="ublInput"/>
                     <label for="ublInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
                 </div>
 
             </div>
             <div clss="form-actions">
                 <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-                <button class="btn-wko" type="submit" wicket:id="convertUbl">
-                    UBL nach ebInterface (4.1) konvertieren
-                </button>
+                <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
+                    <option>woo</option>
+                    <option>hoo</option>
+                </select>
+                <button class="btn-wko" type="submit" wicket:id="convertUbl">UBL nach ebInterface konvertieren</button>
             </div>
-            <br/><br/>
         </form>
+        <br/><br/>
+        
         <hr class="section-line"/>
         <div style="text-align: center;">
-            Code lizensiert unter <a
-                href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
+            Code lizensiert unter <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
             License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den
             Sourcecode besuchen
-            Sie bitte die <a href="https://github.com/austriapro/ebinterface-web"
-                             target="_blank">Projekthomepage</a>. <br/><br/>
+            Sie bitte die <a href="https://github.com/austriapro/ebinterface-web" target="_blank">Projekthomepage</a>. <br/><br/>
 
-            Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at"
-                                                            target="_blank">AUSTRIAPRO</a>
+            Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at" target="_blank">AUSTRIAPRO</a>
             entwickelt.
-            <br/><br/>
         </div>
+        <br/><br/>
     </div>
 
 </wicket:extend>

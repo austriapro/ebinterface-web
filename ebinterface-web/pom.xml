@@ -14,12 +14,12 @@
 	<name>ebInterface validation web interface</name>
 
 	<properties>
-    <commons.logging.version>1.1.1</commons.logging.version>
     <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
 		<ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
     <ebinterface-ubl-mapping-version>4.0.0-SNAPSHOT</ebinterface-ubl-mapping-version>
     <logback-version>1.2.3</logback-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<slf4j-version>1.7.26</slf4j-version>
 		<wicket-version>6.30.0</wicket-version>
 	</properties>

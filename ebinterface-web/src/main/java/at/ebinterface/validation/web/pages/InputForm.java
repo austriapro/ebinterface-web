@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
+import com.helger.commons.io.stream.StreamHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.austriapro.Mapping;
@@ -53,7 +54,7 @@ import net.sf.saxon.Controller;
 import net.sf.saxon.serialize.MessageWarner;
 
 /**
- * The input form class
+ * The input form class used on the startPage
  *
  * @author pl
  */
@@ -200,7 +201,7 @@ class InputForm extends Form<Object> {
 
     try {
       final InputStream inputStream = upload.getInputStream();
-      uploadedData = IOUtils.toByteArray(inputStream);
+      uploadedData = StreamHelper.getAllBytes(inputStream);
     } catch (final IOException e) {
       LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
@@ -436,7 +437,7 @@ class InputForm extends Form<Object> {
       //Redirect to the ebInterface result page
       setResponsePage(
           new ResultPageEbInterface(validationResult, selectedSchematronRule, selectedAction,
-                                    pdf, null, null));
+                                    pdf, null, null, StartPage.class));
     } else {
       //Redirect to the ZUGFeRD result page
       setResponsePage(

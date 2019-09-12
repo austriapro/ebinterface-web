@@ -1,28 +1,46 @@
 package at.ebinterface.validation.web.pages;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.IError;
 import com.helger.commons.error.list.ErrorList;
+import com.helger.commons.io.stream.StreamHelper;
+import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.ebinterface.EbInterface41Marshaller;
+import com.helger.ebinterface.EbInterface42Marshaller;
+import com.helger.ebinterface.EbInterface43Marshaller;
+import com.helger.ebinterface.EbInterface50Marshaller;
 import com.helger.ebinterface.ubl.from.IToEbinterfaceSettings;
 import com.helger.ebinterface.ubl.from.ToEbinterfaceSettings;
 import com.helger.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface41Converter;
+import com.helger.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface42Converter;
+import com.helger.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface43Converter;
+import com.helger.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface50Converter;
 import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface41Converter;
+import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface42Converter;
+import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface43Converter;
+import com.helger.ebinterface.ubl.from.invoice.InvoiceToEbInterface50Converter;
 import com.helger.ebinterface.v41.Ebi41InvoiceType;
+import com.helger.ebinterface.v42.Ebi42InvoiceType;
+import com.helger.ebinterface.v43.Ebi43InvoiceType;
+import com.helger.ebinterface.v50.Ebi50InvoiceType;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
 import com.helger.ubl21.UBL21Reader;
 
@@ -40,51 +58,95 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  *
  * @author pl
  */
-class UblForm extends Form<Object> {
+class UblForm extends Form <Object>
+{
   private static final Logger LOG = LoggerFactory.getLogger (UblForm.class);
-  
+  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,
+                                                                                                       EEbInterfaceVersion.V42,
+                                                                                                       EEbInterfaceVersion.V43,
+                                                                                                       EEbInterfaceVersion.V50);
+
   /**
    * Panel for providing feedback in case of erroneous input
    */
-  FeedbackPanel feedbackPanel;
+  private FeedbackPanel feedbackPanel;
 
   /**
    * Upload field for the ebInterface instance
    */
-  FileUploadField fileUploadField;
+  private FileUploadField fileUploadField;
 
-  public UblForm(final String id) {
-    super(id);
+  /**
+   * Dropdown choice for the ebInterface versions
+   */
+  private DropDownChoice <EEbInterfaceVersion> ebiVersions;
+  private final boolean fromStartPage;
 
-    //Add a feedback panel
-    feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-    feedbackPanel.setVisible(false);
-    add(feedbackPanel);
+  public UblForm (final String id, boolean fromStartPage)
+  {
+    super (id);
+    this.fromStartPage = fromStartPage;
 
-    //Add the file upload field
-    fileUploadField = new FileUploadField("ublInput");
-    fileUploadField.setRequired(true);
-    add(fileUploadField);
+    // Add a feedback panel
+    feedbackPanel = new FeedbackPanel ("feedback", new ContainerFeedbackMessageFilter (this));
+    feedbackPanel.setVisible (false);
+    add (feedbackPanel);
 
-    //Add a submit button
-    add(new SubmitLink("convertUbl"));
+    // Add the file upload field
+    fileUploadField = new FileUploadField ("ublInput");
+    fileUploadField.setRequired (true);
+    add (fileUploadField);
+
+    // Add the drop down choice for the different rules which are currently
+    // supported
+    ebiVersions = new DropDownChoice <> ("ebiVersionSelector",
+                                         Model.of (POSSIBLE_VERSIONS.getFirst ()),
+                                         POSSIBLE_VERSIONS,
+                                         new IChoiceRenderer <EEbInterfaceVersion> ()
+                                         {
+                                           @Override
+                                           public Object getDisplayValue (EEbInterfaceVersion object)
+                                           {
+                                             return "ebInterface " + object.getVersion ().getAsString (false, true);
+                                           }
+
+                                           @Override
+                                           public String getIdValue (EEbInterfaceVersion object, int index)
+                                           {
+                                             return object.getNamespaceURI ();
+                                           }
+                                         });
+
+    add (ebiVersions);
+
+    // Add a submit button
+    add (new SubmitLink ("convertUbl"));
   }
 
   @Override
-  protected void onSubmit() {
-    super.onSubmit();
+  protected void onSubmit ()
+  {
+    feedbackPanel.setVisible (false);
 
-    feedbackPanel.setVisible(false);
+    // Get the selected version
+    final EEbInterfaceVersion eVersion = ebiVersions.getModelObject ();
+    if (eVersion == null)
+    {
+      error (new ResourceModel ("ebiVersion.Required").getObject ());
+      onError ();
+      return;
+    }
 
-    //Get the file input
-    final FileUpload upload = fileUploadField.getFileUpload();
-    byte[] uploadedData = null;
-
-    try {
-      final InputStream inputStream = upload.getInputStream();
-      uploadedData = IOUtils.toByteArray(inputStream);
-    } catch (final IOException e) {
-      LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+    // Get the file input
+    final FileUpload upload = fileUploadField.getFileUpload ();
+    byte [] uploadedData = null;
+    try
+    {
+      uploadedData = StreamHelper.getAllBytes (upload.getInputStream ());
+    }
+    catch (final IOException e)
+    {
+      LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     final Locale aDisplayLocale = Locale.GERMANY;
@@ -92,99 +154,201 @@ class UblForm extends Form<Object> {
 
     // Read UBL
     ErrorList aReadErrors = new ErrorList ();
-    final InvoiceType aUBLInvoice = UBL21Reader.invoice().setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors)).read(uploadedData);
+    // First try Invoice
+    final InvoiceType aUBLInvoice = UBL21Reader.invoice ()
+                                               .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
+                                               .read (uploadedData);
     final CreditNoteType aUBLCreditNote;
     if (aUBLInvoice == null)
-      aUBLCreditNote = UBL21Reader.creditNote ().setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors)).read (uploadedData);
+    {
+      // No Invoice - try credit note
+      aUBLCreditNote = UBL21Reader.creditNote ()
+                                  .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
+                                  .read (uploadedData);
+    }
     else
       aUBLCreditNote = null;
 
-    if (aUBLInvoice == null && aUBLCreditNote == null){
-      error(
-          "Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice und CreditNote Dokumente verarbeitet werden.");
+    if (aUBLInvoice == null && aUBLCreditNote == null)
+    {
+      error ("Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice und CreditNote Dokumente verarbeitet werden.");
       // Log errors in case somebody cares
-      for (final IError aError: aReadErrors.getAllFailures ())
-        LOG.warn ("UBL parsing: " + aError.getAsString (aDisplayLocale));
-      onError();
+      LOG.warn ("UBL parsing errors:");
+      for (final IError aError : aReadErrors.getAllFailures ())
+        LOG.warn ("  " + aError.getAsString (aDisplayLocale));
+      onError ();
       return;
     }
 
     // Convert to ebInterface
     final IToEbinterfaceSettings aToEbiSettings = new ToEbinterfaceSettings ();
     final ErrorList aErrorList = new ErrorList ();
-    final Ebi41InvoiceType aEb41Invoice;
-    if (aUBLInvoice != null) {
-      // It's an invoice
-      aEb41Invoice = new InvoiceToEbInterface41Converter(aDisplayLocale, aContentLocale, aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+    byte [] ebInterface = null;
+    switch (eVersion)
+    {
+      case V41:
+        final Ebi41InvoiceType aEb41Invoice;
+        if (aUBLInvoice != null)
+        {
+          // It's an invoice
+          aEb41Invoice = new InvoiceToEbInterface41Converter (aDisplayLocale,
+                                                              aContentLocale,
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
+        }
+        else
+        {
+          // It' a credit note
+          aEb41Invoice = new CreditNoteToEbInterface41Converter (aDisplayLocale,
+                                                                 aContentLocale,
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
+        }
+        if (aEb41Invoice != null)
+          ebInterface = new EbInterface41Marshaller ().getAsBytes (aEb41Invoice);
+        break;
+      case V42:
+        final Ebi42InvoiceType aEb42Invoice;
+        if (aUBLInvoice != null)
+        {
+          // It's an invoice
+          aEb42Invoice = new InvoiceToEbInterface42Converter (aDisplayLocale,
+                                                              aContentLocale,
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
+        }
+        else
+        {
+          // It' a credit note
+          aEb42Invoice = new CreditNoteToEbInterface42Converter (aDisplayLocale,
+                                                                 aContentLocale,
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
+        }
+        if (aEb42Invoice != null)
+          ebInterface = new EbInterface42Marshaller ().getAsBytes (aEb42Invoice);
+        break;
+      case V43:
+        final Ebi43InvoiceType aEb43Invoice;
+        if (aUBLInvoice != null)
+        {
+          // It's an invoice
+          aEb43Invoice = new InvoiceToEbInterface43Converter (aDisplayLocale,
+                                                              aContentLocale,
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
+        }
+        else
+        {
+          // It' a credit note
+          aEb43Invoice = new CreditNoteToEbInterface43Converter (aDisplayLocale,
+                                                                 aContentLocale,
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
+        }
+        if (aEb43Invoice != null)
+          ebInterface = new EbInterface43Marshaller ().getAsBytes (aEb43Invoice);
+        break;
+      case V50:
+        final Ebi50InvoiceType aEb50Invoice;
+        if (aUBLInvoice != null)
+        {
+          // It's an invoice
+          aEb50Invoice = new InvoiceToEbInterface50Converter (aDisplayLocale,
+                                                              aContentLocale,
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
+        }
+        else
+        {
+          // It' a credit note
+          aEb50Invoice = new CreditNoteToEbInterface50Converter (aDisplayLocale,
+                                                                 aContentLocale,
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
+        }
+        if (aEb50Invoice != null)
+          ebInterface = new EbInterface50Marshaller ().getAsBytes (aEb50Invoice);
+        break;
+      default:
+        throw new IllegalStateException ("This ebInterface version is unknown: " + eVersion);
     }
-    else {
-      // It' a credit note 
-      aEb41Invoice = new CreditNoteToEbInterface41Converter(aDisplayLocale, aContentLocale, aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
-    }
-    
-    byte[] ebInterface = null;
+
     ValidationResult validationResult = null;
-    byte[] pdf = null;
+    byte [] pdf = null;
 
-    final StringBuilder sbLog = new StringBuilder();
+    final StringBuilder sbLog = new StringBuilder ();
 
-    if(aErrorList.containsAtLeastOneError ()) {
-      validationResult = new ValidationResult();
-      validationResult.setSchemaValidationErrorMessage("Die Schemavalidierung konnte nicht durchgeführt werden.");
+    if (aErrorList.containsAtLeastOneError () || ebInterface == null)
+    {
+      validationResult = new ValidationResult ();
+      validationResult.setSchemaValidationErrorMessage ("Die Schemavalidierung konnte nicht durchgeführt werden.");
 
-      sbLog.append("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
-      for (IError error : aErrorList.getAllErrors ()){
-        sbLog.append(error.getErrorFieldName()).append(":<br/>").append(error.getErrorText(Locale.GERMANY)).append("<br/><br/>");
+      sbLog.append ("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
+      for (final IError error : aErrorList.getAllErrors ())
+      {
+        sbLog.append (error.getErrorFieldName ())
+             .append (":<br/>")
+             .append (error.getErrorText (Locale.GERMANY))
+             .append ("<br/><br/>");
       }
-    } else {
-      ebInterface = new EbInterface41Marshaller().getAsBytes (aEb41Invoice);
+    }
+    else
+    {
+      // Validate the XML instance - performed in any case
+      final EbInterfaceValidator validator = Application.get ()
+                                                        .getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+      validationResult = validator.validateXMLInstanceAgainstSchema (ebInterface);
 
-      //Validate the XML instance - performed in any case
-      final EbInterfaceValidator validator = Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
-      validationResult = validator.validateXMLInstanceAgainstSchema(ebInterface);
-
-      if (validationResult.getDeterminedEbInterfaceVersion() == null) {
-        error(
-            "Das konvertierte XML kann nicht verarbeitet werden, das es keiner ebInterface Version entspricht.");
-        onError();
+      if (validationResult.getDeterminedEbInterfaceVersion () == null)
+      {
+        error ("Das konvertierte XML kann nicht verarbeitet werden, das es keiner ebInterface Version entspricht.");
+        onError ();
         return;
       }
 
-      BaseRenderer renderer = new BaseRenderer();
+      BaseRenderer renderer = new BaseRenderer ();
 
-      try {
-        LOG.debug("Load ebInterface JasperReport template from application context.");
-        JasperReport
-            jrReport =
-            Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
+      try
+      {
+        LOG.debug ("Load ebInterface JasperReport template from application context.");
+        JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-        LOG.debug("Rendering PDF.");
+        LOG.debug ("Rendering PDF.");
 
-        pdf = renderer.renderReport(jrReport, ebInterface, null);
-
-      } catch (Exception ex) {
-        error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
-        onError();
+        pdf = renderer.renderReport (jrReport, ebInterface, null);
+      }
+      catch (Exception ex)
+      {
+        error ("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
+        onError ();
         return;
       }
     }
 
     String log = null;
-    if (sbLog.length()>0){
-      log = sbLog.toString();
+    if (sbLog.length () > 0)
+    {
+      log = sbLog.toString ();
     }
 
-    //Redirect
-    setResponsePage(new ResultPageEbInterface(validationResult, null, StartPage.ActionType.SCHEMA_VALIDATION, pdf, ebInterface, log));
+    // Redirect
+    setResponsePage (new ResultPageEbInterface (validationResult,
+                                                null,
+                                                StartPage.ActionType.SCHEMA_VALIDATION,
+                                                pdf,
+                                                ebInterface,
+                                                log,
+                                                this.fromStartPage ? StartPage.class : LabsPage.class));
   }
-
 
   /**
    * Process errors
    */
   @Override
-  protected void onError() {
-    //Show the feedback panel in case on an error
-    feedbackPanel.setVisible(true);
+  protected void onError ()
+  {
+    // Show the feedback panel in case on an error
+    feedbackPanel.setVisible (true);
   }
 }

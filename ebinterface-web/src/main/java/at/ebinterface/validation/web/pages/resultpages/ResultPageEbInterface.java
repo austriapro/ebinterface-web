@@ -1,5 +1,7 @@
 package at.ebinterface.validation.web.pages.resultpages;
 
+import org.apache.wicket.markup.html.WebPage;
+
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.pages.BasePage;
 import at.ebinterface.validation.web.pages.LabsPage;
@@ -20,17 +22,14 @@ public class ResultPageEbInterface extends BasePage {
                                final ActionType selectedAction,
                                final byte[] pdf,
                                final byte[] xml,
-                               final String log) {
+                               final String log,
+                               Class<? extends WebPage> returnPage) {
 
-    ResultPanel
-        resultPanel =
+    ResultPanel resultPanel =
         new ResultPanel("resultPanel", validationResult, selectedSchematron, selectedAction, pdf,
-                        xml, log, LabsPage.class);
+                        xml, log, returnPage);
 
     add(resultPanel);
-
-
   }
-
 }
 

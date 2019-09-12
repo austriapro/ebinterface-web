@@ -36,7 +36,7 @@ public class StartPage extends BasePage {
     add(showRulesForm);
 
     //Add the form for convert UBL to ebInterface
-    final UblForm ublForm = new UblForm("ublForm");
+    final UblForm ublForm = new UblForm("ublForm", true);
     add(ublForm);
   }
 }
