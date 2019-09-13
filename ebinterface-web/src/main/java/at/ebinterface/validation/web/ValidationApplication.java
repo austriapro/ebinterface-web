@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -39,7 +40,7 @@ public class ValidationApplication extends WebApplication {
 
 
   /**
-   * Defines wether the application shall be started in develop or deployment mode
+   * Defines whether the application shall be started in develop or deployment mode
    */
   private static RuntimeConfigurationType CONFIGURATION_TYPE = RuntimeConfigurationType.DEPLOYMENT;
 
@@ -120,12 +121,11 @@ public class ValidationApplication extends WebApplication {
     }
     LOG.info("schematron transformer for ZUGFeRD is now stored in application context.");
 
-    getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
-    getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+    getMarkupSettings().setDefaultMarkupEncoding(StandardCharsets.UTF_8.name ());
+    getRequestCycleSettings().setResponseRequestEncoding(StandardCharsets.UTF_8.name ());
 
     mountPage("/service", ServicePage.class);
     mountPage("/labs", LabsPage.class);
-
   }
 
   /**
@@ -133,9 +133,7 @@ public class ValidationApplication extends WebApplication {
    */
   @Override
   public RuntimeConfigurationType getConfigurationType() {
-
     return CONFIGURATION_TYPE;
-
   }
 
 
@@ -149,7 +147,6 @@ public class ValidationApplication extends WebApplication {
     Class<? extends Page> homePage = StartPage.class;
 
     try {
-
       String appPath = System.getenv("APPLICATION_PATH");
 
       if (Strings.isNullOrEmpty(appPath)) {
@@ -169,7 +166,6 @@ public class ValidationApplication extends WebApplication {
         default:
           LOG.info("Could not determine type of landing page, using startpage");
           homePage = StartPage.class;
-
       }
 
     } catch (Exception e) {
