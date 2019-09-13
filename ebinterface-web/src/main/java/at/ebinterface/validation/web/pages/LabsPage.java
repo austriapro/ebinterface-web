@@ -17,5 +17,9 @@ public class LabsPage extends BasePage {
     //Add the form for showing the supported rules
     final UblToEbiForm ublToEbiForm = new UblToEbiForm("ublToEbiForm", false);
     add(ublToEbiForm);
+
+    //Add the form for convert ebInterface to UBL
+    final EbiToUblForm ebiToUblForm = new EbiToUblForm("ebiToUblForm", true);
+    add(ebiToUblForm);
   }
 }

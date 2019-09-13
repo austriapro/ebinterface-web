@@ -84,7 +84,7 @@ final class EbiToUblForm extends Form <Object>
     add (feedbackPanel);
 
     // Add the file upload field
-    fileUploadField = new FileUploadField ("ebiInput");
+    fileUploadField = new FileUploadField ("fileInput");
     fileUploadField.setRequired (true);
     add (fileUploadField);
 
@@ -136,6 +136,8 @@ final class EbiToUblForm extends Form <Object>
       onError ();
       return;
     }
+    
+    LOG.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
 
     // Parse ebInterface against XSD
     final ErrorList aErrorList = new ErrorList ();
@@ -184,6 +186,8 @@ final class EbiToUblForm extends Form <Object>
       return;
     }
 
+    LOG.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to UBL Invoice");
+
     final InvoiceType aUBLInvoice;
     // Convert to ebInterface
     switch (eVersion)
@@ -231,6 +235,7 @@ final class EbiToUblForm extends Form <Object>
     }
     else
     {
+      LOG.info ("Converting ebInterface to UBL Invoice was successful");
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
     }
 

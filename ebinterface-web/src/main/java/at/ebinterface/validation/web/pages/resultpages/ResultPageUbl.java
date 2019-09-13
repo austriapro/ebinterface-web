@@ -1,6 +1,10 @@
 package at.ebinterface.validation.web.pages.resultpages;
 
+import javax.annotation.Nonnull;
+
 import org.apache.wicket.markup.html.WebPage;
+
+import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.ebinterface.validation.web.pages.BasePage;
 
@@ -11,12 +15,9 @@ import at.ebinterface.validation.web.pages.BasePage;
  */
 public class ResultPageUbl extends BasePage
 {
-  /*
-   * Create a new result page
-   */
-  public ResultPageUbl (final byte [] xml, final String log, Class <? extends WebPage> returnPage)
+  public ResultPageUbl (@Nonnull EEbInterfaceVersion eVersion, final byte [] xml, final String log, Class <? extends WebPage> returnPage)
   {
-    ResultPanelUbl resultPanel = new ResultPanelUbl ("resultPanel", xml, log, returnPage);
+    ResultPanelUbl resultPanel = new ResultPanelUbl ("resultPanelUbl", eVersion, xml, log, returnPage);
     add (resultPanel);
   }
 }
