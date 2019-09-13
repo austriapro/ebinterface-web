@@ -153,8 +153,8 @@ class UblToEbiForm extends Form <Object>
       LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
-    final Locale aDisplayLocale = Locale.GERMANY;
-    final Locale aContentLocale = Locale.GERMANY;
+    final Locale aDisplayLocale = Constants.DE_AT;
+    final Locale aContentLocale = Constants.DE_AT;
 
     // Read UBL
     ErrorList aReadErrors = new ErrorList ();
@@ -293,7 +293,7 @@ class UblToEbiForm extends Form <Object>
       {
         sbLog.append (error.getErrorFieldName ())
              .append (":<br/>")
-             .append (error.getErrorText (Locale.GERMANY))
+             .append (error.getErrorText (aDisplayLocale))
              .append ("<br/><br/>");
       }
     }
