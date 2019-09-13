@@ -1,6 +1,6 @@
 package at.ebinterface.validation.parser;
 
-import java.io.InputStream;
+import javax.annotation.Nonnull;
 
 import org.xml.sax.InputSource;
 
@@ -18,20 +18,18 @@ public enum CustomParser {
 
   INSTANCE;
 
-  private static final CustomHandler customHandler;
-
-  static {
-    customHandler = new CustomHandler();
-  }
-
   /**
    * Determines the correct ebInterface version
    *
-   * @return version
+   * @return version and never <code>null</code>
    */
+  @Nonnull
   public EbiVersion getEbInterfaceDetails(final InputSource source)
       throws NamespaceUnknownException {
 
+    // Instantiate per call to avoid threading issues
+    final CustomHandler customHandler = new CustomHandler ();
+    
     //Get the namespace from the instance
     try {
       at.ebinterface.validation.validator.SAXParserFactory.newInstance()
@@ -56,16 +54,4 @@ public enum CustomParser {
         "Unbekannter Namespace gefunden: " + customHandler.getFoundNameSpace());
 
   }
-
-
-  /**
-   * Determines the ebInterface version of the upload
-   *
-   * @return version
-   */
-  public EbiVersion getEbInterfaceDetails(final InputStream inputStream)
-      throws NamespaceUnknownException {
-    return getEbInterfaceDetails(new InputSource(inputStream));
-  }
-
 }

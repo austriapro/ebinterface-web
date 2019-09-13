@@ -124,7 +124,7 @@ class UblToEbiForm extends Form <Object>
     add (ebiVersions);
 
     // Add a submit button
-    add (new SubmitLink ("convertUbl"));
+    add (new SubmitLink ("convertUblToEbi"));
   }
 
   @Override
@@ -288,7 +288,7 @@ class UblToEbiForm extends Form <Object>
       validationResult = new ValidationResult ();
       validationResult.setSchemaValidationErrorMessage ("Die Schemavalidierung konnte nicht durchgeführt werden.");
 
-      sbLog.append ("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
+      sbLog.append ("<b>Bei der UBL-ebInterface-Konvertierung sind folgende Fehler aufgetreten:</b><br/>");
       for (final IError error : aErrorList.getAllErrors ())
       {
         sbLog.append (error.getErrorFieldName ())

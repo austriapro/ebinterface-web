@@ -1,10 +1,10 @@
 package at.ebinterface.validation.dto;
 
-import at.ebinterface.validation.rtr.generated.SignatureInfoType;
-import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
-
 import java.io.Serializable;
 import java.math.BigInteger;
+
+import at.ebinterface.validation.rtr.generated.SignatureInfoType;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
 
 /**
  * Used to represent the result of a signature validation based on the Web Service response User: pl

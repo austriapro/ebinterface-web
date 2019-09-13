@@ -1,9 +1,13 @@
 package at.ebinterface.validation.rtr.generated;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.*;
-
 import java.net.URL;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import javax.xml.ws.WebEndpoint;
+import javax.xml.ws.WebServiceClient;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceFeature;
 
 
 /**

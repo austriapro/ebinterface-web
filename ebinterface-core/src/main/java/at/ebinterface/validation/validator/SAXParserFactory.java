@@ -11,15 +11,12 @@ import org.xml.sax.SAXException;
  * Factory providing XXE-save SAX-parser
  */
 public class SAXParserFactory {
-
-
-  private static final Logger LOG = LoggerFactory.getLogger(SAXParserFactory.class.getName());
-
+  private static final Logger LOG = LoggerFactory.getLogger(SAXParserFactory.class);
 
   /**
    * SAX-Parser factory
    */
-  private static javax.xml.parsers.SAXParserFactory saxParserFactory;
+  private static final javax.xml.parsers.SAXParserFactory saxParserFactory;
 
   static {
 
@@ -44,16 +41,10 @@ public class SAXParserFactory {
 
     try {
       return saxParserFactory.newSAXParser();
-    } catch (ParserConfigurationException e) {
-      LOG.error("Unable to instantiate new SAXParser", e);
-    } catch (SAXException e) {
+    } catch (ParserConfigurationException | SAXException e) {
       LOG.error("Unable to instantiate new SAXParser", e);
     }
 
     return null;
-
-
   }
-
-
 }

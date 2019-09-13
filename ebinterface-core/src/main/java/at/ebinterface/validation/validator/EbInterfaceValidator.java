@@ -1,9 +1,6 @@
 package at.ebinterface.validation.validator;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -27,6 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
+import com.helger.commons.io.stream.NonBlockingStringReader;
+import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.ebinterface.validation.exception.NamespaceUnknownException;
@@ -246,7 +246,7 @@ public class EbInterfaceValidator {
     try {
       version = CustomParser.INSTANCE
           .getEbInterfaceDetails(new InputSource(
-              new ByteArrayInputStream(uploadedData)));
+              new NonBlockingByteArrayInputStream(uploadedData)));
       result.setDeterminedEbInterfaceVersion(version);
     } catch (final NamespaceUnknownException e1) {
       result.setSchemaValidationErrorMessage(e1.getMessage());
@@ -260,23 +260,33 @@ public class EbInterfaceValidator {
       javax.xml.transform.sax.SAXSource
           saxSource =
           new javax.xml.transform.sax.SAXSource(new InputSource(
-              new ByteArrayInputStream(uploadedData)));
+              new NonBlockingByteArrayInputStream(uploadedData)));
 
       final EEbInterfaceVersion v = version.getVersion ();
-      if (v == EEbInterfaceVersion.V30) {
-        ebInterface3p0Validator.validate(saxSource);
-      } else if (v == EEbInterfaceVersion.V302) {
-        ebInterface3p02Validator.validate(saxSource);
-      } else if (v == EEbInterfaceVersion.V40) {
-        ebInterface4p0Validator.validate(saxSource);
-      } else if (v == EEbInterfaceVersion.V41) {
-        ebInterface4p1Validator.validate(saxSource);
-      } else if (v == EEbInterfaceVersion.V42) {
-        ebInterface4p2Validator.validate(saxSource);
-      } else if (v == EEbInterfaceVersion.V50) {
-        ebInterface5p0Validator.validate(saxSource);
-      } else {
-        ebInterface4p3Validator.validate(saxSource);
+      switch (v) {
+        case V30:
+          ebInterface3p0Validator.validate(saxSource);
+          break;
+        case V302:  
+          ebInterface3p02Validator.validate(saxSource);
+          break;
+        case V40:  
+          ebInterface4p0Validator.validate(saxSource);
+          break;
+        case V41:  
+          ebInterface4p1Validator.validate(saxSource);
+          break;
+        case V42:  
+          ebInterface4p2Validator.validate(saxSource);
+          break;
+        case V43:  
+          ebInterface4p3Validator.validate(saxSource);
+          break;
+        case V50:  
+          ebInterface5p0Validator.validate(saxSource);
+          break;
+        default:
+          throw new IllegalStateException ("Unsupported version " + v);
       }
     } catch (final SAXException e) {
       result.setSchemaValidationErrorMessage(e.getMessage());
@@ -322,52 +332,54 @@ public class EbInterfaceValidator {
   public String transformInput(final byte[] uploadedData, final EEbInterfaceVersion version) {
 
     try {
-      final StringWriter sw = new StringWriter();
+      final NonBlockingStringWriter sw = new NonBlockingStringWriter();
 
       SAXSource
           saxSource =
           new SAXSource(
               at.ebinterface.validation.validator.SAXParserFactory.newInstance().getXMLReader(),
-              (new InputSource(new ByteArrayInputStream(uploadedData))));
+              (new InputSource(new NonBlockingByteArrayInputStream(uploadedData))));
 
       LOG.info("Transforming {}", version);
-      if (version == EEbInterfaceVersion.V30) {
-        ebInterface3p0Transformer.transform(new StreamSource(
-                                                new ByteArrayInputStream(uploadedData)),
-                                            new StreamResult(sw)
-        );
-      } else if (version == EEbInterfaceVersion.V302) {
-        ebInterface3p02Transformer.transform(new StreamSource(
-                                                 new ByteArrayInputStream(uploadedData)),
-                                             new StreamResult(sw)
-        );
-      } else if (version == EEbInterfaceVersion.V40) {
-        ebInterface4p0Transformer.transform(saxSource,
-                                            new StreamResult(sw)
-        );
-      } else if (version == EEbInterfaceVersion.V41) {
-        ebInterface4p1Transformer.transform(new StreamSource(
-                                                new ByteArrayInputStream(uploadedData)),
-                                            new StreamResult(sw)
-        );
-      } else if (version == EEbInterfaceVersion.V42) {
-        ebInterface4p2Transformer.transform(new StreamSource(
-                                                new ByteArrayInputStream(uploadedData)),
-                                            new StreamResult(sw)
-        );
-      } else if (version == EEbInterfaceVersion.V50) {
-        ebInterface5p0Transformer.transform(new StreamSource(
-                                                new ByteArrayInputStream(uploadedData)),
-                                            new StreamResult(sw)
-        );
+      switch (version) {
+        case V30:
+          ebInterface3p0Transformer.transform(new StreamSource(
+                                                  new NonBlockingByteArrayInputStream(uploadedData)),
+                                              new StreamResult(sw));
+          break;
+        case V302:  
+          ebInterface3p02Transformer.transform(new StreamSource(
+                                                   new NonBlockingByteArrayInputStream(uploadedData)),
+                                               new StreamResult(sw));
+          break;
+        case V40:  
+          ebInterface4p0Transformer.transform(saxSource,
+                                              new StreamResult(sw));
+          break;
+        case V41:  
+          ebInterface4p1Transformer.transform(new StreamSource(
+                                                  new NonBlockingByteArrayInputStream(uploadedData)),
+                                              new StreamResult(sw));
+          break;
+        case V42:
+          ebInterface4p2Transformer.transform(new StreamSource(
+                                                  new NonBlockingByteArrayInputStream(uploadedData)),
+                                              new StreamResult(sw));
+          break;
+        case V43:
+          ebInterface4p3Transformer.transform(new StreamSource(
+                                                  new NonBlockingByteArrayInputStream(uploadedData)),
+                                              new StreamResult(sw));
+          break;
+        case V50:
+          ebInterface5p0Transformer.transform(new StreamSource(
+                                                  new NonBlockingByteArrayInputStream(uploadedData)),
+                                              new StreamResult(sw));
+          break;
+        default:
+          throw new IllegalStateException ("Unsupported ebInterface version " + version); 
       }
-      else {
-        ebInterface4p3Transformer.transform(new StreamSource(
-                                                new ByteArrayInputStream(uploadedData)),
-                                            new StreamResult(sw)
-        );
-      }
-      return sw.toString();
+      return sw.getAsString();
 
     } catch (final Exception e) {
       return "XSLT Transformation konnte nicht ausgeführt werden. Fehler: "
@@ -387,17 +399,17 @@ public class EbInterfaceValidator {
 
       // create a new string writer to hold the output of the validation
       // transformation
-      final StringWriter sw = new StringWriter();
+      final NonBlockingStringWriter sw = new NonBlockingStringWriter();
 
       // apply the validating XSLT to the ebinterface document
-      transformer.transform(new StreamSource(new ByteArrayInputStream(
+      transformer.transform(new StreamSource(new NonBlockingByteArrayInputStream(
           uploadedData)), new StreamResult(sw));
 
       final JAXBResult jaxbResult = new JAXBResult(jaxb);
 
       // apply the final transformation
       reportTransformer.transform(
-          new StreamSource(new StringReader(sw.toString())),
+          new StreamSource(new NonBlockingStringReader(sw.getAsString())),
           jaxbResult);
 
       return (Result) jaxbResult.getResult();
@@ -413,7 +425,7 @@ public class EbInterfaceValidator {
   private Transformer getTransformer(final String urlPath)
       throws TransformerException {
 
-    final StringWriter sw = new StringWriter();
+    final NonBlockingStringWriter sw = new NonBlockingStringWriter();
 
         /* Read the Schematron source */
     final String schematronDocumentUrl = this.getClass()
@@ -422,8 +434,8 @@ public class EbInterfaceValidator {
     interimTransformer.transform(new StreamSource(schematronDocumentUrl),
                                  new StreamResult(sw));
 
-    return tFactory.newTransformer(new StreamSource(new StringReader(sw
-                                                                         .toString())));
+    return tFactory.newTransformer(new StreamSource(new NonBlockingStringReader(sw
+                                                                         .getAsString())));
   }
 
 }

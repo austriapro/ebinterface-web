@@ -4,11 +4,11 @@ import com.helger.ebinterface.EEbInterfaceVersion;
 
 public class EbiVersion
 {
-  private EEbInterfaceVersion m_eVersion;
-  private boolean m_bSigned;
-  private String m_sSignatureNamespacePrefix;
+  private final EEbInterfaceVersion m_eVersion;
+  private final boolean m_bSigned;
+  private final String m_sSignatureNamespacePrefix;
 
-  public EbiVersion (EEbInterfaceVersion eVersion, boolean bSigned, String sSignatureNamespacePrefix)
+  public EbiVersion (final EEbInterfaceVersion eVersion, final boolean bSigned, final String sSignatureNamespacePrefix)
   {
     m_eVersion = eVersion;
     m_bSigned = bSigned;

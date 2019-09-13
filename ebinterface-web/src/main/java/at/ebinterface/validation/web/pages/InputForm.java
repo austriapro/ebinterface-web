@@ -61,22 +61,22 @@ class InputForm extends Form<Object> {
   /**
    * Panel for providing feedback in case of erroneous input
    */
-  FeedbackPanel feedbackPanel;
+  private FeedbackPanel feedbackPanel;
 
   /**
    * Dropdown choice for the Schematron rules
    */
-  DropDownChoice<Rule> rules;
+  private DropDownChoice<Rule> rules;
 
   /**
    * Dropdown choice for the ZUGFeRD level
    */
-  DropDownChoice<String> zugferdlevels;
+  private DropDownChoice<String> zugferdlevels;
 
   /**
    * Upload field for the ebInterface instance
    */
-  FileUploadField fileUploadField;
+  private FileUploadField fileUploadField;
 
   public InputForm(final String id) {
     super(id);
