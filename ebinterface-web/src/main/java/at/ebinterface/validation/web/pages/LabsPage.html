@@ -39,6 +39,7 @@
             </div>
 
             <div wicket:id="zugferdWrapper">
+                <!-- hidden because no ID handler is present -->
                 <h5 class="functionHeader">Konvertieren</h5>
                 <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
                 <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
@@ -68,7 +69,7 @@
         <br/><br/>
         <hr class="section-line"/>
         
-        <form class="border" wicket:id="ublForm">
+        <form class="border" wicket:id="ublToEbiForm">
             <h2>UBL nach ebInterface konvertieren</h2>
             <div class="alert alert-danger" wicket:id="feedback"></div>
             <div>

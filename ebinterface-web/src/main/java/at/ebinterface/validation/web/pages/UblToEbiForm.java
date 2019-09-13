@@ -58,9 +58,9 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  *
  * @author pl
  */
-class UblForm extends Form <Object>
+class UblToEbiForm extends Form <Object>
 {
-  private static final Logger LOG = LoggerFactory.getLogger (UblForm.class);
+  private static final Logger LOG = LoggerFactory.getLogger (UblToEbiForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,
                                                                                                        EEbInterfaceVersion.V42,
                                                                                                        EEbInterfaceVersion.V43,
@@ -82,7 +82,7 @@ class UblForm extends Form <Object>
   private DropDownChoice <EEbInterfaceVersion> ebiVersions;
   private final boolean fromStartPage;
 
-  public UblForm (final String id, boolean fromStartPage)
+  public UblToEbiForm (final String id, boolean fromStartPage)
   {
     super (id);
     this.fromStartPage = fromStartPage;
