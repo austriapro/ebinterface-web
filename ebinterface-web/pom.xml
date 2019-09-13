@@ -26,7 +26,6 @@
 
 
 	<dependencies>
-
 		<!-- ebInterface core for the validation logic -->
 		<dependency>
 			<groupId>at.austriapro</groupId>

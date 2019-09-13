@@ -350,20 +350,17 @@ public class EbInterfaceValidator {
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
-      }
-      else if (version == EEbInterfaceVersion.V42) {
+      } else if (version == EEbInterfaceVersion.V42) {
         ebInterface4p2Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
-      }
-      else if (version == EEbInterfaceVersion.V50) {
+      } else if (version == EEbInterfaceVersion.V50) {
         ebInterface5p0Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),
                                             new StreamResult(sw)
         );
       }
-
       else {
         ebInterface4p3Transformer.transform(new StreamSource(
                                                 new ByteArrayInputStream(uploadedData)),

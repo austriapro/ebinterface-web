@@ -17,6 +17,5 @@ public class LabsPage extends BasePage {
     //Add the form for showing the supported rules
     final UblForm ublForm = new UblForm("ublForm", false);
     add(ublForm);
-
   }
 }

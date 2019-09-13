@@ -1,11 +1,10 @@
 <wicket:extend>
 
-
     <h1>ebInterface Rechnung erstellen, prüfen und anzeigen</h1>
     <h3>Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im Format ebInterface.</h3>
 
     <div>
-       <hr class="section-line"/>
+        <hr class="section-line"/>
         <form wicket:id="inputForm" class="form-inline">
             <h2> ebInterface Rechnung prüfen und als PDF anzeigen</h2>
             <p>
@@ -40,13 +39,13 @@
             </div>
 
             <div wicket:id="zugferdWrapper">
-            <h5 class="functionHeader">Konvertieren</h5>
-            <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
-            <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
-                <option>woo</option>
-                <option>hoo</option>
-            </select>
-            <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
+                <h5 class="functionHeader">Konvertieren</h5>
+                <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
+                <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
+                    <option>woo</option>
+                    <option>hoo</option>
+                </select>
+                <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
             </div>
         </form>
         <br/><br/>
@@ -64,10 +63,11 @@
                 </select>
                 <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
             </div>
-
         </form>
+
         <br/><br/>
         <hr class="section-line"/>
+        
         <form class="border" wicket:id="ublForm">
             <h2>UBL nach ebInterface konvertieren</h2>
             <div class="alert alert-danger" wicket:id="feedback"></div>
@@ -90,9 +90,10 @@
                 <button class="btn-wko" type="submit" wicket:id="convertUbl">UBL nach ebInterface konvertieren</button>
             </div>
         </form>
+
         <br/><br/>
-        
         <hr class="section-line"/>
+
         <div style="text-align: center;">
             Code lizensiert unter <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
             License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den

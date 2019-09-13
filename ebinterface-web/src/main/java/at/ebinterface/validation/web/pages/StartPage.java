@@ -26,7 +26,6 @@ public class StartPage extends BasePage {
    * Construct the start page
    */
   public StartPage() {
-
     //Add the input form
     final InputForm inputForm = new InputForm("inputForm");
     add(inputForm);
