@@ -4,7 +4,6 @@ import org.apache.wicket.markup.html.WebPage;
 
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.pages.BasePage;
-import at.ebinterface.validation.web.pages.LabsPage;
 import at.ebinterface.validation.web.pages.StartPage.ActionType;
 
 /**

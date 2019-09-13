@@ -17,9 +17,9 @@
 
 package at.ebinterface.validation.web.components.prettyfy;
 
-import at.ebinterface.validation.web.components.CodeBoxLanguage;
-
 import org.apache.wicket.request.resource.PackageResourceReference;
+
+import at.ebinterface.validation.web.components.CodeBoxLanguage;
 
 
 /**

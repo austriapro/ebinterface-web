@@ -61,10 +61,10 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 class UblToEbiForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (UblToEbiForm.class);
-  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,
-                                                                                                       EEbInterfaceVersion.V42,
-                                                                                                       EEbInterfaceVersion.V43,
-                                                                                                       EEbInterfaceVersion.V50);
+  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,
+                                                                                                           EEbInterfaceVersion.V42,
+                                                                                                           EEbInterfaceVersion.V43,
+                                                                                                           EEbInterfaceVersion.V50);
 
   /**
    * Panel for providing feedback in case of erroneous input
@@ -80,6 +80,10 @@ class UblToEbiForm extends Form <Object>
    * Dropdown choice for the ebInterface versions
    */
   private DropDownChoice <EEbInterfaceVersion> ebiVersions;
+  
+  /**
+   * Was the link called from the start page or from the /labs page?
+   */
   private final boolean fromStartPage;
 
   public UblToEbiForm (final String id, boolean fromStartPage)
@@ -100,8 +104,8 @@ class UblToEbiForm extends Form <Object>
     // Add the drop down choice for the different rules which are currently
     // supported
     ebiVersions = new DropDownChoice <> ("ebiVersionSelector",
-                                         Model.of (POSSIBLE_VERSIONS.getFirst ()),
-                                         POSSIBLE_VERSIONS,
+                                         Model.of (POSSIBLE_EBI_VERSIONS.getFirst ()),
+                                         POSSIBLE_EBI_VERSIONS,
                                          new IChoiceRenderer <EEbInterfaceVersion> ()
                                          {
                                            @Override
