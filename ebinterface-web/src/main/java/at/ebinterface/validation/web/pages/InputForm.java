@@ -1,11 +1,7 @@
 package at.ebinterface.validation.web.pages;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -31,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
+import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
@@ -305,7 +303,7 @@ class InputForm extends Form<Object> {
 
       MappingFactory mf = new MappingFactory();
 
-      MappingFactory.ZugferdMappingType zugferdLevel;
+      final MappingFactory.ZugferdMappingType zugferdLevel;
 
       if (zugferdlevels.getModelObject().endsWith("Basic")){
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0;
@@ -315,42 +313,32 @@ class InputForm extends Form<Object> {
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0;
       }
 
-      MappingFactory.EbInterfaceMappingType ebType;
-
-      if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V40){
-        error("ZUGFeRD Konvertierung für ebInterface 4.0 nicht unterstützt.");
-        onError();
-        return;
-
-        /*zugFeRDMapping = mf.getMapper(MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0,
-                                      MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p0);*/
-      }else if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V41){
-        ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
-      }else if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V42) {
-        ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
-      }else if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V50){
-        error("ZUGFeRD Konvertierung für ebInterface 5.0 nicht unterstützt.");
-        onError();
-        return;
-      } else {
-        ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p3;
+      final EEbInterfaceVersion ebType;
+      switch (validationResult.getDeterminedEbInterfaceVersion().getVersion ()) {
+        case V41:  
+        case V42:  
+        case V43:
+          // These versions are supported
+          ebType = validationResult.getDeterminedEbInterfaceVersion().getVersion ();
+          break;
+        default:
+          error("ZUGFeRD Konvertierung für "+validationResult.getDeterminedEbInterfaceVersion ().getCaption ()+" nicht unterstützt.");
+          onError();
+          return;
       }
 
-      Mapping zugFeRDMapping = mf.getMapper(zugferdLevel,
+      final Mapping zugFeRDMapping = mf.getMapper(zugferdLevel,
                                             ebType);
 
-      String sZugferd;
       SAXSource saxSource;
 
       //Map to ZUGFeRD Basic
       try {
         LOG.debug("Map ebInterface to ZUGFeRD.");
-        sZugferd = new String(zugFeRDMapping.mapFromebInterface(new String(uploadedData)));
-
-        zugferd = sZugferd.getBytes(StandardCharsets.UTF_8);
+        zugferd = zugFeRDMapping.mapFromebInterface(uploadedData);
 
         saxSource = new SAXSource(new InputSource(
-            new ByteArrayInputStream(zugferd)));
+            new NonBlockingByteArrayInputStream(zugferd)));
 
         Validator
             zugSchemaValidator = Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator();
@@ -373,8 +361,8 @@ class InputForm extends Form<Object> {
       if (zugferd != null) {
         sbLog.append(zugFeRDMapping.getMappingLogHTML());
 
-        Source source = new StreamSource(new StringReader(sZugferd));
-        javax.xml.transform.Result result = new StreamResult(new StringWriter());
+        Source source = new StreamSource(new NonBlockingByteArrayInputStream (zugferd));
+        javax.xml.transform.Result result = new StreamResult(new NonBlockingStringWriter());
 
         try {
           Transformer transformer = Application.get().getMetaData(
