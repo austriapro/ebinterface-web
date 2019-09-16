@@ -15,9 +15,9 @@ import at.ebinterface.validation.web.pages.BasePage;
  */
 public class ResultPageUbl extends BasePage
 {
-  public ResultPageUbl (@Nonnull EEbInterfaceVersion eVersion, final byte [] xml, final String log, Class <? extends WebPage> returnPage)
+  public ResultPageUbl (final byte [] xml, final String sErrorLog, Class <? extends WebPage> returnPage)
   {
-    ResultPanelUbl resultPanel = new ResultPanelUbl ("resultPanelUbl", eVersion, xml, log, returnPage);
+    ResultPanelUbl resultPanel = new ResultPanelUbl ("resultPanelUbl",  xml, sErrorLog, returnPage);
     add (resultPanel);
   }
 }

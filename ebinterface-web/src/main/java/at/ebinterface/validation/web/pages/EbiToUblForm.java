@@ -219,14 +219,14 @@ final class EbiToUblForm extends Form <Object>
     // Check if the result is okay or not
     final IErrorList aUBLErrorList = UBL21Validator.invoice ().validate (aUBLInvoice);
 
-    final StringBuilder sbLog = new StringBuilder ();
+    final StringBuilder aErrorLog = new StringBuilder ();
     final byte [] aUBLXML;
     if (aUBLErrorList.containsAtLeastOneError ())
     {
-      sbLog.append ("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
+      aErrorLog.append ("<b>Bei der UBL - ebInterfacekonvertierung sind folgende Fehler aufgetreten:</b><br/>");
       for (final IError error : aErrorList.getAllErrors ())
       {
-        sbLog.append (error.getErrorFieldName ())
+        aErrorLog.append (error.getErrorFieldName ())
              .append (":<br/>")
              .append (error.getErrorText (aDisplayLocale))
              .append ("<br/><br/>");
@@ -236,12 +236,13 @@ final class EbiToUblForm extends Form <Object>
     else
     {
       LOG.info ("Converting ebInterface to UBL Invoice was successful");
+      // No need to collect errors here, because the validation was already performed previously 
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
     }
 
     // Redirect
     setResponsePage (new ResultPageUbl (aUBLXML,
-                                        sbLog.toString (),
+                                        aErrorLog.toString (),
                                         this.fromStartPage ? StartPage.class : LabsPage.class));
   }
 
