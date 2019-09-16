@@ -1,19 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <groupId>at.austriapro</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>at.austriapro</groupId>
 	<artifactId>ebinterface-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.7-SNAPSHOT</version>
-	<modelVersion>4.0.0</modelVersion>
 	<name>ebInterface validation service parent</name>
+  <description>The ebInterface validation service allows to check ebInterface instances against predefined Schematron rules etc.</description>
+  <url>http://ebinterface.at</url>
 
+  <scm>
+    <connection>scm:git:git@github.com:austriapro/ebinterface-web.git</connection>
+    <developerConnection>scm:git:git@github.com:austriapro/ebinterface-web.git</developerConnection>
+    <url>https://github.com/austriapro/ebinterface-web</url>
+  </scm>
 
-    <modules>
-        <module>ebinterface-core</module>
-        <module>ebinterface-web</module>
-    </modules>
+  <organization>
+    <url>http://ebinterface.at</url>
+  </organization>
 
+  <modules>
+    <module>ebinterface-core</module>
+    <module>ebinterface-web</module>
+  </modules>
 
 	<properties>
 		<junit-version>4.12</junit-version>
@@ -24,50 +33,7 @@
 		<slf4j-version>1.7.26</slf4j-version>
 	</properties>
 
-
-
-	<repositories>
-		<!-- Apache repository -->
-		<repository>
-			<id>apache.snapshots</id>
-			<name>Apache Development Snapshot Repository</name>
-			<url>https://repository.apache.org/content/repositories/
-			</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-
-
-		<!-- Wicket Stuff Repository -->
-		<repository>
-			<id>wicket-snaps</id>
-			<url>http://wicketstuff.org/maven/repository</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-
-		<!-- Wicket Wiquery Components Repository -->
-		<repository>
-			<id>wiquery repository</id>
-			<name>wiQuery repository</name>
-			<url>http://wiquery.googlecode.com/svn/repo/</url>
-			<layout>default</layout>
-		</repository>
-
-	</repositories>
-
-
-
 	<dependencies>
-
 		<!-- testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -104,29 +70,12 @@
 		</dependency>
 	</dependencies>
 
-
-	<description>The ebInterface validation service allows to check ebInterface 4.0 instances against predefined Schematron rules</description>
-	<url>http://ebinterface.at</url>
-
-
-	<scm>
-		<connection>scm:git:git@github.com:austriapro/ebinterface-web.git</connection>
-		<developerConnection>scm:git:git@github.com:austriapro/ebinterface-web.git</developerConnection>
-    	<url>https://github.com/austriapro/ebinterface-web</url>
-	</scm>
-
-	<organization>
-		<url>http://ebinterface.at</url>
-	</organization>
-
 	<build>
 		<plugins>
-
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.5</version>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -137,12 +86,6 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-
-
-
-
-
-
 		</plugins>
 
 		<directory>target</directory>
@@ -174,5 +117,4 @@
 		</testResources>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 	</build>
-
 </project>
