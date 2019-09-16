@@ -44,5 +44,9 @@ public class StartPage extends BasePage {
     //Add the form for convert ebInterface to UBL
     final EbiToUblForm ebiToUblForm = new EbiToUblForm("ebiToUblForm", true);
     add(ebiToUblForm);
+
+    //Add the form for convert ebInterface to XRechnung
+    final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm("ebiToXRechnungForm", true);
+    add(ebiToXRechnungForm);
   }
 }

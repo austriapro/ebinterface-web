@@ -19,7 +19,11 @@ public class LabsPage extends BasePage {
     add(ublToEbiForm);
 
     //Add the form for convert ebInterface to UBL
-    final EbiToUblForm ebiToUblForm = new EbiToUblForm("ebiToUblForm", true);
+    final EbiToUblForm ebiToUblForm = new EbiToUblForm("ebiToUblForm", false);
     add(ebiToUblForm);
+
+    //Add the form for convert ebInterface to XRechnung
+    final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm("ebiToXRechnungForm", false);
+    add(ebiToXRechnungForm);
   }
 }

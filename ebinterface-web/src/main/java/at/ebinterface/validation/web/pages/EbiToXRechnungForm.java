@@ -18,40 +18,38 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.IError;
 import com.helger.commons.error.list.ErrorList;
-import com.helger.commons.error.list.IErrorList;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.ebinterface.builder.EbInterfaceReader;
-import com.helger.ebinterface.ubl.to.EbInterface40ToInvoiceConverter;
-import com.helger.ebinterface.ubl.to.EbInterface41ToInvoiceConverter;
-import com.helger.ebinterface.ubl.to.EbInterface42ToInvoiceConverter;
-import com.helger.ebinterface.ubl.to.EbInterface43ToInvoiceConverter;
-import com.helger.ebinterface.ubl.to.EbInterface50ToInvoiceConverter;
 import com.helger.ebinterface.v40.Ebi40InvoiceType;
 import com.helger.ebinterface.v41.Ebi41InvoiceType;
 import com.helger.ebinterface.v42.Ebi42InvoiceType;
 import com.helger.ebinterface.v43.Ebi43InvoiceType;
 import com.helger.ebinterface.v50.Ebi50InvoiceType;
+import com.helger.ebinterface.xrechnung.to.ubl.EbInterface40ToXRechnungUBLConverter;
+import com.helger.ebinterface.xrechnung.to.ubl.EbInterface41ToXRechnungUBLConverter;
+import com.helger.ebinterface.xrechnung.to.ubl.EbInterface42ToXRechnungUBLConverter;
+import com.helger.ebinterface.xrechnung.to.ubl.EbInterface43ToXRechnungUBLConverter;
+import com.helger.ebinterface.xrechnung.to.ubl.EbInterface50ToXRechnungUBLConverter;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
-import com.helger.ubl21.UBL21Validator;
 import com.helger.ubl21.UBL21Writer;
 import com.helger.xml.sax.InputSourceFactory;
 
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.resultpages.ResultPageUbl;
+import at.ebinterface.validation.web.pages.resultpages.ResultPageXRechnung;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 /**
- * Form for converting ebInterface to UBL Invoice
+ * Form for converting ebInterface to XRechnung Invoice
  *
  * @author Philip Helger
  */
-final class EbiToUblForm extends Form <Object>
+final class EbiToXRechnungForm extends Form <Object>
 {
-  private static final Logger LOG = LoggerFactory.getLogger (EbiToUblForm.class);
+  private static final Logger LOG = LoggerFactory.getLogger (EbiToXRechnungForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V40,
                                                                                                            EEbInterfaceVersion.V41,
                                                                                                            EEbInterfaceVersion.V42,
@@ -73,7 +71,7 @@ final class EbiToUblForm extends Form <Object>
    */
   private final boolean fromStartPage;
 
-  public EbiToUblForm (final String id, boolean fromStartPage)
+  public EbiToXRechnungForm (final String id, boolean fromStartPage)
   {
     super (id);
     this.fromStartPage = fromStartPage;
@@ -84,12 +82,12 @@ final class EbiToUblForm extends Form <Object>
     add (feedbackPanel);
 
     // Add the file upload field
-    fileUploadField = new FileUploadField ("fileInputEbiToUbl");
+    fileUploadField = new FileUploadField ("fileInputEbiToXRechnung");
     fileUploadField.setRequired (true);
     add (fileUploadField);
 
     // Add a submit button
-    add (new SubmitLink ("convertEbiToUbl"));
+    add (new SubmitLink ("convertEbiToXRechnung"));
   }
 
   @Override
@@ -136,12 +134,12 @@ final class EbiToUblForm extends Form <Object>
       onError ();
       return;
     }
-    
+
     LOG.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
 
     // Parse ebInterface against XSD
-    final ErrorList aErrorList = new ErrorList ();
-    final ValidationEventHandler aValidationHdl = new WrappedCollectingValidationEventHandler (aErrorList);
+    final ErrorList aErrorListEbi = new ErrorList ();
+    final ValidationEventHandler aValidationHdl = new WrappedCollectingValidationEventHandler (aErrorListEbi);
     final Object aParsedInvoice;
     switch (eVersion)
     {
@@ -180,70 +178,74 @@ final class EbiToUblForm extends Form <Object>
     if (aParsedInvoice == null)
     {
       error ("Die ebInterface-Datei entspricht nicht dem XML Schema und kann daher nicht verarbeitet werden.");
-      for (final IError aError : aErrorList.getAllFailures ())
+      for (final IError aError : aErrorListEbi.getAllFailures ())
         error ("Fehler: " + aError.getAsString (aDisplayLocale));
       onError ();
       return;
     }
 
-    LOG.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to UBL Invoice");
+    LOG.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to XRechnung");
 
     final InvoiceType aUBLInvoice;
-    // Convert ebInterface to UBL
+    ErrorList aConvertErrorList = new ErrorList ();
+    // Convert ebInterface to XRechnung
     switch (eVersion)
     {
       case V40:
-        aUBLInvoice = new EbInterface40ToInvoiceConverter (aDisplayLocale,
-                                                           aContentLocale).convertInvoice ((Ebi40InvoiceType) aParsedInvoice);
+        aUBLInvoice = new EbInterface40ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale).convert ((Ebi40InvoiceType) aParsedInvoice,
+                                                                                         aConvertErrorList);
         break;
       case V41:
-        aUBLInvoice = new EbInterface41ToInvoiceConverter (aDisplayLocale,
-                                                           aContentLocale).convertInvoice ((Ebi41InvoiceType) aParsedInvoice);
+        aUBLInvoice = new EbInterface41ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale).convert ((Ebi41InvoiceType) aParsedInvoice,
+                                                                                         aConvertErrorList);
         break;
       case V42:
-        aUBLInvoice = new EbInterface42ToInvoiceConverter (aDisplayLocale,
-                                                           aContentLocale).convertInvoice ((Ebi42InvoiceType) aParsedInvoice);
+        aUBLInvoice = new EbInterface42ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale).convert ((Ebi42InvoiceType) aParsedInvoice,
+                                                                                         aConvertErrorList);
         break;
       case V43:
-        aUBLInvoice = new EbInterface43ToInvoiceConverter (aDisplayLocale,
-                                                           aContentLocale).convertInvoice ((Ebi43InvoiceType) aParsedInvoice);
+        aUBLInvoice = new EbInterface43ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale).convert ((Ebi43InvoiceType) aParsedInvoice,
+                                                                                         aConvertErrorList);
         break;
       case V50:
-        aUBLInvoice = new EbInterface50ToInvoiceConverter (aDisplayLocale,
-                                                           aContentLocale).convertInvoice ((Ebi50InvoiceType) aParsedInvoice);
+        aUBLInvoice = new EbInterface50ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale).convert ((Ebi50InvoiceType) aParsedInvoice,
+                                                                                         aConvertErrorList);
         break;
       default:
         throw new IllegalStateException ("This ebInterface version is unknown: " + eVersion);
     }
 
-    // Check if the result is okay or not
-    final IErrorList aUBLErrorList = UBL21Validator.invoice ().validate (aUBLInvoice);
-
     final StringBuilder aErrorLog = new StringBuilder ();
     final byte [] aUBLXML;
-    if (aUBLErrorList.containsAtLeastOneError ())
+    if (aConvertErrorList.containsAtLeastOneError ())
     {
-      aErrorLog.append ("<b>Bei der ebInterface-UBL-Konvertierung sind folgende Fehler aufgetreten:</b><br/>");
-      for (final IError error : aUBLErrorList.getAllErrors ())
+      aErrorLog.append ("<b>Bei der ebInterface-XRechnung-Konvertierung sind folgende Fehler aufgetreten:</b><br/>");
+      for (final IError error : aConvertErrorList.getAllErrors ())
       {
         aErrorLog.append (error.getErrorFieldName ())
-             .append (":<br/>")
-             .append (error.getErrorText (aDisplayLocale))
-             .append ("<br/><br/>");
+                 .append (":<br/>")
+                 .append (error.getErrorText (aDisplayLocale))
+                 .append ("<br/><br/>");
       }
       aUBLXML = null;
     }
     else
     {
-      LOG.info ("Conversion from ebInterface to UBL Invoice was successful");
-      // No need to collect errors here, because the validation was already performed previously 
+      LOG.info ("Conversion from ebInterface to XRechnung was successful");
+      // No need to collect errors here, because the validation was already
+      // performed previously
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
     }
 
     // Redirect
-    setResponsePage (new ResultPageUbl (aUBLXML,
-                                        aErrorLog.toString (),
-                                        this.fromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageXRechnung (aUBLXML,
+                                              aErrorLog.toString (),
+                                              this.fromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**

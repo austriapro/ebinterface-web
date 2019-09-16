@@ -58,7 +58,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  *
  * @author pl
  */
-class UblToEbiForm extends Form <Object>
+final class UblToEbiForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (UblToEbiForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,

@@ -1,13 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>at.austriapro</groupId>
-        <artifactId>ebinterface-parent</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
-    </parent>
-
+  <parent>
+    <groupId>at.austriapro</groupId>
+    <artifactId>ebinterface-parent</artifactId>
+    <version>1.0.7-SNAPSHOT</version>
+  </parent>
 	<artifactId>ebinterface-web</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.7-SNAPSHOT</version>
@@ -16,14 +14,14 @@
 	<properties>
     <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
 		<ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
-    <ebinterface-ubl-mapping-version>4.0.0-SNAPSHOT</ebinterface-ubl-mapping-version>
+    <ebinterface-ubl-mapping-version>4.0.1-SNAPSHOT</ebinterface-ubl-mapping-version>
+    <ebinterface-xrechnung-mapping-version>1.0.0-SNAPSHOT</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<slf4j-version>1.7.26</slf4j-version>
 		<wicket-version>6.30.0</wicket-version>
 	</properties>
-
 
 	<dependencies>
 		<!-- ebInterface core for the validation logic -->
@@ -51,6 +49,12 @@
       <groupId>com.helger</groupId>
       <artifactId>ebinterface-ubl-mapping</artifactId>
       <version>${ebinterface-ubl-mapping-version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ebinterface-xrechnung-mapping</artifactId>
+      <version>${ebinterface-xrechnung-mapping-version}</version>
     </dependency>
 
 		<!-- Wicket -->
