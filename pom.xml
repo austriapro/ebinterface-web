@@ -1,6 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.helger</groupId>
+    <artifactId>parent-pom</artifactId>
+    <version>1.10.9</version>
+  </parent>
   <groupId>at.austriapro</groupId>
 	<artifactId>ebinterface-parent</artifactId>
 	<packaging>pom</packaging>
@@ -13,6 +18,7 @@
     <connection>scm:git:git@github.com:austriapro/ebinterface-web.git</connection>
     <developerConnection>scm:git:git@github.com:austriapro/ebinterface-web.git</developerConnection>
     <url>https://github.com/austriapro/ebinterface-web</url>
+    <tag>HEAD</tag>
   </scm>
 
   <organization>
@@ -27,21 +33,10 @@
 	<properties>
 		<junit-version>4.12</junit-version>
 		<logback-version>1.2.3</logback-version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j-version>1.7.26</slf4j-version>
 	</properties>
 
 	<dependencies>
-		<!-- testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
-      <scope>test</scope>
-		</dependency>
-
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -68,6 +63,14 @@
 			<artifactId>logback-classic</artifactId>
 			<version>${logback-version}</version>
 		</dependency>
+
+    <!-- testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit-version}</version>
+      <scope>test</scope>
+    </dependency>
 	</dependencies>
 
 	<build>

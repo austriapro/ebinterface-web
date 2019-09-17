@@ -1,4 +1,4 @@
-<wicket:extend>
+<wicket:extend wicket:id="labsPage">
   <h1>ebInterface Rechnung prüfen, anzeigen und konvertieren</h1>
   <h3>Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im Format ebInterface.</h3>
 
@@ -48,9 +48,11 @@
         <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
       </div>
     </form>
-    <br/><br/>
 
+    <br/>
     <hr class="section-line"/>
+    <br/>
+
     <form wicket:id="showRulesForm">
       <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
       <div class="alert alert-danger" wicket:id="feedback"></div>
@@ -64,10 +66,12 @@
         <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
       </div>
     </form>
-    <br/><br/>
 
+    <br/>
     <hr class="section-line"/>
-    <form class="border" wicket:id="ublToEbiForm">
+    <br/>
+
+    <form wicket:id="ublToEbiForm">
       <h2>UBL nach ebInterface konvertieren</h2>
       <div class="alert alert-danger" wicket:id="feedback"></div>
       <div>
@@ -88,10 +92,12 @@
         <button class="btn-wko" type="submit" wicket:id="convertUblToEbi">UBL nach ebInterface konvertieren</button>
       </div>
     </form>
-    <br/><br/>
-  
+
+    <br/>
     <hr class="section-line"/>
-    <form class="border" wicket:id="ebiToUblForm">
+    <br/>
+
+    <form wicket:id="ebiToUblForm">
       <h2>ebInterface nach UBL konvertieren</h2>
       <div class="alert alert-danger" wicket:id="feedback"></div>
       <div>
@@ -107,10 +113,12 @@
         <button class="btn-wko" type="submit" wicket:id="convertEbiToUbl">ebInterface nach UBL konvertieren</button>
       </div>
     </form>
-    <br/><br/>
 
+    <br/>
     <hr class="section-line"/>
-    <form class="border" wicket:id="xRechnungToEbiForm">
+    <br/>
+
+    <form wicket:id="xRechnungToEbiForm">
       <h2>XRechnung nach ebInterface konvertieren</h2>
       <div class="alert alert-danger" wicket:id="feedback"></div>
       <div>
@@ -131,10 +139,12 @@
         <button class="btn-wko" type="submit" wicket:id="convertXRechnungToEbi">XRechnung nach ebInterface konvertieren</button>
       </div>
     </form>
-    <br/><br/>
-      
+
+    <br/>
     <hr class="section-line"/>
-    <form class="border" wicket:id="ebiToXRechnungForm">
+    <br/>
+
+    <form wicket:id="ebiToXRechnungForm">
       <h2>ebInterface nach XRechnung konvertieren</h2>
       <div class="alert alert-danger" wicket:id="feedback"></div>
       <div>

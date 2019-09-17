@@ -20,7 +20,7 @@ public class EbiVersion
     return m_eVersion;
   }
 
-  public boolean supportsSignign ()
+  public boolean supportsSigning ()
   {
     return m_eVersion.ordinal () < EEbInterfaceVersion.V50.ordinal ();
   }

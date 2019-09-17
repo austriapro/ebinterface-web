@@ -42,7 +42,7 @@ public class ResultPanel extends Panel {
     if (validationResult.getDeterminedEbInterfaceVersion() != null) {
       schemaVersion.append(validationResult.getDeterminedEbInterfaceVersion().getCaption());
 
-      if (validationResult.getDeterminedEbInterfaceVersion().supportsSignign()) {
+      if (validationResult.getDeterminedEbInterfaceVersion().supportsSigning()) {
         if (validationResult.getDeterminedEbInterfaceVersion().isSigned()) {
           schemaVersion.append(" (signiert)");
         } else {
