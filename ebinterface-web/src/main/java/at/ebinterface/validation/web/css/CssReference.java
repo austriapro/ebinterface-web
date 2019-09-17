@@ -1,5 +1,7 @@
 package at.ebinterface.validation.web.css;
 
-public class CssReference {
-
-}
+/**
+ * Placeholder class to determine the package.
+ */
+public final class CssReference
+{}

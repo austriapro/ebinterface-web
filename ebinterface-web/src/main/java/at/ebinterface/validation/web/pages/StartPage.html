@@ -1,151 +1,178 @@
 <wicket:extend>
   <h1>ebInterface Rechnungen prüfen, anzeigen und konvertieren</h1>
+  
+  <ul class="nav nav-tabs" id="tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="validate-tab" data-toggle="tab" href="#validate" role="tab" aria-selected="true">Prüfen und anzeigen</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="ubl-tab" data-toggle="tab" href="#ubl" role="tab" aria-selected="false">UBL</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="xrechnung-tab" data-toggle="tab" href="#xrechnung" role="tab" aria-selected="false">XRechnung</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="sv-tab" data-toggle="tab" href="#sv" role="tab" aria-selected="false">Sozialversicherung</a>
+    </li>
+  </ul>
+  
+  <div class="tab-content" id="tabContent">
+    <!-- validate and check tab -->
+    <div class="tab-pane active" id="validate" role="tabpanel" aria-labelledby="validate-tab">
+      <form wicket:id="inputForm">
+        <h2>Wählen Sie eine ebInterface-Datei und anschließend eine Funktion:</h2>
+        <div class="alert alert-danger" wicket:id="feedback"></div>
+        <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
+        <p class="help-block">Wählen Sie eine ebInterface 3.0, 3.02, 4.0, 4.1, 4.2, 4.3 oder 5.0 Datei von Ihrer Festplatte</p>
+  
+        <div class="uploadFile">
+          <input id="fileInput1" type="file" wicket:id="fileInput" class="inputFile" onchange="getFileName('fileInput1','uploadText')"/>
+          <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <p class="upload-label" id="uploadText">Keine Datei ausgewählt</p>
+        </div>
+        <h4>Schritt 2: Funktion</h4>
+  
+        <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
+        <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" wicket:id="submitButtonSchemaOnly">ebInterface gegen Schema prüfen</button>
+  
+        <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
+        <p class="help-block">Wählen Sie ein Set von Schematron Regeln, gegen welches Sie prüfen möchten.</p>
+        <div class="inline-btn">
+          <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
+            <option>woo</option>
+            <option>hoo</option>
+          </select>
+          <button class="btn-wko" type="submit" wicket:id="submitButtonSchematron">ebInterface gegen Schematronregeln prüfen</button>
+        </div>
+  
+        <h5 class="functionHeader">Anzeigen</h5>
+        <div class="inline-btn">
+          <button class="btn-wko" type="submit" wicket:id="submitButtonVisualizeHTML">ebInterface in HTML Druckansicht anzeigen</button>
+          <button class="btn-wko" type="submit" wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen</button>
+        </div>
+        
+        <h5 class="functionHeader">Konvertieren</h5>
+        <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
+        <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
+          <option>woo</option>
+          <option>hoo</option>
+        </select>
+        <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
+      </form>
+    </div>
+
+    <!-- UBL tab -->
+    <div class="tab-pane" id="ubl" role="tabpanel" aria-labelledby="ubl-tab">
+      <form wicket:id="ublToEbiForm">
+        <h2>UBL nach ebInterface konvertieren</h2>
+        <div class="alert alert-danger" wicket:id="feedback"></div>
+        <div>
+          <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
+          <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
+          <div class="uploadFile">
+            <input class="inputFile" id="ublInput" type="file" wicket:id="ublInput"/>
+            <label for="ublInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          </div>
+        </div>
+        <div clss="form-actions">
+          <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
+          <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
+            <option>woo</option>
+            <option>hoo</option>
+          </select>
+          <button class="btn-wko" type="submit" wicket:id="convertUblToEbi">UBL nach ebInterface konvertieren</button>
+        </div>
+      </form>
+      
+      <br/>
+      <hr class="section-line"/>
+      <br/>
+      
+      <form wicket:id="ebiToUblForm">
+        <h2>ebInterface nach UBL konvertieren</h2>
+        <div class="alert alert-danger" wicket:id="feedback"></div>
+        <div>
+          <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
+          <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
+          <div class="uploadFile">
+            <input class="inputFile" id="fileInputEbiToUbl" type="file" wicket:id="fileInputEbiToUbl"/>
+            <label for="fileInputEbiToUbl"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          </div>
+        </div>
+        <div clss="form-actions">
+          <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
+          <button class="btn-wko" type="submit" wicket:id="convertEbiToUbl">ebInterface nach UBL konvertieren</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- XRechnung tab -->
+    <div class="tab-pane" id="xrechnung" role="tabpanel" aria-labelledby="xrechnung-tab">
+      <form wicket:id="xRechnungToEbiForm">
+        <h2>XRechnung nach ebInterface konvertieren</h2>
+        <div class="alert alert-danger" wicket:id="feedback"></div>
+        <div>
+          <h4 class="functionHeader">Schritt 1: XRechnung-Datei</h4>
+          <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige XRechnung-Datei von Ihrer Festplatte</p>
+  
+          <div class="uploadFile">
+            <input class="inputFile" id="xRechnungInput" type="file" wicket:id="xRechnungInput"/>
+            <label for="xRechnungInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          </div>
+        </div>
+        <div clss="form-actions">
+          <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
+          <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
+            <option>woo</option>
+            <option>hoo</option>
+          </select>
+          <button class="btn-wko" type="submit" wicket:id="convertXRechnungToEbi">XRechnung nach ebInterface konvertieren</button>
+        </div>
+      </form>
+      
+      <br/>
+      <hr class="section-line"/>
+      <br/>
+      
+      <form wicket:id="ebiToXRechnungForm">
+        <h2>ebInterface nach XRechnung konvertieren</h2>
+        <div class="alert alert-danger" wicket:id="feedback"></div>
+        <div>
+          <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
+          <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
+          <div class="uploadFile">
+            <input class="inputFile" id="fileInputEbiToXRechnung" type="file" wicket:id="fileInputEbiToXRechnung"/>
+            <label for="fileInputEbiToXRechnung"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          </div>
+        </div>
+        <div clss="form-actions">
+          <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
+          <button class="btn-wko" type="submit" wicket:id="convertEbiToXRechnung">ebInterface nach XRechnung konvertieren</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- SV tab -->
+    <div class="tab-pane" id="sv" role="tabpanel" aria-labelledby="sv-tab">
+      <form wicket:id="showRulesForm">
+        <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
+        <div class="alert alert-danger" wicket:id="feedback"></div>
+        <div class="form-actions">
+          <h5 class="functionHeader">Unterst&uuml;tzte Schematron Regeln</h5>
+          <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches sie einsehen m&ouml;chten.</p>
+          <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
+            <option>woo</option>
+            <option>hoo</option>
+          </select>
+          <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div>
-    <hr class="section-line"/>
-    <form wicket:id="inputForm" class="form-inline">
-      <h2>Wählen Sie eine ebInterface-Datei und anschließend eine Funktion:</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
-      <p class="help-block">Wählen Sie eine ebInterface 3.0, 3.02, 4.0, 4.1, 4.2, 4.3 oder 5.0 Datei von Ihrer Festplatte</p>
-
-      <div class="uploadFile">
-        <input id="fileInput1" type="file" wicket:id="fileInput" class="inputFile"/>
-        <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-        <p class="upload-label" id="uploadText"></p>
-      </div>
-      <h4>Schritt 2: Funktion</h4>
-
-      <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
-      <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" wicket:id="submitButtonSchemaOnly">ebInterface gegen Schema prüfen</button>
-
-      <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
-      <p class="help-block">Wählen Sie ein Set von Schematron Regeln, gegen welches Sie prüfen möchten.</p>
-      <div class="inline-btn">
-        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="submitButtonSchematron">ebInterface gegen Schematronregeln prüfen</button>
-      </div>
-
-      <h5 class="functionHeader">Anzeigen</h5>
-      <div class="inline-btn">
-        <button class="btn-wko" type="submit" wicket:id="submitButtonVisualizeHTML">ebInterface in HTML Druckansicht anzeigen</button>
-        <button class="btn-wko" type="submit" wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen</button>
-      </div>
-      
-      <h5 class="functionHeader">Konvertieren</h5>
-      <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
-      <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
-        <option>woo</option>
-        <option>hoo</option>
-      </select>
-      <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
-    </form>
     <br/><br/>
-    
-    <hr class="section-line"/>
-    <form wicket:id="showRulesForm">
-      <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div class="form-actions">
-        <h5 class="functionHeader">Unterst&uuml;tzte Schematron Regeln</h5>
-        <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches sie einsehen m&ouml;chten.</p>
-        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
-      </div>
-    </form>
-    <br/><br/>
-    
-    <hr class="section-line"/>
-    <form class="border" wicket:id="ublToEbiForm">
-      <h2>UBL nach ebInterface konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div>
-        <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
-        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
-        <div class="uploadFile">
-          <input class="inputFile" id="ublInput" type="file" wicket:id="ublInput"/>
-          <label for="ublInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-        </div>
-      </div>
-      <div clss="form-actions">
-        <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="convertUblToEbi">UBL nach ebInterface konvertieren</button>
-      </div>
-    </form>
-    <br/><br/>
-    
-    <hr class="section-line"/>
-    <form class="border" wicket:id="ebiToUblForm">
-      <h2>ebInterface nach UBL konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div>
-        <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
-        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
-        <div class="uploadFile">
-          <input class="inputFile" id="fileInputEbiToUbl" type="file" wicket:id="fileInputEbiToUbl"/>
-          <label for="fileInputEbiToUbl"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-        </div>
-      </div>
-      <div clss="form-actions">
-        <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <button class="btn-wko" type="submit" wicket:id="convertEbiToUbl">ebInterface nach UBL konvertieren</button>
-      </div>
-    </form>
-    <br/><br/>
-
-    <hr class="section-line"/>
-    <form class="border" wicket:id="xRechnungToEbiForm">
-      <h2>XRechnung nach ebInterface konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div>
-        <h4 class="functionHeader">Schritt 1: XRechnung-Datei</h4>
-        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige XRechnung-Datei von Ihrer Festplatte</p>
-
-        <div class="uploadFile">
-          <input class="inputFile" id="xRechnungInput" type="file" wicket:id="xRechnungInput"/>
-          <label for="xRechnungInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-        </div>
-      </div>
-      <div clss="form-actions">
-        <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="convertXRechnungToEbi">XRechnung nach ebInterface konvertieren</button>
-      </div>
-    </form>
-    <br/><br/>
-      
-    <hr class="section-line"/>
-    <form class="border" wicket:id="ebiToXRechnungForm">
-      <h2>ebInterface nach XRechnung konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div>
-        <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
-        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
-        <div class="uploadFile">
-          <input class="inputFile" id="fileInputEbiToXRechnung" type="file" wicket:id="fileInputEbiToXRechnung"/>
-          <label for="fileInputEbiToXRechnung"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-        </div>
-      </div>
-      <div clss="form-actions">
-        <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <button class="btn-wko" type="submit" wicket:id="convertEbiToXRechnung">ebInterface nach XRechnung konvertieren</button>
-      </div>
-    </form>
-    <br/><br/>
-    
+   
     <hr class="section-line"/>
     <div style="text-align: center;">
       Code lizensiert unter <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT

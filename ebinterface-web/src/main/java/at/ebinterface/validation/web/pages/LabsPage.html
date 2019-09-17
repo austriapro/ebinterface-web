@@ -12,13 +12,16 @@
         Daten ins Mobile Banking.
       </p>
       <div class="alert alert-danger" wicket:id="feedback"></div>
+      
       <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
+      
       <p class="help-block">Wählen Sie eine ebInterface Datei von Ihrer Festplatte</p>
       <div class="uploadFile">
-        <input id="fileInput1" type="file" wicket:id="fileInput" class="inputFile" onchange="getFileName()" />
+        <input id="fileInput1" type="file" wicket:id="fileInput" class="inputFile" onchange="getFileName('fileInput1','uploadText')" />
         <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
         <p class="upload-label" id="uploadText">Keine Datei ausgewählt</p>
       </div>
+      
       <h4>Schritt 2: Funktion</h4>
 
       <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>

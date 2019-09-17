@@ -5,27 +5,10 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.pages.resultpages.ResultPanel;
 
-public class ServicePage extends BasePage {
-
-  public ServicePage() {
-    super();
-    setup();
-  }
-
+public final class ServicePage extends BasePage {
   public ServicePage(ValidationResult validationResult, String selectedSchematronRule,
                      StartPage.ActionType selectedAction, byte[] pdf) {
-    super();
-    setup(validationResult, selectedSchematronRule, selectedAction, pdf);
-  }
-
-   private void setup() {
-    setup(null, null, null, null);
-   }
-
-  private void setup(ValidationResult validationResult, String selectedSchematronRule,
-                     StartPage.ActionType selectedAction, byte[] pdf) {
-
-        //Add the input form
+    //Add the input form
     final ServiceForm inputForm = new ServiceForm("inputForm");
     add(inputForm);
 
@@ -34,6 +17,5 @@ public class ServicePage extends BasePage {
     } else {
       add(new EmptyPanel("resultPanel"));
     }
-
   }
 }

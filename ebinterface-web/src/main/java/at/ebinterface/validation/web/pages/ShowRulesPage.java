@@ -18,9 +18,7 @@ import at.ebinterface.validation.web.components.CodeBox;
  *
  * @author pl
  */
-public class ShowRulesPage extends BasePage {
-
-
+public final class ShowRulesPage extends BasePage {
   public ShowRulesPage(IModel<Rule> ruleModel) {
 
     //Add a label showing the selected Schematron file
@@ -39,8 +37,5 @@ public class ShowRulesPage extends BasePage {
     //Add the codebox for showing the schematron rules
     final CodeBox codeBox = new CodeBox("message", code).setDisplayLineNumbers(true);
     add(codeBox);
-
-
   }
-
 }

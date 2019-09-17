@@ -1,4 +1,7 @@
 package at.ebinterface.validation.web.js;
 
-public interface JsReference {
-}
+/**
+ * Placeholder class to determine the package.
+ */
+public final class JsReference
+{}

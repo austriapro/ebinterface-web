@@ -1,31 +1,4 @@
 @charset "UTF-8";
-@font-face {
-    font-family: 'DIN Web Pro';
-    src: url("/DINWebPro.woff") format("woff");
-    font-weight: 400;
-    font-style: normal
-}
-
-@font-face {
-    font-family: 'DIN Web Pro';
-    src: url("/css-js/styles/fonts/DIN/DINWebPro-Italic.woff") format("woff");
-    font-weight: 400;
-    font-style: italic
-}
-
-@font-face {
-    font-family: 'DIN Web Pro';
-    src: url("/css-js/styles/fonts/DIN/DINWebPro-Medium.woff") format("woff");
-    font-weight: 500;
-    font-style: normal
-}
-
-@font-face {
-    font-family: 'DIN Web Pro';
-    src: url("/css-js/styles/fonts/DIN/DINWebPro-MediumItalic.woff") format("woff");
-    font-weight: 500;
-    font-style: italic
-}
 
 html {
     font-family: sans-serif;

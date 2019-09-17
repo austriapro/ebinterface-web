@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
+import com.helger.commons.string.StringHelper;
 
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.web.pages.LabsPage;
@@ -45,6 +46,9 @@ public class ValidationApplication extends WebApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(ValidationApplication.class.getName());
 
+  private static final String APP_PATH;
+
+
   static {
     //Set the manual keystore, otherwise the RTR certificate is not trusted
     try {
@@ -57,6 +61,9 @@ public class ValidationApplication extends WebApplication {
       throw new RuntimeException("Error while reading SSL Keystore. Unable to proceed.", e1);
     }
 
+    APP_PATH = System.getenv("APPLICATION_PATH");
+    if (StringHelper.hasNoText(APP_PATH))
+      LOG.debug("APPLICATION_PATH not set, always returning default homepage");
   }
 
   @Override
@@ -141,19 +148,11 @@ public class ValidationApplication extends WebApplication {
    */
   @Override
   public Class<? extends Page> getHomePage() {
-
     // https://gitlab.ecosio.com/misc/austriapro/issues/11
     Class<? extends Page> homePage = StartPage.class;
 
-    try {
-      String appPath = System.getenv("APPLICATION_PATH");
-
-      if (Strings.isNullOrEmpty(appPath)) {
-        LOG.debug("APPLICATION_PATH not set, returning default homepage");
-        return homePage;
-      }
-
-      switch (appPath) {
+    if (StringHelper.hasText(APP_PATH))
+      switch (APP_PATH) {
         case "service":
           LOG.debug("Homepage is ServicePage");
           homePage = ServicePage.class;
@@ -164,14 +163,7 @@ public class ValidationApplication extends WebApplication {
           break;
         default:
           LOG.info("Could not determine type of landing page, using startpage");
-          homePage = StartPage.class;
       }
-
-    } catch (Exception e) {
-      LOG.warn(e.getMessage(), e);
-    }
-
     return homePage;
   }
-
 }

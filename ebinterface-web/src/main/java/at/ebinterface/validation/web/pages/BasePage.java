@@ -18,13 +18,10 @@ import at.ebinterface.validation.web.pages.images.ImagesLogoAccessor;
  * @author pl
  */
 public abstract class BasePage extends WebPage {
-
-
   /**
-   *
+   *Constructor
    */
   public BasePage() {
-
     add(new Image("ebInterface-logo",
                   new PackageResourceReference(ImagesLogoAccessor.class, "ebinterface-logo.png")));
     add(new Image("wko-logo",
@@ -36,17 +33,16 @@ public abstract class BasePage extends WebPage {
   @Override
   public void renderHead(HtmlHeaderContainer container) {
 
-    PackageResourceReference cssFile_one =
-        new PackageResourceReference(CssReference.class, "style.css");
-    CssHeaderItem cssItem_one = CssHeaderItem.forReference(cssFile_one);
-
-    PackageResourceReference cssFile_three =
+    PackageResourceReference cssFile_wko =
         new PackageResourceReference(CssReference.class, "wkostyle.css");
-    CssHeaderItem cssItem_three = CssHeaderItem.forReference(cssFile_three);
+    CssHeaderItem cssItem_wko = CssHeaderItem.forReference(cssFile_wko);
 
-    container.getHeaderResponse().render(cssItem_one);
-    //container.getHeaderResponse().render(cssItem_two);
-    container.getHeaderResponse().render(cssItem_three);
+    PackageResourceReference cssFile_page =
+        new PackageResourceReference(CssReference.class, "style.css");
+    CssHeaderItem cssItem_page = CssHeaderItem.forReference(cssFile_page);
+
+    container.getHeaderResponse().render(cssItem_wko);
+    container.getHeaderResponse().render(cssItem_page);
 
     PackageResourceReference
         jsReference =
@@ -54,8 +50,5 @@ public abstract class BasePage extends WebPage {
     JavaScriptReferenceHeaderItem headerItem = JavaScriptHeaderItem.forReference(jsReference);
     container.getHeaderResponse().render(headerItem);
     super.renderHead(container);
-
-
   }
-
 }
