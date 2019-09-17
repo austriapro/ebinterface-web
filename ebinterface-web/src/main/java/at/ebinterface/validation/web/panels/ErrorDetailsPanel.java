@@ -1,6 +1,6 @@
 package at.ebinterface.validation.web.panels;
 
-import at.ebinterface.validation.validator.jaxb.Result;
+import java.util.List;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import java.util.List;
+import at.ebinterface.validation.validator.jaxb.Result;
 
 /**
  * This class is used to show the generated error messages from the schematron validation

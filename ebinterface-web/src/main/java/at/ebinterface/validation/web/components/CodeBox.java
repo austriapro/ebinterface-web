@@ -1,10 +1,6 @@
 package at.ebinterface.validation.web.components;
 
 
-import at.ebinterface.validation.web.components.prettyfy.ExtraJSResourceReference;
-import at.ebinterface.validation.web.components.prettyfy.PrettifyCSSResourceReference;
-import at.ebinterface.validation.web.components.prettyfy.PrettifyJSResourceReference;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -14,6 +10,10 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+
+import at.ebinterface.validation.web.components.prettyfy.ExtraJSResourceReference;
+import at.ebinterface.validation.web.components.prettyfy.PrettifyCSSResourceReference;
+import at.ebinterface.validation.web.components.prettyfy.PrettifyJSResourceReference;
 
 
 /**

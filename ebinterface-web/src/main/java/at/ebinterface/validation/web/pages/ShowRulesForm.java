@@ -17,15 +17,15 @@ import at.ebinterface.validation.validator.Rules;
  *
  * @author pl
  */
-class ShowRulesForm extends Form {
+class ShowRulesForm extends Form<Object> {
 
   /**
-   * Panel for providing feedback in case of errorneous input
+   * Panel for providing feedback in case of erroneous input
    */
   FeedbackPanel feedbackPanel;
 
   /**
-   * Dropdown choice for the schmeatrno rules
+   * Dropdown choice for the Schematron rules
    */
   DropDownChoice<Rule> rules;
 
@@ -39,7 +39,7 @@ class ShowRulesForm extends Form {
 
     //Add the drop down choice for the different rules which are currently supported
     rules =
-        new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
+        new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
                                  new IChoiceRenderer<Rule>() {
                                    @Override
                                    public Object getDisplayValue(Rule object) {

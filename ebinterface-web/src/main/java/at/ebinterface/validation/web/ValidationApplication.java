@@ -1,20 +1,8 @@
 package at.ebinterface.validation.web;
 
-import com.google.common.base.Strings;
-
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.RuntimeConfigurationType;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -24,10 +12,22 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
+
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.web.pages.LabsPage;
 import at.ebinterface.validation.web.pages.ServicePage;
 import at.ebinterface.validation.web.pages.StartPage;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 
 /**
@@ -39,7 +39,7 @@ public class ValidationApplication extends WebApplication {
 
 
   /**
-   * Defines wether the application shall be started in develop or deployment mode
+   * Defines whether the application shall be started in develop or deployment mode
    */
   private static RuntimeConfigurationType CONFIGURATION_TYPE = RuntimeConfigurationType.DEPLOYMENT;
 
@@ -73,7 +73,7 @@ public class ValidationApplication extends WebApplication {
       setMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE, jrReport);
       LOG.info("JasperReport template for ebInterface is now stored in application context.");
     } catch (Exception ex) {
-      LOG.error("Could not load ebInterface PDF template!");
+      LOG.error("Could not load ebInterface PDF template!", ex);
     }
 
     try {
@@ -86,7 +86,7 @@ public class ValidationApplication extends WebApplication {
       setMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE, jrReport);
       LOG.info("JasperReport template for ZUGFeRD is now stored in application context.");
     } catch (Exception ex) {
-      LOG.error("Could not load ZUGFeRD PDF template!");
+      LOG.error("Could not load ZUGFeRD PDF template!", ex);
     }
 
     LOG.info("Initializing XML schema validator for ebInterface");
@@ -120,12 +120,11 @@ public class ValidationApplication extends WebApplication {
     }
     LOG.info("schematron transformer for ZUGFeRD is now stored in application context.");
 
-    getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
-    getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+    getMarkupSettings().setDefaultMarkupEncoding(StandardCharsets.UTF_8.name ());
+    getRequestCycleSettings().setResponseRequestEncoding(StandardCharsets.UTF_8.name ());
 
     mountPage("/service", ServicePage.class);
     mountPage("/labs", LabsPage.class);
-
   }
 
   /**
@@ -133,9 +132,7 @@ public class ValidationApplication extends WebApplication {
    */
   @Override
   public RuntimeConfigurationType getConfigurationType() {
-
     return CONFIGURATION_TYPE;
-
   }
 
 
@@ -149,7 +146,6 @@ public class ValidationApplication extends WebApplication {
     Class<? extends Page> homePage = StartPage.class;
 
     try {
-
       String appPath = System.getenv("APPLICATION_PATH");
 
       if (Strings.isNullOrEmpty(appPath)) {
@@ -169,7 +165,6 @@ public class ValidationApplication extends WebApplication {
         default:
           LOG.info("Could not determine type of landing page, using startpage");
           homePage = StartPage.class;
-
       }
 
     } catch (Exception e) {

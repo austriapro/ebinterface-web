@@ -1,8 +1,15 @@
 package at.ebinterface.validation.web.pages;
 
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.saxon.Controller;
-import net.sf.saxon.serialize.MessageWarner;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Validator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
@@ -16,22 +23,14 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Validator;
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
+import com.helger.commons.io.stream.NonBlockingStringWriter;
+import com.helger.commons.io.stream.StreamHelper;
+import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.austriapro.Mapping;
 import at.austriapro.MappingErrorHandler;
@@ -40,7 +39,6 @@ import at.austriapro.MappingFactory;
 import at.austriapro.rendering.BaseRenderer;
 import at.austriapro.rendering.ZugferdRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.validator.Rules;
 import at.ebinterface.validation.validator.ValidationResult;
@@ -48,34 +46,37 @@ import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageZugferd;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.saxon.Controller;
+import net.sf.saxon.serialize.MessageWarner;
 
 /**
- * The input form class
+ * The input form class used on the startPage
  *
  * @author pl
  */
-class InputForm extends Form {
-
-
-  /**
-   * Panel for providing feedback in case of errorneous input
-   */
-  FeedbackPanel feedbackPanel;
+class InputForm extends Form<Object> {
+  private static final Logger LOG = LoggerFactory.getLogger (InputForm.class);
 
   /**
-   * Dropdown choice for the schmeatrno rules
+   * Panel for providing feedback in case of erroneous input
    */
-  DropDownChoice<Rule> rules;
+  private FeedbackPanel feedbackPanel;
+
+  /**
+   * Dropdown choice for the Schematron rules
+   */
+  private DropDownChoice<Rule> rules;
 
   /**
    * Dropdown choice for the ZUGFeRD level
    */
-  DropDownChoice<String> zugferdlevels;
+  private DropDownChoice<String> zugferdlevels;
 
   /**
    * Upload field for the ebInterface instance
    */
-  FileUploadField fileUploadField;
+  private FileUploadField fileUploadField;
 
   public InputForm(final String id) {
     super(id);
@@ -95,7 +96,7 @@ class InputForm extends Form {
 
     //Add the drop down choice for the different rules which are currently supported
     rules =
-        new DropDownChoice<Rule>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
+        new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
                                  new IChoiceRenderer<Rule>() {
                                    @Override
                                    public Object getDisplayValue(Rule object) {
@@ -112,7 +113,7 @@ class InputForm extends Form {
 
     //Add the drop down choice for the different ZUGFeRD levels which are currently supported
     zugferdlevels =
-        new DropDownChoice<String>(
+        new DropDownChoice<>(
             "zugferdSelector", Model.of(new String()), StartPage.ZUGFERD_LEVELS,
             new IChoiceRenderer<String>() {
               @Override
@@ -197,9 +198,9 @@ class InputForm extends Form {
 
     try {
       final InputStream inputStream = upload.getInputStream();
-      uploadedData = IOUtils.toByteArray(inputStream);
+      uploadedData = StreamHelper.getAllBytes(inputStream);
     } catch (final IOException e) {
-      StartPage.LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     //Validate the XML instance - performed in any case
@@ -219,15 +220,15 @@ class InputForm extends Form {
     //Schematron validation too?
     if (selectedAction == StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
       //Schematron validation may only be started in case of ebInterface 4p0
-      if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0 ||
-          validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1 ||
-          validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2 ||
-          validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P3) {
+      if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V40 ||
+          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V41 ||
+          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V42 ||
+          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V43) {
 
         //Selected rule and selected ebInterface version must match
         Rule rule = rules.getModelObject();
         if (rule != null && !(rule.getEbInterfaceVersion()
-                                  .equals(validationResult.getDeterminedEbInterfaceVersion()))) {
+                                  .equals(validationResult.getDeterminedEbInterfaceVersion().getVersion ()))) {
           error(new ResourceModel("schematron.version.mismatch").getObject());
           onError();
           return;
@@ -243,7 +244,7 @@ class InputForm extends Form {
       else {
         error(
             "Schematronregeln können nur auf ebInterface 4.0/4.1/4.2/4.3 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: "
-            + validationResult.getDeterminedEbInterfaceVersion().getCaption());
+            + validationResult.getDeterminedEbInterfaceVersion().getCaption ());
         onError();
         return;
       }
@@ -262,7 +263,7 @@ class InputForm extends Form {
       final String
           s =
           validator
-              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion());
+              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion().getVersion ());
       //Redirect to the printview page
       setResponsePage(new PrintViewPage(s));
       return;
@@ -274,17 +275,17 @@ class InputForm extends Form {
       BaseRenderer renderer = new BaseRenderer();
 
       try {
-        StartPage.LOG.debug("Load ebInterface JasperReport template from application context.");
+        LOG.debug("Load ebInterface JasperReport template from application context.");
         JasperReport
             jrReport =
             Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-        StartPage.LOG.debug("Rendering PDF from ebInterface file.");
+        LOG.debug("Rendering PDF from ebInterface file.");
 
         pdf = renderer.renderReport(jrReport, uploadedData, null);
 
       } catch (Exception ex) {
-        StartPage.LOG.error("Error when generating PDF from ebInterface", ex);
+        LOG.error("Error when generating PDF from ebInterface", ex);
         error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
         onError();
         return;
@@ -302,7 +303,7 @@ class InputForm extends Form {
 
       MappingFactory mf = new MappingFactory();
 
-      MappingFactory.ZugferdMappingType zugferdLevel;
+      final MappingFactory.ZugferdMappingType zugferdLevel;
 
       if (zugferdlevels.getModelObject().endsWith("Basic")){
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0;
@@ -312,39 +313,32 @@ class InputForm extends Form {
         zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0;
       }
 
-      MappingFactory.EbInterfaceMappingType ebType;
-
-      if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P0){
-        error("ZUGFeRD Konvertierung für ebInterface 4.0 nicht unterstützt.");
-        onError();
-        return;
-
-        /*zugFeRDMapping = mf.getMapper(MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0,
-                                      MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p0);*/
-      }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P1){
-        ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p1;
-      }else if (validationResult.getDeterminedEbInterfaceVersion() == EbInterfaceVersion.E4P2) {
-        ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p2;
-      }
-      else {
-        ebType = MappingFactory.EbInterfaceMappingType.EBINTERFACE_4p3;
+      final EEbInterfaceVersion ebType;
+      switch (validationResult.getDeterminedEbInterfaceVersion().getVersion ()) {
+        case V41:  
+        case V42:  
+        case V43:
+          // These versions are supported
+          ebType = validationResult.getDeterminedEbInterfaceVersion().getVersion ();
+          break;
+        default:
+          error("ZUGFeRD Konvertierung für "+validationResult.getDeterminedEbInterfaceVersion ().getCaption ()+" nicht unterstützt.");
+          onError();
+          return;
       }
 
-      Mapping zugFeRDMapping = mf.getMapper(zugferdLevel,
+      final Mapping zugFeRDMapping = mf.getMapper(zugferdLevel,
                                             ebType);
 
-      String sZugferd;
       SAXSource saxSource;
 
       //Map to ZUGFeRD Basic
       try {
-        StartPage.LOG.debug("Map ebInterface to ZUGFeRD.");
-        sZugferd = new String(zugFeRDMapping.mapFromebInterface(new String(uploadedData)));
-
-        zugferd = sZugferd.getBytes("UTF-8");
+        LOG.debug("Map ebInterface to ZUGFeRD.");
+        zugferd = zugFeRDMapping.mapFromebInterface(uploadedData);
 
         saxSource = new SAXSource(new InputSource(
-            new ByteArrayInputStream(zugferd)));
+            new NonBlockingByteArrayInputStream(zugferd)));
 
         Validator
             zugSchemaValidator = Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator();
@@ -358,7 +352,7 @@ class InputForm extends Form {
               eh.toString().replace("\n", "<br/>"));
         }
       } catch (Exception e) {
-        StartPage.LOG.error("ZUGFeRD conversion failed", e);
+        LOG.error("ZUGFeRD conversion failed", e);
         error("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
         onError();
         return;
@@ -367,8 +361,8 @@ class InputForm extends Form {
       if (zugferd != null) {
         sbLog.append(zugFeRDMapping.getMappingLogHTML());
 
-        Source source = new StreamSource(new StringReader(sZugferd));
-        javax.xml.transform.Result result = new StreamResult(new StringWriter());
+        Source source = new StreamSource(new NonBlockingByteArrayInputStream (zugferd));
+        javax.xml.transform.Result result = new StreamResult(new NonBlockingStringWriter());
 
         try {
           Transformer transformer = Application.get().getMetaData(
@@ -398,12 +392,12 @@ class InputForm extends Form {
             ZugferdRenderer renderer = new ZugferdRenderer();
 
             try {
-              StartPage.LOG.debug("Load ZUGFeRD JasperReport template from application context.");
+              LOG.debug("Load ZUGFeRD JasperReport template from application context.");
               JasperReport
                   jrReport =
                   Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE);
 
-              StartPage.LOG.debug("Rendering PDF.");
+              LOG.debug("Rendering PDF.");
 
               pdf = renderer.renderReport(jrReport, zugferd, null);
 
@@ -430,7 +424,7 @@ class InputForm extends Form {
       //Redirect to the ebInterface result page
       setResponsePage(
           new ResultPageEbInterface(validationResult, selectedSchematronRule, selectedAction,
-                                    pdf, null, null));
+                                    pdf, null, null, StartPage.class));
     } else {
       //Redirect to the ZUGFeRD result page
       setResponsePage(

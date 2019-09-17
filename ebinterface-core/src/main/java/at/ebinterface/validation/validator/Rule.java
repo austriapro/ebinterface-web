@@ -2,20 +2,22 @@ package at.ebinterface.validation.validator;
 
 import java.io.Serializable;
 
+import com.helger.ebinterface.EEbInterfaceVersion;
+
 /**
  * Represents a Schematron rule
  */
 public class Rule implements Serializable {
 
   private String name;
-  private EbInterfaceVersion ebInterfaceVersion;
+  private EEbInterfaceVersion ebInterfaceVersion;
   private String fileReference;
 
 
   public Rule() {
   }
 
-  public Rule(String name, EbInterfaceVersion ebInterfaceVersion, String fileReference) {
+  public Rule(String name, EEbInterfaceVersion ebInterfaceVersion, String fileReference) {
     this.name = name;
     this.ebInterfaceVersion = ebInterfaceVersion;
     this.fileReference = fileReference;
@@ -29,11 +31,11 @@ public class Rule implements Serializable {
     this.name = name;
   }
 
-  public EbInterfaceVersion getEbInterfaceVersion() {
+  public EEbInterfaceVersion getEbInterfaceVersion() {
     return ebInterfaceVersion;
   }
 
-  public void setEbInterfaceVersion(EbInterfaceVersion ebInterfaceVersion) {
+  public void setEbInterfaceVersion(EEbInterfaceVersion ebInterfaceVersion) {
     this.ebInterfaceVersion = ebInterfaceVersion;
   }
 

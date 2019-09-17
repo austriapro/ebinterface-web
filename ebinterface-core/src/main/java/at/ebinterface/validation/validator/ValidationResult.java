@@ -1,5 +1,6 @@
 package at.ebinterface.validation.validator;
 
+import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
 import at.ebinterface.validation.validator.jaxb.Result;
 
@@ -12,7 +13,7 @@ public class ValidationResult {
 
 
   private String schemaValidationErrorMessage;
-  private EbInterfaceVersion determinedEbInterfaceVersion;
+  private EbiVersion determinedEbInterfaceVersion;
 
   /**
    * Schematronvalidation result
@@ -39,12 +40,12 @@ public class ValidationResult {
     this.schemaValidationErrorMessage = schemaValidationErrorMessage;
   }
 
-  public EbInterfaceVersion getDeterminedEbInterfaceVersion() {
+  public EbiVersion getDeterminedEbInterfaceVersion() {
     return determinedEbInterfaceVersion;
   }
 
   public void setDeterminedEbInterfaceVersion(
-      final EbInterfaceVersion determinedEbInterfaceVersion) {
+      final EbiVersion determinedEbInterfaceVersion) {
     this.determinedEbInterfaceVersion = determinedEbInterfaceVersion;
   }
 

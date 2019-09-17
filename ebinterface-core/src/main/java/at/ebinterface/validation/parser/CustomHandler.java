@@ -21,25 +21,15 @@ public class CustomHandler extends DefaultHandler {
 
   @Override
   public void startDocument() throws SAXException {
-    // TODO Auto-generated method stub
-    super.startDocument();
-
     foundNameSpace = "";
     containsSignature = false;
     signatureNamespacePrefix = "";
   }
 
-  @Override
-  public void endDocument() throws SAXException {
-    // TODO Auto-generated method stub
-    super.endDocument();
-  }
-
+ 
   @Override
   public void startElement(final String uri, final String localName, final String qName,
                            final Attributes attributes) throws SAXException {
-    super.startElement(uri, localName, qName, attributes);
-
     //Get the Invoice ROOT element
     if (qName.endsWith("Invoice")) {
 
@@ -74,42 +64,18 @@ public class CustomHandler extends DefaultHandler {
       //Get the namespace prefix of the signature element
       final String nameSpace = qName.substring(0, qName.indexOf(":"));
       signatureNamespacePrefix = nameSpace;
-
     }
-
-
-  }
-
-  @Override
-  public void endElement(final String uri, final String localName, final String qName)
-      throws SAXException {
-    // TODO Auto-generated method stub
-    super.endElement(uri, localName, qName);
   }
 
   public String getFoundNameSpace() {
     return foundNameSpace;
   }
 
-  public void setFoundNameSpace(final String foundNameSpace) {
-    this.foundNameSpace = foundNameSpace;
-  }
-
   public boolean isContainsSignature() {
     return containsSignature;
-  }
-
-  public void setContainsSignature(final boolean containsSignature) {
-    this.containsSignature = containsSignature;
   }
 
   public String getSignatureNamespacePrefix() {
     return signatureNamespacePrefix;
   }
-
-  public void setSignatureNamespacePrefix(final String signatureNamespacePrefix) {
-    this.signatureNamespacePrefix = signatureNamespacePrefix;
-  }
-
-
 }

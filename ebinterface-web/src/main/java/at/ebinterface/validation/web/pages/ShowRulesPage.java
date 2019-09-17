@@ -1,16 +1,16 @@
 package at.ebinterface.validation.web.pages;
 
-import at.ebinterface.validation.validator.Rule;
-import at.ebinterface.validation.web.components.CodeBox;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.io.IOUtils;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import com.helger.commons.io.stream.StreamHelper;
+
+import at.ebinterface.validation.validator.Rule;
+import at.ebinterface.validation.web.components.CodeBox;
 
 
 /**
@@ -34,17 +34,10 @@ public class ShowRulesPage extends BasePage {
       }
     });
 
-    final StringWriter writer = new StringWriter();
-    try {
-      IOUtils.copy(this.getClass().getResourceAsStream(ruleModel.getObject().getFileReference()),
-                   writer, "UTF-8");
-    } catch (final IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    final String code = StreamHelper.getAllBytesAsString (getClass().getResourceAsStream(ruleModel.getObject().getFileReference()), StandardCharsets.UTF_8);
 
     //Add the codebox for showing the schematron rules
-    final CodeBox codeBox = new CodeBox("message", writer.toString()).setDisplayLineNumbers(true);
+    final CodeBox codeBox = new CodeBox("message", code).setDisplayLineNumbers(true);
     add(codeBox);
 
 

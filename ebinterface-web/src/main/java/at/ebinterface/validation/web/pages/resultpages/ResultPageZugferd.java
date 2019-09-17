@@ -1,30 +1,24 @@
 package at.ebinterface.validation.web.pages.resultpages;
 
-import net.sf.jasperreports.engine.JasperReport;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.Application;
-import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import com.helger.commons.string.StringHelper;
 
-import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.validator.jaxb.Result;
-import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.BasePage;
 import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.pages.StartPage.ActionType;
@@ -49,7 +43,7 @@ public class ResultPageZugferd extends BasePage {
                            final String mappingLog,
                            final byte[] zugferdPdf) {
 
-    final StringBuffer schemaVersion = new StringBuffer();
+    final StringBuilder schemaVersion = new StringBuilder();
 
     if (validationResult.getDeterminedEbInterfaceVersion() != null) {
       schemaVersion.append(validationResult.getDeterminedEbInterfaceVersion().getCaption());
@@ -171,15 +165,15 @@ public class ResultPageZugferd extends BasePage {
     }
 
     //In case the Schema validation failed, or only schema validation is turned on we do not show anything about the schematron
-    if (selectedAction == ActionType.SCHEMA_VALIDATION || !StringUtils
-        .isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+    if (selectedAction == ActionType.SCHEMA_VALIDATION || 
+        StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
       schematronOkContainer.setVisible(false);
       schematronNokContainer.setVisible(false);
     }
     //Are there schematron validation messages?
     //Everything OK
     else if (schematronResult == null || schematronResult.getErrors() == null
-             || schematronResult.getErrors().size() == 0) {
+             || schematronResult.getErrors().isEmpty ()) {
       schematronOkContainer.setVisible(true);
       schematronNokContainer.setVisible(false);
     }

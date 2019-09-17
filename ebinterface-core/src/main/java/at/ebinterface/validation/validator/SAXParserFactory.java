@@ -1,37 +1,34 @@
 package at.ebinterface.validation.validator;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
 
 /**
  * Factory providing XXE-save SAX-parser
  */
 public class SAXParserFactory {
-
-
-  private static final Logger LOG = LoggerFactory.getLogger(SAXParserFactory.class.getName());
-
+  private static final Logger LOG = LoggerFactory.getLogger(SAXParserFactory.class);
 
   /**
    * SAX-Parser factory
    */
-  private static javax.xml.parsers.SAXParserFactory saxParserFactory;
+  private static final javax.xml.parsers.SAXParserFactory saxParserFactory;
 
   static {
 
     //Get a SAXParser factory and avoid potential XXE
-    saxParserFactory = org.apache.xerces.jaxp.SAXParserFactoryImpl.newInstance();
+    saxParserFactory = javax.xml.parsers.SAXParserFactory.newInstance();
 
     try {
       saxParserFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
       saxParserFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
       saxParserFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     } catch (Exception e) {
-      new RuntimeException(e);
+      throw new RuntimeException(e);
     }
 
   }
@@ -44,16 +41,10 @@ public class SAXParserFactory {
 
     try {
       return saxParserFactory.newSAXParser();
-    } catch (ParserConfigurationException e) {
-      LOG.error("Unable to instantiate new SAXParser", e);
-    } catch (SAXException e) {
+    } catch (ParserConfigurationException | SAXException e) {
       LOG.error("Unable to instantiate new SAXParser", e);
     }
 
     return null;
-
-
   }
-
-
 }

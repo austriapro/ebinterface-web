@@ -1,0 +1,39 @@
+<wicket:panel>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <h4>Konvertierung</h4>
+                </div>
+            </div>
+            <div wicket:id="mappingLogSuccess">
+                <div class="row">
+                    <div class="col-md-12 alert alert-success">
+                        <div>Die Konvertierung nach UBL war erfolgreich.</div>
+                    </div>
+                </div>
+            </div>
+            <div wicket:id="mappingLogError">
+                <div class="row">
+                    <div class="col-md-12 alert alert-danger">
+                        <div wicket:id="logErrorPanel"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a class="btn btn-ghost btn-ghost--red" type="submit" wicket:id="linkXMLDownload">Download UBL</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-ghost btn-ghost--red" wicket:id="returnLink">Neue Anfrage starten</a>
+        </div>
+    </div>
+</wicket:panel>

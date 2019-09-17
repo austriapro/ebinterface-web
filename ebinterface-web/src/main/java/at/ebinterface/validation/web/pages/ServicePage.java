@@ -30,7 +30,7 @@ public class ServicePage extends BasePage {
     add(inputForm);
 
     if (validationResult != null) {
-      add(new ResultPanel("resultPanel", validationResult, selectedSchematronRule, selectedAction, pdf, null, null));
+      add(new ResultPanel("resultPanel", validationResult, selectedSchematronRule, selectedAction, pdf, null, null, null));
     } else {
       add(new EmptyPanel("resultPanel"));
     }

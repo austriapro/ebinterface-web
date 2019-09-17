@@ -1,17 +1,20 @@
 package at.ebinterface.validation.rtr;
 
-import at.ebinterface.validation.rtr.generated.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.ws.BindingProvider;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.util.Properties;
+
+import javax.xml.ws.BindingProvider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import at.ebinterface.validation.rtr.generated.VerificationFault;
+import at.ebinterface.validation.rtr.generated.VerificationService;
+import at.ebinterface.validation.rtr.generated.VerificationServicePortType;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
+import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
 
 /**
  * Used to invoke the validation service - adds the HTTP basic parameters to the service invocation
@@ -41,10 +44,7 @@ public class VerificationServiceInvoker {
     //Get username and password for the RTR Web Service, which requires HTTP Basic Authentication
     //That may be done more nicely using Spring, but we abstain to use Spring dependencies in this project...
     Properties prop = new Properties();
-    InputStream input = null;
-    try {
-
-      input = Thread.currentThread().getContextClassLoader().getResourceAsStream("rtr.properties");
+    try(final InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("rtr.properties")) {
       prop.load(input);
 
       //Set the properties
@@ -65,14 +65,6 @@ public class VerificationServiceInvoker {
       LOG.error(
           "Unable to read username/password for HTTP basic authentication of RTR service. Validation service Won't be able to perform signature validations.");
       activated = false;
-    } finally {
-      if (input != null) {
-        try {
-          input.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
 
     //Enable some more verbose logging

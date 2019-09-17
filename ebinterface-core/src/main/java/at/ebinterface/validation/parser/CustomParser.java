@@ -1,15 +1,13 @@
 package at.ebinterface.validation.parser;
 
-import at.ebinterface.validation.exception.NamespaceUnknownException;
-import at.ebinterface.validation.validator.EbInterfaceVersion;
+import javax.annotation.Nonnull;
 
-import org.apache.commons.lang.StringUtils;
 import org.xml.sax.InputSource;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import com.helger.commons.string.StringHelper;
+import com.helger.ebinterface.EEbInterfaceVersion;
 
-import java.io.InputStream;
+import at.ebinterface.validation.exception.NamespaceUnknownException;
 
 /**
  * Custom parser for XML instances. Used to determine the used XML Schema based on the namespace
@@ -20,21 +18,19 @@ public enum CustomParser {
 
   INSTANCE;
 
-  private static CustomHandler customHandler;
-
-  static {
-    customHandler = new CustomHandler();
-  }
-
   /**
    * Determines the correct ebInterface version
    *
-   * @return version
+   * @return version and never <code>null</code>
    */
-  public EbInterfaceVersion getEbInterfaceDetails(final InputSource source)
+  @Nonnull
+  public EbiVersion getEbInterfaceDetails(final InputSource source)
       throws NamespaceUnknownException {
 
-    //Get the namespace from the instace
+    // Instantiate per call to avoid threading issues
+    final CustomHandler customHandler = new CustomHandler ();
+    
+    //Get the namespace from the instance
     try {
       at.ebinterface.validation.validator.SAXParserFactory.newInstance()
           .parse(source, customHandler);
@@ -44,14 +40,12 @@ public enum CustomParser {
     }
 
     //Map it to an enumeration
-    if (!StringUtils.isEmpty(customHandler.getFoundNameSpace())) {
-      for (final EbInterfaceVersion v : EbInterfaceVersion.values()) {
-        if (v.getNamespace().equals(customHandler.getFoundNameSpace())) {
+    if (StringHelper.hasText(customHandler.getFoundNameSpace())) {
+      for (final EEbInterfaceVersion v : EEbInterfaceVersion.values()) {
+        if (v.getNamespaceURI ().equals(customHandler.getFoundNameSpace())) {
           //Set whether its signed or not
-          v.setSigned(customHandler.isContainsSignature());
           //Set the NS of the Signature element
-          v.setSignatureNamespacePrefix(customHandler.getSignatureNamespacePrefix());
-          return v;
+          return new EbiVersion (v, customHandler.isContainsSignature(), customHandler.getSignatureNamespacePrefix());
         }
       }
     }
@@ -60,16 +54,4 @@ public enum CustomParser {
         "Unbekannter Namespace gefunden: " + customHandler.getFoundNameSpace());
 
   }
-
-
-  /**
-   * Determines the ebInterface version of the upload
-   *
-   * @return version
-   */
-  public EbInterfaceVersion getEbInterfaceDetails(final InputStream inputStream)
-      throws NamespaceUnknownException {
-    return getEbInterfaceDetails(new InputSource(inputStream));
-  }
-
 }

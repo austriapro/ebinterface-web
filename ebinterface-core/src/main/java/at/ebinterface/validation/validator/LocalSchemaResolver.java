@@ -1,14 +1,14 @@
 package at.ebinterface.validation.validator;
 
+import java.io.InputStream;
+import java.io.Reader;
+
+import javax.xml.crypto.dsig.XMLSignature;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
-
-import javax.xml.crypto.dsig.XMLSignature;
-
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * Resolver for local schema definitions
@@ -70,7 +70,7 @@ public class LocalSchemaResolver implements LSResourceResolver {
       LOG.debug("Trying to resolve 4p3 extension Schema");
       url = "/ebinterface/ebInterfaceExtension4p3.xsd";
     }
-    //Replace the 4p2 SV extension schema
+    //Replace the 4p3 SV extension schema
     else if ("http://www.ebinterface.at/schema/4p3/extensions/sv".equals(namespaceURI)) {
       LOG.debug("Trying to resolve 4p3 SV extension Schema");
       url = "/ebinterface/ext4p3/ebInterfaceExtension_SV.xsd";
@@ -88,11 +88,15 @@ public class LocalSchemaResolver implements LSResourceResolver {
       }
     }
 
+    if (parent != null)
+      return parent.resolveResource (type, namespaceURI, publicId, systemId, baseURI);
+    
     return null;
-
   }
 
-  class LSInputImpl implements LSInput {
+  static class LSInputImpl implements LSInput {
+    private String systemId = null;
+    private InputStream byteStream = null;
 
     @Override
     public Reader getCharacterStream() {
@@ -171,9 +175,6 @@ public class LocalSchemaResolver implements LSResourceResolver {
     @Override
     public void setCertifiedText(boolean certifiedText) {
     }
-
-    private String systemId = null;
-    private InputStream byteStream = null;
   }
 
 }

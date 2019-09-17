@@ -16,37 +16,18 @@
 
 
     <properties>
-        <commons-logging-version>1.1.1</commons-logging-version>
-        <jaxb-basics-version>0.6.0</jaxb-basics-version>
         <jaxb-impl-version>2.2.2</jaxb-impl-version>
         <jaxb-xjc-version>2.2.2</jaxb-xjc-version>
         <jaxen-version>1.0-FCS</jaxen-version>
-        <logback-version>1.0.0</logback-version>
+        <logback-version>1.2.3</logback-version>
+        <ph-ebinterface-version>6.1.1</ph-ebinterface-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sax-path-version>1.0-FCS</sax-path-version>
         <saxon-version>9.5.1-6</saxon-version>
-        <slf4j-version>1.6.4</slf4j-version>
-        <xerces-version>2.11.0</xerces-version>
+        <slf4j-version>1.7.26</slf4j-version>
+        <xerces-version>2.12.0</xerces-version>
         <xml-resolver-version>1.2</xml-resolver-version>
     </properties>
-
-
-    <repositories>
-        <!-- Apache repository -->
-        <repository>
-            <id>apache.snapshots</id>
-            <name>Apache Development Snapshot Repository</name>
-            <url>https://repository.apache.org/content/repositories/
-            </url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
 
     <dependencies>
 
@@ -95,13 +76,11 @@
             <version>${jaxb-impl-version}</version>
         </dependency>
 
-        <!-- JAXB Basics plugin -->
         <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics</artifactId>
-            <version>${jaxb-basics-version}</version>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-ebinterface</artifactId>
+            <version>${ph-ebinterface-version}</version>
         </dependency>
-
     </dependencies>
 
 
