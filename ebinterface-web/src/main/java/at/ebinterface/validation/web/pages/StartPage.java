@@ -9,7 +9,7 @@ import com.helger.commons.collection.impl.CommonsArrayList;
  *
  * @author pl
  */
-public class StartPage extends BasePage
+public final class StartPage extends BasePage
 {
   /**
    * The possible actions

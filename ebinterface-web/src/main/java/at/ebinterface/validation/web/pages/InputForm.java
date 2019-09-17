@@ -55,7 +55,7 @@ import net.sf.saxon.serialize.MessageWarner;
  *
  * @author pl
  */
-class InputForm extends Form<Object> {
+final class InputForm extends Form<Object> {
   private static final Logger LOG = LoggerFactory.getLogger (InputForm.class);
 
   /**

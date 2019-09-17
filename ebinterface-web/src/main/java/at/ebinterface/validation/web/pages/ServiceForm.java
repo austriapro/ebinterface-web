@@ -26,18 +26,18 @@ import net.sf.jasperreports.engine.JasperReport;
  *
  * @author pl
  */
-class ServiceForm extends Form<Object> {
+final class ServiceForm extends Form<Object> {
 private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
 
   /**
    * Panel for providing feedback in case of errorneous input
    */
-  FeedbackPanel feedbackPanel;
+  private FeedbackPanel feedbackPanel;
 
   /**
    * Upload field for the ebInterface instance
    */
-  FileUploadField fileUploadField;
+  private FileUploadField fileUploadField;
 
   public ServiceForm(final String id) {
     super(id);

@@ -15,7 +15,7 @@ document.addEventListener("load", function () {
     }
 });
 
-function getFileName() {
-    var x = document.getElementById('fileInput1');
-    document.getElementById('uploadText').innerHTML = x.value.split('\\').pop();
+function getFileName(inputId,destId) {
+    var x = document.getElementById(inputId);
+    document.getElementById(destId).innerHTML = x.value.split('\\').pop();
 }

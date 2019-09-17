@@ -55,28 +55,28 @@ import net.sf.saxon.serialize.MessageWarner;
  *
  * @author pl
  */
-class LabsForm extends Form<Object> {
+final class LabsForm extends Form<Object> {
   private static final Logger LOG = LoggerFactory.getLogger (LabsForm.class);
 
   /**
    * Panel for providing feedback in case of erroneous input
    */
-  FeedbackPanel feedbackPanel;
+  private FeedbackPanel feedbackPanel;
 
   /**
    * Dropdown choice for the Schematron rules
    */
-  DropDownChoice<Rule> rules;
+  private DropDownChoice<Rule> rules;
 
   /**
    * Dropdown choice for the ZUGFeRD level
    */
-  DropDownChoice<String> zugferdlevels;
+  private DropDownChoice<String> zugferdlevels;
 
   /**
    * Upload field for the ebInterface instance
    */
-  FileUploadField fileUploadField;
+  private FileUploadField fileUploadField;
 
   public LabsForm(final String id) {
     super(id);
