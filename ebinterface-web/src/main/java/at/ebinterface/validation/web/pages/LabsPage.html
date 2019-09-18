@@ -27,16 +27,6 @@
       <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
       <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" wicket:id="submitButtonSchemaOnly">ebInterface gegen Schema prüfen</button>
 
-      <h5 class="functionHeader">Prüfen gegen Schematronregeln</h5>
-      <p class="help-block">Wählen Sie ein Set von Schematron Regeln, gegen welches Sie prüfen möchten.</p>
-      <div class="inline-btn">
-        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="submitButtonSchematron">ebInterface gegen Schematronregeln prüfen</button>
-      </div>
-
       <div wicket:id="zugferdWrapper">
         <!-- hidden because no ID handler is present -->
         <h5 class="functionHeader">Konvertieren</h5>
@@ -146,6 +136,36 @@
       <div clss="form-actions">
         <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
         <button class="btn-wko" type="submit" wicket:id="ebiToXRechnungSubmit">ebInterface nach XRechnung konvertieren</button>
+      </div>
+    </form>
+
+    <br/>
+    <hr class="section-line"/>
+    <br/>
+    
+    <form wicket:id="validateRulesForm">
+      <h2>Prüfen gegen Schematronregeln</h2>
+      <div class="alert alert-danger" wicket:id="validateRulesFeedback"></div>
+      <div>
+        <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
+        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
+        <div class="uploadFile">
+          <input class="inputFile" type="file" id="validateRulesInput" wicket:id="validateRulesInput" onchange="getFileName('validateRulesInput','validateRulesSelectedFile')"/>
+          <label for="validateRulesInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <p class="upload-label" id="validateRulesSelectedFile">Keine Datei ausgewählt</p>
+        </div>
+      </div>
+      
+      <div clss="form-actions">
+        <h4 class="functionHeader">Schritt 2: Prüfen gegen Schematronregeln</h4>
+        <p class="help-block">Wählen Sie ein Set von Schematron Regeln, gegen welches Sie prüfen möchten.</p>
+        <div class="inline-btn">
+          <select class="wko-selector" id="validateRulesSelector" wicket:id="validateRulesSelector">
+            <option>woo</option>
+            <option>hoo</option>
+          </select>
+          <button class="btn-wko" type="submit" wicket:id="validateRulesSubmit">ebInterface gegen Schematronregeln prüfen</button>
+        </div>
       </div>
     </form>
 

@@ -13,13 +13,16 @@ import com.helger.commons.string.StringHelper;
 
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.validator.Rules;
+import at.ebinterface.validation.web.pages.LabsPage;
+import at.ebinterface.validation.web.pages.StartPage;
 
 /**
  * Form for showing the rules which are currently supported
  *
  * @author pl
  */
-public final class ShowRulesForm extends Form<Object> {
+public final class ShowRulesForm extends Form <Object>
+{
 
   /**
    * Panel for providing feedback in case of erroneous input
@@ -29,59 +32,72 @@ public final class ShowRulesForm extends Form<Object> {
   /**
    * Dropdown choice for the Schematron rules
    */
-  private DropDownChoice<Rule> rules;
+  private DropDownChoice <Rule> rules;
 
-  public ShowRulesForm(final String id) {
-    super(id);
+  private final boolean m_bIsStartPage;
 
-    //Add a feedback panel
-    feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-    feedbackPanel.setVisible(false);
-    add(feedbackPanel);
+  public ShowRulesForm (final String id, final boolean bIsStartPage)
+  {
+    super (id);
 
-    //Add the drop down choice for the different rules which are currently supported
-    rules =
-        new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
-                                 new IChoiceRenderer<Rule>() {
-                                   @Override
-                                   public Object getDisplayValue(final Rule object) {
-                                     return object.getName();
-                                   }
+    m_bIsStartPage = bIsStartPage;
 
-                                   @Override
-                                   public String getIdValue(final Rule object, final int index) {
-                                     return object.getName();
-                                   }
-                                 });
+    // Add a feedback panel
+    feedbackPanel = new FeedbackPanel ("feedback", new ContainerFeedbackMessageFilter (this));
+    feedbackPanel.setVisible (false);
+    add (feedbackPanel);
 
-    add(rules);
+    // Add the drop down choice for the different rules which are currently
+    // supported
+    rules = new DropDownChoice <> ("ruleSelector",
+                                   Model.of (new Rule ()),
+                                   Rules.getRules (),
+                                   new IChoiceRenderer <Rule> ()
+                                   {
+                                     @Override
+                                     public Object getDisplayValue (final Rule object)
+                                     {
+                                       return object.getName ();
+                                     }
 
-    //Add a submit button
-    add(new SubmitLink("showSchematron"));
+                                     @Override
+                                     public String getIdValue (final Rule object, final int index)
+                                     {
+                                       return object.getName ();
+                                     }
+                                   });
+
+    add (rules);
+
+    // Add a submit button
+    add (new SubmitLink ("showSchematron"));
   }
 
   @Override
-  protected void onSubmit() {
-    super.onSubmit();
+  protected void onSubmit ()
+  {
+    super.onSubmit ();
 
-    //Did the user select a schematron file?
-    if (rules.getModelObject() == null || StringHelper.hasNoText (rules.getModelObject().toString())) {
-      error(new ResourceModel("ruleSelector.NoSelected").getObject());
-      onError();
+    // Did the user select a schematron file?
+    final Rule rule = rules.getModelObject ();
+    if (rule == null || StringHelper.hasNoText (rule.toString ()))
+    {
+      error (new ResourceModel ("ruleSelector.NoSelected").getObject ());
+      onError ();
       return;
     }
 
-    //Redirect
-    setResponsePage(new ShowRulesPage(rules.getModel()));
+    // Redirect
+    setResponsePage (new ShowRulesPage (rule, m_bIsStartPage ? StartPage.class : LabsPage.class));
   }
-
 
   /**
    * Process errors
    */
   @Override
-  protected void onError() {
-    //Show the feedback panel in case on an error
-    feedbackPanel.setVisible(true);
+  protected void onError ()
+  {
+    // Show the feedback panel in case on an error
+    feedbackPanel.setVisible (true);
   }
 }

@@ -71,12 +71,12 @@ public final class EbiToXRechnungForm extends Form <Object>
   /**
    * Was the link called from the start page or from the /labs page?
    */
-  private final boolean fromStartPage;
+  private final boolean m_bFromStartPage;
 
   public EbiToXRechnungForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    fromStartPage = bFromStartPage;
+    m_bFromStartPage = bFromStartPage;
 
     // Add a feedback panel
     feedbackPanel = new FeedbackPanel ("ebiToXRechnungFeedback", new ContainerFeedbackMessageFilter (this));
@@ -246,8 +246,8 @@ public final class EbiToXRechnungForm extends Form <Object>
 
     // Redirect
     setResponsePage (new ResultPageEbiToXRechnung (aUBLXML,
-                                              aErrorLog.toString (),
-                                              this.fromStartPage ? StartPage.class : LabsPage.class));
+                                                   aErrorLog.toString (),
+                                                   m_bFromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**

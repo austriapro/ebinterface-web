@@ -10,18 +10,13 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.string.StringHelper;
 
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.validator.ValidationResult;
-import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.pages.BasePage;
 import at.ebinterface.validation.web.pages.StartPage;
-import at.ebinterface.validation.web.pages.StartPage.ActionType;
-import at.ebinterface.validation.web.panels.ErrorDetailsPanel;
 import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
 
 /**
@@ -29,15 +24,8 @@ import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
  *
  * @author pl
  */
-public class ResultPageZugferd extends BasePage {
-  private static final Logger LOG = LoggerFactory.getLogger(ResultPageZugferd.class.getName());
-
-  /**
-   * Create a new result page
-   */
+public final class ResultPageZugferd extends BasePage {
   public ResultPageZugferd(final ValidationResult validationResult,
-                           final String selectedSchematron,
-                           final ActionType selectedAction,
                            final byte[] zugferdXml,
                            final String mappingLog,
                            final byte[] zugferdPdf) {
@@ -111,31 +99,6 @@ public class ResultPageZugferd extends BasePage {
 
     add(signatureResultContainer);
 
-    //Schematron OK Container
-    final WebMarkupContainer schematronOkContainer = new WebMarkupContainer("schematronOK");
-
-    //Add a label with the selected Schematron
-    schematronOkContainer.add(new Label("selectedSchematron", Model.of(selectedSchematron)));
-    add(schematronOkContainer);
-
-    //Schematron NOK Container
-    final WebMarkupContainer schematronNokContainer = new WebMarkupContainer("schematronNOK");
-
-    schematronNokContainer.add(new Label("selectedSchematron", Model.of(selectedSchematron)));
-
-    final Result schematronResult = validationResult.getResult();
-
-    //Add schematron error messages if there some
-    if (schematronResult == null || schematronResult.getErrors() == null
-        || schematronResult.getErrors().size() == 0) {
-      schematronNokContainer.add(new EmptyPanel("errorDetailsPanel"));
-    } else {
-      schematronNokContainer
-          .add(new ErrorDetailsPanel("errorDetailsPanel", schematronResult.getErrors()));
-    }
-
-    add(schematronNokContainer);
-
     //ZUGFeRD Container
     final WebMarkupContainer zugferdContainer = new WebMarkupContainer("zugferdMappingLog");
     add(zugferdContainer);
@@ -161,25 +124,6 @@ public class ResultPageZugferd extends BasePage {
       zugferdSuccessContainer.add(slog);
       final Label elog = new Label("zugferdLogErrorPanel", Model.of(new String(mappingLog).trim()));
       zugferdErrorContainer.add(elog.setEscapeModelStrings(false));
-    }
-
-    //In case the Schema validation failed, or only schema validation is turned on we do not show anything about the schematron
-    if (selectedAction == ActionType.SCHEMA_VALIDATION ||
-        StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
-      schematronOkContainer.setVisible(false);
-      schematronNokContainer.setVisible(false);
-    }
-    //Are there schematron validation messages?
-    //Everything OK
-    else if (schematronResult == null || schematronResult.getErrors() == null
-             || schematronResult.getErrors().isEmpty ()) {
-      schematronOkContainer.setVisible(true);
-      schematronNokContainer.setVisible(false);
-    }
-    //NOK
-    else {
-      schematronOkContainer.setVisible(false);
-      schematronNokContainer.setVisible(true);
     }
 
     add(new Link<Object>("returnLink") {

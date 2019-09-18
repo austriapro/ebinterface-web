@@ -73,12 +73,12 @@ public final class EbiToUblForm extends Form <Object>
   /**
    * Was the link called from the start page or from the /labs page?
    */
-  private final boolean fromStartPage;
+  private final boolean m_bFromStartPage;
 
   public EbiToUblForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    fromStartPage = bFromStartPage;
+    m_bFromStartPage = bFromStartPage;
 
     // Add a feedback panel
     feedbackPanel = new FeedbackPanel ("ebiToUblFeedback", new ContainerFeedbackMessageFilter (this));
@@ -246,7 +246,7 @@ public final class EbiToUblForm extends Form <Object>
     // Redirect
     setResponsePage (new ResultPageEbiToUbl (aUBLXML,
                                              aErrorLog.toString (),
-                                             this.fromStartPage ? StartPage.class : LabsPage.class));
+                                             m_bFromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**

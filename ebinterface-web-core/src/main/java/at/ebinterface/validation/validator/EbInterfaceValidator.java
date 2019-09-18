@@ -236,6 +236,7 @@ public class EbInterfaceValidator {
    * Validate the XML instance input stream
    *
    * @param uploadedData The XML data
+   * @return The validation result. Never <code>null</code>.
    */
   public ValidationResult validateXMLInstanceAgainstSchema(final byte[] uploadedData) {
 
@@ -257,7 +258,7 @@ public class EbInterfaceValidator {
     // version
     try {
 
-      javax.xml.transform.sax.SAXSource
+      final javax.xml.transform.sax.SAXSource
           saxSource =
           new javax.xml.transform.sax.SAXSource(new InputSource(
               new NonBlockingByteArrayInputStream(uploadedData)));
@@ -267,22 +268,22 @@ public class EbInterfaceValidator {
         case V30:
           ebInterface3p0Validator.validate(saxSource);
           break;
-        case V302:  
+        case V302:
           ebInterface3p02Validator.validate(saxSource);
           break;
-        case V40:  
+        case V40:
           ebInterface4p0Validator.validate(saxSource);
           break;
-        case V41:  
+        case V41:
           ebInterface4p1Validator.validate(saxSource);
           break;
-        case V42:  
+        case V42:
           ebInterface4p2Validator.validate(saxSource);
           break;
-        case V43:  
+        case V43:
           ebInterface4p3Validator.validate(saxSource);
           break;
-        case V50:  
+        case V50:
           ebInterface5p0Validator.validate(saxSource);
           break;
         default:
@@ -300,7 +301,7 @@ public class EbInterfaceValidator {
 
       //Build the request for the verification Web Service
       //Create a verification request
-      VerifyDocumentRequest request = new VerifyDocumentRequest();
+      final VerifyDocumentRequest request = new VerifyDocumentRequest();
 
       //Set the document
       request.setDocument(uploadedData);
@@ -313,9 +314,9 @@ public class EbInterfaceValidator {
       try {
         response = VerificationServiceInvoker.verifyDocument(request);
         result.setVerifyDocumentResponse(response);
-      } catch (SOAPFaultException sfe) {
+      } catch (final SOAPFaultException sfe) {
         result.setSignatureValidationExceptionMessage(sfe.getMessage());
-      } catch (Exception e) {
+      } catch (final Exception e) {
         result.setSignatureValidationExceptionMessage(e.getMessage());
       }
 
@@ -334,7 +335,7 @@ public class EbInterfaceValidator {
     try {
       final NonBlockingStringWriter sw = new NonBlockingStringWriter();
 
-      SAXSource
+      final SAXSource
           saxSource =
           new SAXSource(
               at.ebinterface.validation.validator.SAXParserFactory.newInstance().getXMLReader(),
@@ -347,16 +348,16 @@ public class EbInterfaceValidator {
                                                   new NonBlockingByteArrayInputStream(uploadedData)),
                                               new StreamResult(sw));
           break;
-        case V302:  
+        case V302:
           ebInterface3p02Transformer.transform(new StreamSource(
                                                    new NonBlockingByteArrayInputStream(uploadedData)),
                                                new StreamResult(sw));
           break;
-        case V40:  
+        case V40:
           ebInterface4p0Transformer.transform(saxSource,
                                               new StreamResult(sw));
           break;
-        case V41:  
+        case V41:
           ebInterface4p1Transformer.transform(new StreamSource(
                                                   new NonBlockingByteArrayInputStream(uploadedData)),
                                               new StreamResult(sw));
@@ -377,7 +378,7 @@ public class EbInterfaceValidator {
                                               new StreamResult(sw));
           break;
         default:
-          throw new IllegalStateException ("Unsupported ebInterface version " + version); 
+          throw new IllegalStateException ("Unsupported ebInterface version " + version);
       }
       return sw.getAsString();
 
@@ -390,6 +391,9 @@ public class EbInterfaceValidator {
 
   /**
    * Validate the given XML instance against the given schematron file
+   * @param uploadedData XML to be validated
+   * @param schematronFileReference Schematron file URL
+   * @return The non-<code>null</code> validation result
    */
   public Result validateXMLInstanceAgainstSchematron(final byte[] uploadedData,
                                                      final String schematronFileReference) {

@@ -1,7 +1,5 @@
 package at.ebinterface.validation.web.pages.resultpages;
 
-import static at.ebinterface.validation.web.pages.StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -21,15 +19,10 @@ import com.helger.commons.string.StringHelper;
 
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.validator.ValidationResult;
-import at.ebinterface.validation.validator.jaxb.Result;
-import at.ebinterface.validation.web.pages.StartPage;
-import at.ebinterface.validation.web.panels.ErrorDetailsPanel;
 import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
 
-public class ResultPanel extends Panel {
+public final class ResultPanel extends Panel {
   public ResultPanel(final String id, final ValidationResult validationResult,
-                     final String selectedSchematron,
-                     final StartPage.ActionType selectedAction,
                      final byte[] pdf,
                      final byte[] xml,
                      final String log,
@@ -118,51 +111,6 @@ public class ResultPanel extends Panel {
                                                                         .isManifestValid())));
 
     add(signatureResultContainer);
-
-    //Schematron OK Container
-    final WebMarkupContainer schematronOkContainer = new WebMarkupContainer("schematronOK");
-
-    //Add a label with the selected Schematron
-    schematronOkContainer.add(new Label("selectedSchematron", Model.of(selectedSchematron)));
-    schematronOkContainer.setVisibilityAllowed(selectedAction == SCHEMA_AND_SCHEMATRON_VALIDATION);
-    add(schematronOkContainer);
-
-    //Schematron NOK Container
-    final WebMarkupContainer schematronNokContainer = new WebMarkupContainer("schematronNOK");
-
-    schematronNokContainer.add(new Label("selectedSchematron", Model.of(selectedSchematron)));
-    schematronNokContainer.setVisibilityAllowed(selectedAction == SCHEMA_AND_SCHEMATRON_VALIDATION);
-
-    final Result schematronResult = validationResult.getResult();
-
-    //Add schematron error messages if there some
-    if (schematronResult == null || schematronResult.getErrors() == null
-        || schematronResult.getErrors().size() == 0) {
-      schematronNokContainer.add(new EmptyPanel("errorDetailsPanel"));
-    } else {
-      schematronNokContainer
-          .add(new ErrorDetailsPanel("errorDetailsPanel", schematronResult.getErrors()));
-    }
-
-    add(schematronNokContainer);
-
-    //In case the Schema validation failed, or only schema validation is turned on we do not show anything about the schematron
-    if (selectedAction == StartPage.ActionType.SCHEMA_VALIDATION || StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
-      schematronOkContainer.setVisible(false);
-      schematronNokContainer.setVisible(false);
-    }
-    //Are there schematron validation messages?
-    //Everything OK
-    else if (schematronResult == null || schematronResult.getErrors() == null
-             || schematronResult.getErrors().isEmpty()) {
-      schematronOkContainer.setVisible(true);
-      schematronNokContainer.setVisible(false);
-    }
-    //NOK
-    else {
-      schematronOkContainer.setVisible(false);
-      schematronNokContainer.setVisible(true);
-    }
 
     //Log Container
     final WebMarkupContainer mappingContainer = new WebMarkupContainer("mappingLog");

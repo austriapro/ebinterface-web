@@ -2,9 +2,9 @@ package at.ebinterface.validation.web.pages.schematron;
 
 import java.nio.charset.StandardCharsets;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import com.helger.commons.io.stream.StreamHelper;
@@ -12,7 +12,6 @@ import com.helger.commons.io.stream.StreamHelper;
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.web.components.CodeBox;
 import at.ebinterface.validation.web.pages.BasePage;
-import at.ebinterface.validation.web.pages.StartPage;
 
 
 /**
@@ -21,20 +20,20 @@ import at.ebinterface.validation.web.pages.StartPage;
  * @author pl
  */
 public final class ShowRulesPage extends BasePage {
-  public ShowRulesPage(IModel<Rule> ruleModel) {
+  public ShowRulesPage(final Rule rule, final Class <? extends WebPage> returnPage) {
 
     //Add a label showing the selected Schematron file
-    add(new Label("selectedSchematron", Model.of(ruleModel.getObject().getName())));
+    add(new Label("selectedSchematron", Model.of(rule.getName())));
 
     //Add a return link
     add(new Link<Object>("returnLink") {
       @Override
       public void onClick() {
-        setResponsePage(StartPage.class);
+        setResponsePage(returnPage);
       }
-    });
+    }).setVisibilityAllowed (returnPage != null);
 
-    final String code = StreamHelper.getAllBytesAsString (getClass().getResourceAsStream(ruleModel.getObject().getFileReference()), StandardCharsets.UTF_8);
+    final String code = StreamHelper.getAllBytesAsString (getClass().getResourceAsStream(rule.getFileReference()), StandardCharsets.UTF_8);
 
     //Add the codebox for showing the schematron rules
     final CodeBox codeBox = new CodeBox("message", code).setDisplayLineNumbers(true);

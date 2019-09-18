@@ -20,7 +20,6 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -38,10 +37,7 @@ import at.austriapro.MappingFactory;
 import at.austriapro.rendering.BaseRenderer;
 import at.austriapro.rendering.ZugferdRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
-import at.ebinterface.validation.validator.Rule;
-import at.ebinterface.validation.validator.Rules;
 import at.ebinterface.validation.validator.ValidationResult;
-import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageZugferd;
@@ -54,18 +50,13 @@ import net.sf.saxon.serialize.MessageWarner;
  *
  * @author pl
  */
-final class InputForm extends Form<Object> {
-  private static final Logger LOG = LoggerFactory.getLogger (InputForm.class);
+final class StartForm extends Form<Object> {
+  private static final Logger LOG = LoggerFactory.getLogger (StartForm.class);
 
   /**
    * Panel for providing feedback in case of erroneous input
    */
   private FeedbackPanel feedbackPanel;
-
-  /**
-   * Dropdown choice for the Schematron rules
-   */
-  private DropDownChoice<Rule> rules;
 
   /**
    * Dropdown choice for the ZUGFeRD level
@@ -77,7 +68,7 @@ final class InputForm extends Form<Object> {
    */
   private FileUploadField fileUploadField;
 
-  public InputForm(final String id) {
+  public StartForm(final String id) {
     super(id);
 
     //Set the form to multi part since we use file upload
@@ -92,23 +83,6 @@ final class InputForm extends Form<Object> {
     fileUploadField = new FileUploadField("fileInput");
     fileUploadField.setRequired(true);
     add(fileUploadField);
-
-    //Add the drop down choice for the different rules which are currently supported
-    rules =
-        new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
-                                 new IChoiceRenderer<Rule>() {
-                                   @Override
-                                   public Object getDisplayValue(final Rule object) {
-                                     return object.getName();
-                                   }
-
-                                   @Override
-                                   public String getIdValue(final Rule object, final int index) {
-                                     return object.getName();
-                                   }
-                                 });
-
-    add(rules);
 
     //Add the drop down choice for the different ZUGFeRD levels which are currently supported
     zugferdlevels =
@@ -132,15 +106,7 @@ final class InputForm extends Form<Object> {
     add(new SubmitLink("submitButtonSchemaOnly") {
       @Override
       public void onSubmit() {
-        submit(StartPage.ActionType.SCHEMA_VALIDATION);
-      }
-    });
-
-    //Add a submit button
-    add(new SubmitLink("submitButtonSchematron") {
-      @Override
-      public void onSubmit() {
-        submit(StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION);
+        submit(EBasicEbiActionType.SCHEMA_VALIDATION);
       }
     });
 
@@ -148,7 +114,7 @@ final class InputForm extends Form<Object> {
     add(new SubmitLink("submitButtonVisualizeHTML") {
       @Override
       public void onSubmit() {
-        submit(StartPage.ActionType.VISUALIZATION_HTML);
+        submit(EBasicEbiActionType.VISUALIZATION_HTML);
       }
     });
 
@@ -156,7 +122,7 @@ final class InputForm extends Form<Object> {
     add(new SubmitLink("submitButtonVisualizePDF") {
       @Override
       public void onSubmit() {
-        submit(StartPage.ActionType.VISUALIZATION_PDF);
+        submit(EBasicEbiActionType.VISUALIZATION_PDF);
       }
     });
 
@@ -164,7 +130,7 @@ final class InputForm extends Form<Object> {
     add(new SubmitLink("submitButtonConvertZUGFeRD") {
       @Override
       public void onSubmit() {
-        submit(StartPage.ActionType.CONVERSION_ZUGFERD);
+        submit(EBasicEbiActionType.CONVERSION_ZUGFERD);
       }
     });
   }
@@ -172,20 +138,10 @@ final class InputForm extends Form<Object> {
   /**
    * Process the input
    */
-  protected void submit(final StartPage.ActionType selectedAction) {
+  protected void submit(final EBasicEbiActionType selectedAction) {
 
     //Hide the feedback panel first (will be shown in case of an error)
     feedbackPanel.setVisible(false);
-
-    //Schematron validation?
-    //Schematron set must be selected
-    if (selectedAction == StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
-      if (rules.getModelObject() == null) {
-        error(new ResourceModel("ruleSelector.Required").getObject());
-        onError();
-        return;
-      }
-    }
 
     byte[] pdf = null;
     byte[] zugferd = null;
@@ -214,40 +170,8 @@ final class InputForm extends Form<Object> {
       onError();
       return;
     }
-
-    //Schematron validation too?
-    if (selectedAction == StartPage.ActionType.SCHEMA_AND_SCHEMATRON_VALIDATION) {
-      //Schematron validation may only be started in case of ebInterface 4p0
-      if (validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V40 ||
-          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V41 ||
-          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V42 ||
-          validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V43) {
-
-        //Selected rule and selected ebInterface version must match
-        final Rule rule = rules.getModelObject();
-        if (rule != null && !(rule.getEbInterfaceVersion()
-                                  .equals(validationResult.getDeterminedEbInterfaceVersion().getVersion ()))) {
-          error(new ResourceModel("schematron.version.mismatch").getObject());
-          onError();
-          return;
-        }
-
-        //Invoke the validation
-        final Result
-            r =
-            validator.validateXMLInstanceAgainstSchematron(uploadedData, rule.getFileReference());
-        validationResult.setResult(r);
-      }
-      //Wrong ebInterface version
-      else {
-        error("Schematronregeln können nur auf ebInterface 4.0/4.1/4.2/4.3 Instanzen angewendet werden. Erkannte ebInterface Version ist jedoch: "
-            + validationResult.getDeterminedEbInterfaceVersion().getCaption ());
-        onError();
-        return;
-      }
-    }
     //Visualization HTML?
-    else if (selectedAction == StartPage.ActionType.VISUALIZATION_HTML) {
+    else if (selectedAction == EBasicEbiActionType.VISUALIZATION_HTML) {
       //Visualization is only possible for valid instances
       if (StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
         error("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
@@ -267,7 +191,7 @@ final class InputForm extends Form<Object> {
 
     }
     //ebInterface PDF-Generation
-    else if (selectedAction == StartPage.ActionType.VISUALIZATION_PDF) {
+    else if (selectedAction == EBasicEbiActionType.VISUALIZATION_PDF) {
       final BaseRenderer renderer = new BaseRenderer();
 
       try {
@@ -288,7 +212,7 @@ final class InputForm extends Form<Object> {
       }
     }
     //Conversion ZUGFerD?
-    else if (selectedAction == StartPage.ActionType.CONVERSION_ZUGFERD) {
+    else if (selectedAction == EBasicEbiActionType.CONVERSION_ZUGFERD) {
       if (zugferdlevels.getModelObject() == null){
         error("Bitte wählen Sie ein ZUGFeRD Profil zur Konvertierung aus.");
         onError();
@@ -412,23 +336,15 @@ final class InputForm extends Form<Object> {
       }
     }
 
-    String selectedSchematronRule = "";
-    if (rules.getModelObject() != null) {
-      selectedSchematronRule = rules.getModelObject().getName();
-    }
-
-    if (selectedAction != StartPage.ActionType.CONVERSION_ZUGFERD) {
+    if (selectedAction != EBasicEbiActionType.CONVERSION_ZUGFERD) {
       //Redirect to the ebInterface result page
       setResponsePage(
-          new ResultPageEbInterface(validationResult, selectedSchematronRule, selectedAction,
-                                    pdf, null, null, StartPage.class));
+          new ResultPageEbInterface(validationResult, pdf, null, null, StartPage.class));
     } else {
       //Redirect to the ZUGFeRD result page
       setResponsePage(
-          new ResultPageZugferd(validationResult, selectedSchematronRule, selectedAction,
-                                zugferd, sbLog.toString(), pdf));
+          new ResultPageZugferd(validationResult, zugferd, sbLog.toString(), pdf));
     }
-
   }
 
   /**

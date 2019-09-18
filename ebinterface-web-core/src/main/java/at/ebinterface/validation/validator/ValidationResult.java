@@ -5,13 +5,11 @@ import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
 import at.ebinterface.validation.validator.jaxb.Result;
 
 /**
- * DTO for the validation result
+ * DTO for the XML Schema validation result
  *
  * @author pl
  */
-public class ValidationResult {
-
-
+public final class ValidationResult {
   private String schemaValidationErrorMessage;
   private EbiVersion determinedEbInterfaceVersion;
 
@@ -31,6 +29,7 @@ public class ValidationResult {
    */
   private VerifyDocumentResponse verifyDocumentResponse;
 
+  public ValidationResult (){}
 
   public String getSchemaValidationErrorMessage() {
     return schemaValidationErrorMessage;
@@ -49,11 +48,11 @@ public class ValidationResult {
     this.determinedEbInterfaceVersion = determinedEbInterfaceVersion;
   }
 
-  public Result getResult() {
+  public Result getSchematronResult() {
     return result;
   }
 
-  public void setResult(final Result result) {
+  public void setSchematronResult(final Result result) {
     this.result = result;
   }
 
@@ -61,16 +60,15 @@ public class ValidationResult {
     return verifyDocumentResponse;
   }
 
-  public void setVerifyDocumentResponse(VerifyDocumentResponse verifyDocumentResponse) {
+  public void setVerifyDocumentResponse(final VerifyDocumentResponse verifyDocumentResponse) {
     this.verifyDocumentResponse = verifyDocumentResponse;
   }
-
 
   public String getSignatureValidationExceptionMessage() {
     return signatureValidationExceptionMessage;
   }
 
-  public void setSignatureValidationExceptionMessage(String signatureValidationExceptionMessage) {
+  public void setSignatureValidationExceptionMessage(final String signatureValidationExceptionMessage) {
     this.signatureValidationExceptionMessage = signatureValidationExceptionMessage;
   }
 }

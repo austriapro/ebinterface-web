@@ -9,6 +9,7 @@ import at.ebinterface.validation.web.pages.convert.EbiToXRechnungForm;
 import at.ebinterface.validation.web.pages.convert.UblToEbiForm;
 import at.ebinterface.validation.web.pages.convert.XRechnungToEbiForm;
 import at.ebinterface.validation.web.pages.schematron.ShowRulesForm;
+import at.ebinterface.validation.web.pages.schematron.ValidateRulesForm;
 
 /**
  * First page of the ebInterface Validation Service
@@ -17,18 +18,6 @@ import at.ebinterface.validation.web.pages.schematron.ShowRulesForm;
  */
 public final class StartPage extends BasePage
 {
-  /**
-   * The possible actions
-   */
-  public enum ActionType
-  {
-    SCHEMA_VALIDATION,
-    SCHEMA_AND_SCHEMATRON_VALIDATION,
-    VISUALIZATION_HTML,
-    VISUALIZATION_PDF,
-    CONVERSION_ZUGFERD
-  }
-
   // choices in dropdown box ZUGFeRD
   static final List <String> ZUGFERD_LEVELS = new CommonsArrayList <> ("ZUGFeRD (1.0) Basic",
                                                                        "ZUGFeRD (1.0) Comfort",
@@ -42,12 +31,9 @@ public final class StartPage extends BasePage
     final boolean bIsStartPage = true;
 
     // Add the input form
-    final InputForm inputForm = new InputForm ("inputForm");
+    final StartForm inputForm = new StartForm ("inputForm");
     add (inputForm);
 
-    // Add the form for showing the supported rules
-    final ShowRulesForm showRulesForm = new ShowRulesForm ("showRulesForm");
-    add (showRulesForm);
 
     // Add the form for convert UBL to ebInterface
     final UblToEbiForm ublToEbiForm = new UblToEbiForm ("ublToEbiForm", bIsStartPage);
@@ -64,5 +50,14 @@ public final class StartPage extends BasePage
     // Add the form for convert ebInterface to XRechnung
     final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", bIsStartPage);
     add (ebiToXRechnungForm);
+
+
+    // Add the form for validating against the Schematrons
+    final ValidateRulesForm validateRulesForm = new ValidateRulesForm ("validateRulesForm", bIsStartPage);
+    add (validateRulesForm);
+
+    // Add the form for showing the supported Schematrons
+    final ShowRulesForm showRulesForm = new ShowRulesForm ("showRulesForm", bIsStartPage);
+    add (showRulesForm);
   }
 }

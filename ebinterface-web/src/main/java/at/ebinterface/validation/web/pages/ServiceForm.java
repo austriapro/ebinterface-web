@@ -60,7 +60,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
     add(new SubmitLink("submitButtonVisualizeHTML") {
       @Override
       public void onSubmit() {
-        submit(StartPage.ActionType.VISUALIZATION_HTML);
+        submit(EBasicEbiActionType.VISUALIZATION_HTML);
       }
       // latest requirements: only pdf visualization
     }.setVisibilityAllowed(false));
@@ -69,7 +69,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
     add(new SubmitLink("submitButtonVisualizePDF") {
       @Override
       public void onSubmit() {
-        submit(StartPage.ActionType.VISUALIZATION_PDF);
+        submit(EBasicEbiActionType.VISUALIZATION_PDF);
       }
     });
 
@@ -78,7 +78,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
   /**
    * Process the input
    */
-  protected void submit(final StartPage.ActionType selectedAction) {
+  protected void submit(final EBasicEbiActionType selectedAction) {
 
     //Hide the feedback panel first (will be shown in case of an error)
     feedbackPanel.setVisible(false);
@@ -115,7 +115,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
 
     //Schematron validation too?
     //Visualization HTML?
-    if (selectedAction == StartPage.ActionType.VISUALIZATION_HTML) {
+    if (selectedAction == EBasicEbiActionType.VISUALIZATION_HTML) {
       //Visualization is only possible for valid instances
       if (StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
         error(
@@ -136,7 +136,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
 
     }
     //ebInterface PDF-Generation
-    else if (selectedAction == StartPage.ActionType.VISUALIZATION_PDF) {
+    else if (selectedAction == EBasicEbiActionType.VISUALIZATION_PDF) {
       final BaseRenderer renderer = new BaseRenderer();
 
       try {
@@ -157,12 +157,9 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
       }
     }
 
-    final String selectedSchematronRule = "";
-
     //Redirect to the ebInterface result page
     setResponsePage(
-        new ServicePage(validationResult, selectedSchematronRule, selectedAction, pdf));
-
+        new ServicePage(validationResult, pdf));
   }
 
   /**
