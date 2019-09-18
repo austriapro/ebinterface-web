@@ -1,5 +1,10 @@
 package at.ebinterface.validation.web.pages;
 
+import at.ebinterface.validation.web.pages.convert.EbiToUblForm;
+import at.ebinterface.validation.web.pages.convert.EbiToXRechnungForm;
+import at.ebinterface.validation.web.pages.convert.UblToEbiForm;
+import at.ebinterface.validation.web.pages.convert.XRechnungToEbiForm;
+
 public final class LabsPage extends BasePage
 {
   @Override

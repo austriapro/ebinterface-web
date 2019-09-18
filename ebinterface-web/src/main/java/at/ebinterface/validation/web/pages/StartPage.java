@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
 
+import at.ebinterface.validation.web.pages.convert.EbiToUblForm;
+import at.ebinterface.validation.web.pages.convert.EbiToXRechnungForm;
+import at.ebinterface.validation.web.pages.convert.UblToEbiForm;
+import at.ebinterface.validation.web.pages.convert.XRechnungToEbiForm;
+
 /**
  * First page of the ebInterface Validation Service
  *

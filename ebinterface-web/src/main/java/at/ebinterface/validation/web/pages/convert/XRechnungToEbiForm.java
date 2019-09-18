@@ -1,4 +1,4 @@
-package at.ebinterface.validation.web.pages;
+package at.ebinterface.validation.web.pages.convert;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -48,7 +48,9 @@ import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
+import at.ebinterface.validation.web.pages.LabsPage;
+import at.ebinterface.validation.web.pages.StartPage;
+import at.ebinterface.validation.web.pages.convert.result.ResultPageXRechnungToEbi;
 import net.sf.jasperreports.engine.JasperReport;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
@@ -58,7 +60,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  *
  * @author pl
  */
-final class XRechnungToEbiForm extends Form <Object>
+public final class XRechnungToEbiForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (XRechnungToEbiForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,
@@ -84,12 +86,12 @@ final class XRechnungToEbiForm extends Form <Object>
   /**
    * Was the link called from the start page or from the /labs page?
    */
-  private final boolean fromStartPage;
+  private final boolean m_bFromStartPage;
 
   public XRechnungToEbiForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    fromStartPage = bFromStartPage;
+    m_bFromStartPage = bFromStartPage;
 
     // Add a feedback panel
     feedbackPanel = new FeedbackPanel ("xRechnungToEbiFeedback", new ContainerFeedbackMessageFilter (this));
@@ -324,20 +326,11 @@ final class XRechnungToEbiForm extends Form <Object>
       }
     }
 
-    String log = null;
-    if (sbLog.length () > 0)
-    {
-      log = sbLog.toString ();
-    }
-
     // Redirect
-    setResponsePage (new ResultPageEbInterface (validationResult,
-                                                null,
-                                                StartPage.ActionType.SCHEMA_VALIDATION,
-                                                pdf,
-                                                ebInterface,
-                                                log,
-                                                this.fromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageXRechnungToEbi (pdf,
+                                                   ebInterface,
+                                                   sbLog.toString (),
+                                                   m_bFromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**

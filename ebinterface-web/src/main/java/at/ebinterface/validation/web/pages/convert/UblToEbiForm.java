@@ -1,4 +1,4 @@
-package at.ebinterface.validation.web.pages;
+package at.ebinterface.validation.web.pages.convert;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -48,7 +48,9 @@ import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
+import at.ebinterface.validation.web.pages.LabsPage;
+import at.ebinterface.validation.web.pages.StartPage;
+import at.ebinterface.validation.web.pages.convert.result.ResultPageUblToEbi;
 import net.sf.jasperreports.engine.JasperReport;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
@@ -58,7 +60,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  *
  * @author pl
  */
-final class UblToEbiForm extends Form <Object>
+public final class UblToEbiForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (UblToEbiForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V41,
@@ -69,7 +71,7 @@ final class UblToEbiForm extends Form <Object>
   /**
    * Panel for providing feedback in case of erroneous input
    */
-  private FeedbackPanel feedbackPanel;
+  private FeedbackPanel m_aFeedbackPanel;
 
   /**
    * Upload field for the ebInterface instance
@@ -84,17 +86,17 @@ final class UblToEbiForm extends Form <Object>
   /**
    * Was the link called from the start page or from the /labs page?
    */
-  private final boolean fromStartPage;
+  private final boolean m_bFromStartPage;
 
   public UblToEbiForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    fromStartPage = bFromStartPage;
+    m_bFromStartPage = bFromStartPage;
 
     // Add a feedback panel
-    feedbackPanel = new FeedbackPanel ("ublToEbiFeedback", new ContainerFeedbackMessageFilter (this));
-    feedbackPanel.setVisible (false);
-    add (feedbackPanel);
+    m_aFeedbackPanel = new FeedbackPanel ("ublToEbiFeedback", new ContainerFeedbackMessageFilter (this));
+    m_aFeedbackPanel.setVisible (false);
+    add (m_aFeedbackPanel);
 
     // Add the file upload field
     fileUploadField = new FileUploadField ("ublToEbiInput");
@@ -129,7 +131,7 @@ final class UblToEbiForm extends Form <Object>
   @Override
   protected void onSubmit ()
   {
-    feedbackPanel.setVisible (false);
+    m_aFeedbackPanel.setVisible (false);
 
     // Get the selected version
     final EEbInterfaceVersion eVersion = ebiVersions.getModelObject ();
@@ -329,20 +331,11 @@ final class UblToEbiForm extends Form <Object>
       }
     }
 
-    String log = null;
-    if (sbLog.length () > 0)
-    {
-      log = sbLog.toString ();
-    }
-
     // Redirect
-    setResponsePage (new ResultPageEbInterface (validationResult,
-                                                null,
-                                                StartPage.ActionType.SCHEMA_VALIDATION,
-                                                pdf,
-                                                ebInterface,
-                                                log,
-                                                this.fromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageUblToEbi (pdf,
+                                             ebInterface,
+                                             sbLog.toString (),
+                                             m_bFromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**
@@ -352,6 +345,6 @@ final class UblToEbiForm extends Form <Object>
   protected void onError ()
   {
     // Show the feedback panel in case on an error
-    feedbackPanel.setVisible (true);
+    m_aFeedbackPanel.setVisible (true);
   }
 }

@@ -7,7 +7,6 @@ import java.io.OutputStream;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -18,6 +17,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 
+import com.helger.commons.string.StringHelper;
+
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.validator.jaxb.Result;
@@ -26,13 +27,13 @@ import at.ebinterface.validation.web.panels.ErrorDetailsPanel;
 import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
 
 public class ResultPanel extends Panel {
-  public ResultPanel(String id, final ValidationResult validationResult,
+  public ResultPanel(final String id, final ValidationResult validationResult,
                      final String selectedSchematron,
                      final StartPage.ActionType selectedAction,
                      final byte[] pdf,
                      final byte[] xml,
-                     final String log, 
-                     @Nullable Class<? extends WebPage> returnPage) {
+                     final String log,
+                     @Nullable final Class<? extends WebPage> returnPage) {
     super(id);
 
     final StringBuilder schemaVersion = new StringBuilder();
@@ -75,7 +76,7 @@ public class ResultPanel extends Panel {
     add(schemaNOkContainer);
 
     //Schema is OK
-    if (StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+    if (StringHelper.hasNoText(validationResult.getSchemaValidationErrorMessage())) {
       schemaOkContainer.setVisible(true);
       schemaNOkContainer.setVisible(false);
     }
@@ -86,7 +87,7 @@ public class ResultPanel extends Panel {
     }
 
     //Signature result container
-    WebMarkupContainer
+    final WebMarkupContainer
         signatureResultContainer =
         new WebMarkupContainer("signatureResultContainer");
     //If no signature is applied we do not show the containers
@@ -96,7 +97,7 @@ public class ResultPanel extends Panel {
     }
 
     //Get the result details for the signature
-    SignatureValidationResult
+    final SignatureValidationResult
         signatureValidationResult =
         new SignatureValidationResult(validationResult.getVerifyDocumentResponse());
 
@@ -146,15 +147,14 @@ public class ResultPanel extends Panel {
     add(schematronNokContainer);
 
     //In case the Schema validation failed, or only schema validation is turned on we do not show anything about the schematron
-    if (selectedAction == StartPage.ActionType.SCHEMA_VALIDATION || !StringUtils
-        .isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+    if (selectedAction == StartPage.ActionType.SCHEMA_VALIDATION || StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
       schematronOkContainer.setVisible(false);
       schematronNokContainer.setVisible(false);
     }
     //Are there schematron validation messages?
     //Everything OK
     else if (schematronResult == null || schematronResult.getErrors() == null
-             || schematronResult.getErrors().size() == 0) {
+             || schematronResult.getErrors().isEmpty()) {
       schematronOkContainer.setVisible(true);
       schematronNokContainer.setVisible(false);
     }
@@ -175,12 +175,12 @@ public class ResultPanel extends Panel {
     if (log != null) {
       mappingContainer.setVisible(true);
 
-      Label slog = new Label("logErrorPanel", Model.of(new String(log).trim()));
+      final Label slog = new Label("logErrorPanel", Model.of(new String(log).trim()));
       errorContainer.add(slog.setEscapeModelStrings(false));
     } else {
       mappingContainer.setVisible(false);
 
-      EmptyPanel slog = new EmptyPanel("logErrorPanel");
+      final EmptyPanel slog = new EmptyPanel("logErrorPanel");
       errorContainer.add(slog);
     }
 
@@ -191,17 +191,17 @@ public class ResultPanel extends Panel {
       }
     }.setVisibilityAllowed(returnPage != null));
 
-    Link<Void> pdflink = new Link<Void>("linkPDFDownload") {
+    final Link<Void> pdflink = new Link<Void>("linkPDFDownload") {
       @Override
       public void onClick() {
-        AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
+        final AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
           @Override
-          public void write(OutputStream output) throws IOException {
+          public void write(final OutputStream output) throws IOException {
             output.write(pdf);
           }
         };
 
-        ResourceStreamRequestHandler
+        final ResourceStreamRequestHandler
             handler = new ResourceStreamRequestHandler(rstream, "ebInterface-Invoice.pdf");
         getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
       }
@@ -210,17 +210,17 @@ public class ResultPanel extends Panel {
     //Add a PDF-download button
     add(pdflink);
 
-    Link<Void> xmllink = new Link<Void>("linkXMLDownload") {
+    final Link<Void> xmllink = new Link<Void>("linkXMLDownload") {
       @Override
       public void onClick() {
-        AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
+        final AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
           @Override
-          public void write(OutputStream output) throws IOException {
+          public void write(final OutputStream output) throws IOException {
             output.write(xml);
           }
         };
 
-        ResourceStreamRequestHandler
+        final ResourceStreamRequestHandler
             handler = new ResourceStreamRequestHandler(rstream, "ebInterface-Invoice.xml");
         getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
       }

@@ -3,7 +3,6 @@ package at.ebinterface.validation.web.pages;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.Form;
@@ -14,6 +13,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.util.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.helger.commons.string.StringHelper;
 
 import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
@@ -32,12 +33,12 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
   /**
    * Panel for providing feedback in case of errorneous input
    */
-  private FeedbackPanel feedbackPanel;
+  private final FeedbackPanel feedbackPanel;
 
   /**
    * Upload field for the ebInterface instance
    */
-  private FileUploadField fileUploadField;
+  private final FileUploadField fileUploadField;
 
   public ServiceForm(final String id) {
     super(id);
@@ -116,7 +117,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
     //Visualization HTML?
     if (selectedAction == StartPage.ActionType.VISUALIZATION_HTML) {
       //Visualization is only possible for valid instances
-      if (!StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+      if (StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
         error(
             "Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
         onError();
@@ -136,11 +137,11 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
     }
     //ebInterface PDF-Generation
     else if (selectedAction == StartPage.ActionType.VISUALIZATION_PDF) {
-      BaseRenderer renderer = new BaseRenderer();
+      final BaseRenderer renderer = new BaseRenderer();
 
       try {
         LOG.debug("Load ebInterface JasperReport template from application context.");
-        JasperReport
+        final JasperReport
             jrReport =
             Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
@@ -148,7 +149,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
 
         pdf = renderer.renderReport(jrReport, uploadedData, null);
 
-      } catch (Exception ex) {
+      } catch (final Exception ex) {
         LOG.error("Error when generating PDF from ebInterface", ex);
         error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
         onError();
@@ -156,7 +157,7 @@ private static final Logger LOG = LoggerFactory.getLogger (ServiceForm.class);
       }
     }
 
-    String selectedSchematronRule = "";
+    final String selectedSchematronRule = "";
 
     //Redirect to the ebInterface result page
     setResponsePage(

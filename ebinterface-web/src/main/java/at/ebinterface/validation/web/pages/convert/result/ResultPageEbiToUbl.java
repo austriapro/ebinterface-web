@@ -1,4 +1,4 @@
-package at.ebinterface.validation.web.pages.resultpages;
+package at.ebinterface.validation.web.pages.convert.result;
 
 import org.apache.wicket.markup.html.WebPage;
 

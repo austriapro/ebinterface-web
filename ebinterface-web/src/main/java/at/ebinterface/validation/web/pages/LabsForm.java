@@ -10,7 +10,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -30,6 +29,7 @@ import org.xml.sax.InputSource;
 import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.austriapro.Mapping;
@@ -242,7 +242,7 @@ final class LabsForm extends Form<Object> {
     //Visualization HTML?
     else if (selectedAction == StartPage.ActionType.VISUALIZATION_HTML) {
       //Visualization is only possible for valid instances
-      if (!StringUtils.isEmpty(validationResult.getSchemaValidationErrorMessage())) {
+      if (StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
         error(
             "Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
         onError();

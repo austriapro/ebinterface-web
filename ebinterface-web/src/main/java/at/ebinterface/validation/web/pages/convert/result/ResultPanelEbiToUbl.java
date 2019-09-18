@@ -1,4 +1,4 @@
-package at.ebinterface.validation.web.pages.resultpages;
+package at.ebinterface.validation.web.pages.convert.result;
 
 import java.io.IOException;
 import java.io.OutputStream;
