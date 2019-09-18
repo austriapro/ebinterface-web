@@ -47,7 +47,7 @@ import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageZugferd;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.saxon.Controller;
+import net.sf.saxon.jaxp.TransformerImpl;
 import net.sf.saxon.serialize.MessageWarner;
 
 /**
@@ -99,12 +99,12 @@ final class InputForm extends Form<Object> {
         new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
                                  new IChoiceRenderer<Rule>() {
                                    @Override
-                                   public Object getDisplayValue(Rule object) {
+                                   public Object getDisplayValue(final Rule object) {
                                      return object.getName();
                                    }
 
                                    @Override
-                                   public String getIdValue(Rule object, int index) {
+                                   public String getIdValue(final Rule object, final int index) {
                                      return object.getName();
                                    }
                                  });
@@ -117,12 +117,12 @@ final class InputForm extends Form<Object> {
             "zugferdSelector", Model.of(new String()), StartPage.ZUGFERD_LEVELS,
             new IChoiceRenderer<String>() {
               @Override
-              public Object getDisplayValue(String object) {
+              public Object getDisplayValue(final String object) {
                 return object;
               }
 
               @Override
-              public String getIdValue(String object, int index) {
+              public String getIdValue(final String object, final int index) {
                 return object;
               }
             });
@@ -190,7 +190,7 @@ final class InputForm extends Form<Object> {
 
     byte[] pdf = null;
     byte[] zugferd = null;
-    StringBuilder sbLog = new StringBuilder();
+    final StringBuilder sbLog = new StringBuilder();
 
     //Get the file input
     final FileUpload upload = fileUploadField.getFileUpload();
@@ -226,7 +226,7 @@ final class InputForm extends Form<Object> {
           validationResult.getDeterminedEbInterfaceVersion().getVersion () == EEbInterfaceVersion.V43) {
 
         //Selected rule and selected ebInterface version must match
-        Rule rule = rules.getModelObject();
+        final Rule rule = rules.getModelObject();
         if (rule != null && !(rule.getEbInterfaceVersion()
                                   .equals(validationResult.getDeterminedEbInterfaceVersion().getVersion ()))) {
           error(new ResourceModel("schematron.version.mismatch").getObject());
@@ -235,7 +235,7 @@ final class InputForm extends Form<Object> {
         }
 
         //Invoke the validation
-        Result
+        final Result
             r =
             validator.validateXMLInstanceAgainstSchematron(uploadedData, rule.getFileReference());
         validationResult.setResult(r);
@@ -272,11 +272,11 @@ final class InputForm extends Form<Object> {
     }
     //ebInterface PDF-Generation
     else if (selectedAction == StartPage.ActionType.VISUALIZATION_PDF) {
-      BaseRenderer renderer = new BaseRenderer();
+      final BaseRenderer renderer = new BaseRenderer();
 
       try {
         LOG.debug("Load ebInterface JasperReport template from application context.");
-        JasperReport
+        final JasperReport
             jrReport =
             Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
@@ -284,7 +284,7 @@ final class InputForm extends Form<Object> {
 
         pdf = renderer.renderReport(jrReport, uploadedData, null);
 
-      } catch (Exception ex) {
+      } catch (final Exception ex) {
         LOG.error("Error when generating PDF from ebInterface", ex);
         error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
         onError();
@@ -301,7 +301,7 @@ final class InputForm extends Form<Object> {
 
       sbLog.append("<b>Ausgewähltes ZUGFeRD Profil: ").append(zugferdlevels.getModelObject()).append("</b><br/><br/>");
 
-      MappingFactory mf = new MappingFactory();
+      final MappingFactory mf = new MappingFactory();
 
       final MappingFactory.ZugferdMappingType zugferdLevel;
 
@@ -315,8 +315,8 @@ final class InputForm extends Form<Object> {
 
       final EEbInterfaceVersion ebType;
       switch (validationResult.getDeterminedEbInterfaceVersion().getVersion ()) {
-        case V41:  
-        case V42:  
+        case V41:
+        case V42:
         case V43:
           // These versions are supported
           ebType = validationResult.getDeterminedEbInterfaceVersion().getVersion ();
@@ -340,9 +340,9 @@ final class InputForm extends Form<Object> {
         saxSource = new SAXSource(new InputSource(
             new NonBlockingByteArrayInputStream(zugferd)));
 
-        Validator
+        final Validator
             zugSchemaValidator = Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator();
-        MappingErrorHandler eh = new MappingErrorHandler();
+        final MappingErrorHandler eh = new MappingErrorHandler();
         zugSchemaValidator.setErrorHandler(eh);
         zugSchemaValidator.validate(saxSource);
 
@@ -351,7 +351,7 @@ final class InputForm extends Form<Object> {
           sbLog.append("<b>ZUGFeRD XSD Validierung fehlgeschlagen:</b><br/>").append(
               eh.toString().replace("\n", "<br/>"));
         }
-      } catch (Exception e) {
+      } catch (final Exception e) {
         LOG.error("ZUGFeRD conversion failed", e);
         error("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
         onError();
@@ -361,23 +361,25 @@ final class InputForm extends Form<Object> {
       if (zugferd != null) {
         sbLog.append(zugFeRDMapping.getMappingLogHTML());
 
-        Source source = new StreamSource(new NonBlockingByteArrayInputStream (zugferd));
-        javax.xml.transform.Result result = new StreamResult(new NonBlockingStringWriter());
+        final Source source = new StreamSource(new NonBlockingByteArrayInputStream (zugferd));
+        final javax.xml.transform.Result result = new StreamResult(new NonBlockingStringWriter());
 
         try {
-          Transformer transformer = Application.get().getMetaData(
+          final Transformer transformer = Application.get().getMetaData(
               Constants.METADATAKEY_ZUGFERD_SCHEMATRONTEMPLATE).newTransformer();
 
           transformer.reset();
 
           transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-          MappingErrorListener el = new MappingErrorListener();
+          final MappingErrorListener el = new MappingErrorListener();
 
           transformer.setErrorListener(el);
 
           //saxon is used, MessageErmitter has to be set, otherwise, ErrorListener will mention Errors
-          ((Controller) transformer).setMessageEmitter(new MessageWarner());
+          ((TransformerImpl) transformer).getUnderlyingXsltTransformer ()
+                                         .getUnderlyingController ()
+                                         .setMessageEmitter (new MessageWarner ());
 
           transformer.transform(source, result);
 
@@ -389,11 +391,11 @@ final class InputForm extends Form<Object> {
             sbLog.append("<br/><p>").append(
                 "<b>Schematron Validierung erfolgreich durchgeführt!</b><br/>");
 
-            ZugferdRenderer renderer = new ZugferdRenderer();
+            final ZugferdRenderer renderer = new ZugferdRenderer();
 
             try {
               LOG.debug("Load ZUGFeRD JasperReport template from application context.");
-              JasperReport
+              final JasperReport
                   jrReport =
                   Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE);
 
@@ -401,13 +403,13 @@ final class InputForm extends Form<Object> {
 
               pdf = renderer.renderReport(jrReport, zugferd, null);
 
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
               error("Bei der ZUGFeRD-PDF-Erstellung ist ein Fehler aufgetreten.");
               onError();
               return;
             }
           }
-        } catch (Exception e) {
+        } catch (final Exception e) {
           error("Bei der ZUGFeRD-Überprüfung ist ein Fehler aufgetreten.");
           onError();
           return;

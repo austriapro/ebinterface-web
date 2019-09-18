@@ -20,7 +20,7 @@
 
   <properties>
     <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
-    <ebinterface-rendering-version>1.0.0-SNAPSHOT</ebinterface-rendering-version>
+    <ebinterface-rendering-version>1.0.1-SNAPSHOT</ebinterface-rendering-version>
     <ebinterface-ubl-mapping-version>4.0.1-SNAPSHOT</ebinterface-ubl-mapping-version>
     <ebinterface-xrechnung-mapping-version>1.0.0-SNAPSHOT</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>

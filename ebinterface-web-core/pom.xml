@@ -1,90 +1,56 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>at.austriapro</groupId>
-        <artifactId>ebinterface-web-parent</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>ebinterface-web-core</artifactId>
-    <packaging>jar</packaging>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>at.austriapro</groupId>
+    <artifactId>ebinterface-web-parent</artifactId>
     <version>1.0.7-SNAPSHOT</version>
-    <name>ebinterface-web-core</name>
+  </parent>
 
-    <description>The ebInterface validation core service allows to check ebInterface instances against predefined Schema
+  <artifactId>ebinterface-web-core</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0.7-SNAPSHOT</version>
+  <name>ebinterface-web-core</name>
+
+  <description>The ebInterface validation core service allows to check ebInterface instances against predefined Schema
         files and Schematron rules
     </description>
+  <url>http://ebinterface.at</url>
+
+  <organization>
     <url>http://ebinterface.at</url>
+  </organization>
 
-    <organization>
-        <url>http://ebinterface.at</url>
-    </organization>
+  <properties>
+    <jaxb-impl-version>2.2.2</jaxb-impl-version>
+    <jaxb-xjc-version>2.2.2</jaxb-xjc-version>
+    <jaxen-version>1.0-FCS</jaxen-version>
+    <ph-ebinterface-version>6.1.1</ph-ebinterface-version>
+    <sax-path-version>1.0-FCS</sax-path-version>
+    <saxon-version>9.9.1-5</saxon-version>
+    <slf4j-version>1.7.28</slf4j-version>
+    <xerces-version>2.12.0</xerces-version>
+    <xml-resolver-version>1.2</xml-resolver-version>
+  </properties>
 
-    <properties>
-        <jaxb-impl-version>2.2.2</jaxb-impl-version>
-        <jaxb-xjc-version>2.2.2</jaxb-xjc-version>
-        <jaxen-version>1.0-FCS</jaxen-version>
-        <logback-version>1.2.3</logback-version>
-        <ph-ebinterface-version>6.1.1</ph-ebinterface-version>
-        <sax-path-version>1.0-FCS</sax-path-version>
-        <saxon-version>9.5.1-6</saxon-version>
-        <slf4j-version>1.7.26</slf4j-version>
-        <xerces-version>2.12.0</xerces-version>
-        <xml-resolver-version>1.2</xml-resolver-version>
-    </properties>
+  <dependencies>
+     <!-- Saxon XSLT processing for Java -->
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
+      <version>${saxon-version}</version>
+    </dependency>
 
-    <dependencies>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-ebinterface</artifactId>
+      <version>${ph-ebinterface-version}</version>
+    </dependency>
 
-        <!-- Xerces -->
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>${xerces-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xml-resolver</groupId>
-            <artifactId>xml-resolver</artifactId>
-            <version>${xml-resolver-version}</version>
-        </dependency>
-
-        <!-- Jaxen XPath library -->
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>${jaxen-version}</version>
-        </dependency>
-
-        <!-- Simple API for XPath -->
-        <dependency>
-            <groupId>saxpath</groupId>
-            <artifactId>saxpath</artifactId>
-            <version>${sax-path-version}</version>
-        </dependency>
-
-        <!-- Saxon XSLT processing for Java -->
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>${saxon-version}</version>
-        </dependency>
-
-        <!-- http://cxf.apache.org/faq.html -->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-xjc</artifactId>
-            <version>${jaxb-xjc-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>${jaxb-impl-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ebinterface</artifactId>
-            <version>${ph-ebinterface-version}</version>
-        </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
