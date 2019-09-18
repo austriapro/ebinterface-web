@@ -41,7 +41,7 @@ import com.helger.xml.sax.InputSourceFactory;
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.resultpages.ResultPageUbl;
+import at.ebinterface.validation.web.pages.resultpages.ResultPageEbiToUbl;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 /**
@@ -227,23 +227,24 @@ final class EbiToUblForm extends Form <Object>
       for (final IError error : aUBLErrorList.getAllErrors ())
       {
         aErrorLog.append (error.getErrorFieldName ())
-             .append (":<br/>")
-             .append (error.getErrorText (aDisplayLocale))
-             .append ("<br/><br/>");
+                 .append (":<br/>")
+                 .append (error.getErrorText (aDisplayLocale))
+                 .append ("<br/><br/>");
       }
       aUBLXML = null;
     }
     else
     {
       LOG.info ("Conversion from ebInterface to UBL Invoice was successful");
-      // No need to collect errors here, because the validation was already performed previously
+      // No need to collect errors here, because the validation was already
+      // performed previously
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
     }
 
     // Redirect
-    setResponsePage (new ResultPageUbl (aUBLXML,
-                                        aErrorLog.toString (),
-                                        this.fromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageEbiToUbl (aUBLXML,
+                                             aErrorLog.toString (),
+                                             this.fromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**

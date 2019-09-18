@@ -39,7 +39,7 @@ import com.helger.xml.sax.InputSourceFactory;
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.resultpages.ResultPageXRechnung;
+import at.ebinterface.validation.web.pages.resultpages.ResultPageEbiToXRechnung;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 /**
@@ -71,10 +71,10 @@ final class EbiToXRechnungForm extends Form <Object>
    */
   private final boolean fromStartPage;
 
-  public EbiToXRechnungForm (final String id, final boolean fromStartPage)
+  public EbiToXRechnungForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    this.fromStartPage = fromStartPage;
+    fromStartPage = bFromStartPage;
 
     // Add a feedback panel
     feedbackPanel = new FeedbackPanel ("ebiToXRechnungFeedback", new ContainerFeedbackMessageFilter (this));
@@ -243,7 +243,7 @@ final class EbiToXRechnungForm extends Form <Object>
     }
 
     // Redirect
-    setResponsePage (new ResultPageXRechnung (aUBLXML,
+    setResponsePage (new ResultPageEbiToXRechnung (aUBLXML,
                                               aErrorLog.toString (),
                                               this.fromStartPage ? StartPage.class : LabsPage.class));
   }
