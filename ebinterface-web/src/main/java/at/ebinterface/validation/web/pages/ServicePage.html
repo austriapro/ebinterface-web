@@ -1,19 +1,11 @@
 <wicket:extend>
-
     <div class="row">
         <div class="col-md-12">
-
-
             <h1>ebInterface Rechnungen erstellen, prüfen und anzeigen</h1>
-            <h3>Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im
-                Format
-                ebInterface.</h3>
-
+            <h3>Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im Format ebInterface.</h3>
             <div>
                 <hr class="section-line"/>
-
                 <h2>ebinterface Rechnung erstellen</h2>
-
                 <p>
                     Wenn Sie keine M&ouml;glichkeit haben, mit Ihrer eigenen Software ebInterface
                     Rechnungen
@@ -24,12 +16,10 @@
                 </p>
                 <a href="http://formular.ebinterface.at" target="_blank" class="btn-wko">Rechnung online erstellen</a>
 
-                <p style="font-size:12px; color: grey; margin-top: 15px;">
-                    Dieser Button führt Sie direkt zum ebInterface Online-Formular.
-                </p>
+                <p style="font-size:12px; color: grey; margin-top: 15px;">Dieser Button führt Sie direkt zum ebInterface Online-Formular.</p>
 
                 <hr class="section-line"/>
-                <form wicket:id="inputForm" class="form-inline">
+                <form wicket:id="inputForm">
                     <h2>ebInterface Rechnung prüfen und als PDF anzeigen</h2>
                     <p>
                         Dieses Tool prüft die Gültigkeit der ebInterface Rechnung und wandelt sie in
@@ -41,28 +31,20 @@
 
                     <div class="alert alert-danger" wicket:id="feedback"></div>
                     <div class="uploadFile">
-                        <input id="fileInput1" type="file" wicket:id="fileInput" class="inputFile" onchange="getFileName('fileInput1','uploadText')"/>
+                        <input class="inputFile" type="file" id="fileInput1" wicket:id="fileInput" onchange="getFileName('fileInput1','uploadText')"/>
                         <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
                         <p class="upload-label" id="uploadText">Keine Datei ausgewählt</p>
                     </div>
 
                     <div class="inline-btn">
                         <button class="btn-wko" type="submit"
-                                wicket:id="submitButtonVisualizeHTML">ebInterface in
-                            HTML Druckansicht anzeigen
-                        </button>
+                                wicket:id="submitButtonVisualizeHTML">ebInterface in HTML Druckansicht anzeigen</button>
                         <button class="btn-wko" type="submit"
-                                wicket:id="submitButtonVisualizePDF">Rechnung als PDF anzeigen
-                        </button>
+                                wicket:id="submitButtonVisualizePDF">Rechnung als PDF anzeigen</button>
                     </div>
 
-                    <p style="font-size:12px; color: grey; margin-top: 15px;">
-                        Wählen Sie eine ebInterface Datei von Ihrer Festplatte aus.
-                    </p>
-
-
+                    <p style="font-size:12px; color: grey; margin-top: 15px;">Wählen Sie eine ebInterface Datei von Ihrer Festplatte aus.</p>
                 </form>
-
 
                 <hr class="section-line"/>
             </div>

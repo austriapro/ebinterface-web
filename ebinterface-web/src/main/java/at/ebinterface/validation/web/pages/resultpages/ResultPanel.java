@@ -22,7 +22,8 @@ import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
 
 public final class ResultPanel extends Panel {
-  public ResultPanel(final String id, final ValidationResult validationResult,
+  public ResultPanel(final String id,
+                     final ValidationResult validationResult,
                      final byte[] pdf,
                      final byte[] xml,
                      final String log,
