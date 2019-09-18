@@ -7,10 +7,10 @@
     <version>1.10.9</version>
   </parent>
   <groupId>at.austriapro</groupId>
-	<artifactId>ebinterface-parent</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0.7-SNAPSHOT</version>
-	<name>ebInterface validation service parent</name>
+  <artifactId>ebinterface-web-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.7-SNAPSHOT</version>
+  <name>ebinterface-web-parent</name>
   <description>The ebInterface validation service allows to check ebInterface instances against predefined Schematron rules etc.</description>
   <url>http://ebinterface.at</url>
 
@@ -26,14 +26,13 @@
   </organization>
 
   <modules>
-    <module>ebinterface-core</module>
+    <module>ebinterface-web-core</module>
     <module>ebinterface-web</module>
   </modules>
 
 	<properties>
-		<junit-version>4.12</junit-version>
 		<logback-version>1.2.3</logback-version>
-		<slf4j-version>1.7.26</slf4j-version>
+    <slf4j-version>1.7.28</slf4j-version>
 	</properties>
 
 	<dependencies>
@@ -41,23 +40,21 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j </artifactId>
+			<artifactId>log4j-over-slf4j</artifactId>
 			<version>${slf4j-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<version>${slf4j-version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -68,56 +65,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit-version}</version>
       <scope>test</scope>
     </dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
-		</plugins>
-
-		<directory>target</directory>
-		<outputDirectory>target/classes</outputDirectory>
-		<finalName>${project.artifactId}</finalName>
-		<testOutputDirectory>target/test-classes</testOutputDirectory>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<scriptSourceDirectory>src/main/java</scriptSourceDirectory>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.*</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-		<testSourceDirectory>src/test/java</testSourceDirectory>
-	</build>
 </project>

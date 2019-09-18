@@ -1,19 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <artifactId>ebinterface-core</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0.7-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
-    <name>ebInterface validation core</name>
-
-
     <parent>
         <groupId>at.austriapro</groupId>
-        <artifactId>ebinterface-parent</artifactId>
+        <artifactId>ebinterface-web-parent</artifactId>
         <version>1.0.7-SNAPSHOT</version>
     </parent>
 
+    <artifactId>ebinterface-web-core</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.7-SNAPSHOT</version>
+    <name>ebinterface-web-core</name>
+
+    <description>The ebInterface validation core service allows to check ebInterface instances against predefined Schema
+        files and Schematron rules
+    </description>
+    <url>http://ebinterface.at</url>
+
+    <organization>
+        <url>http://ebinterface.at</url>
+    </organization>
 
     <properties>
         <jaxb-impl-version>2.2.2</jaxb-impl-version>
@@ -21,7 +27,6 @@
         <jaxen-version>1.0-FCS</jaxen-version>
         <logback-version>1.2.3</logback-version>
         <ph-ebinterface-version>6.1.1</ph-ebinterface-version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sax-path-version>1.0-FCS</sax-path-version>
         <saxon-version>9.5.1-6</saxon-version>
         <slf4j-version>1.7.26</slf4j-version>
@@ -82,45 +87,4 @@
             <version>${ph-ebinterface-version}</version>
         </dependency>
     </dependencies>
-
-
-    <description>The ebInterface validation core service allows to check ebInterface instances against predefined Schema
-        files and Schematron rules
-    </description>
-    <url>http://ebinterface.at</url>
-
-    <organization>
-        <url>http://ebinterface.at</url>
-    </organization>
-
-    <build>
-        <directory>target</directory>
-        <outputDirectory>target/classes</outputDirectory>
-        <finalName>${project.artifactId}</finalName>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <scriptSourceDirectory>src/main/java</scriptSourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-        </testResources>
-    </build>
-
 </project>
