@@ -1,7 +1,6 @@
 package at.ebinterface.validation.web.pages;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -197,8 +196,7 @@ final class InputForm extends Form<Object> {
     byte[] uploadedData = null;
 
     try {
-      final InputStream inputStream = upload.getInputStream();
-      uploadedData = StreamHelper.getAllBytes(inputStream);
+      uploadedData = StreamHelper.getAllBytes(upload.getInputStream());
     } catch (final IOException e) {
       LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
@@ -325,8 +323,7 @@ final class InputForm extends Form<Object> {
           return;
       }
 
-      final Mapping zugFeRDMapping = mf.getMapper(zugferdLevel,
-                                            ebType);
+      final Mapping zugFeRDMapping = mf.getMapper(zugferdLevel, ebType);
 
       SAXSource saxSource;
 

@@ -11,7 +11,7 @@
       <p class="help-block">Wählen Sie eine ebInterface 3.0, 3.02, 4.0, 4.1, 4.2, 4.3 oder 5.0 Datei von Ihrer Festplatte</p>
 
       <div class="uploadFile">
-        <input id="fileInput1" type="file" wicket:id="fileInput" class="inputFile" onchange="getFileName('fileInput1','uploadText')" />
+        <input class="inputFile" type="file" id="fileInput1" wicket:id="fileInput" onchange="getFileName('fileInput1','uploadText')" />
         <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
         <p class="upload-label" id="uploadText">Keine Datei ausgewählt</p>
       </div>
@@ -57,8 +57,9 @@
         <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="ublToEbiInput" type="file" wicket:id="ublToEbiInput"/>
+          <input class="inputFile" type="file" id="ublToEbiInput" wicket:id="ublToEbiInput" onchange="getFileName('ublToEbiInput','ublToEbiSelectedFile')"/>
           <label for="ublToEbiInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <p class="upload-label" id="ublToEbiSelectedFile">Keine Datei ausgewählt</p>
         </div>
       </div>
       
@@ -83,8 +84,9 @@
         <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="ebiToUblInput" type="file" wicket:id="ebiToUblInput"/>
+          <input class="inputFile" type="file" id="ebiToUblInput" wicket:id="ebiToUblInput" onchange="getFileName('ebiToUblInput','ebiToUblSelectedFile')"/>
           <label for="ebiToUblInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <p class="upload-label" id="ebiToUblSelectedFile">Keine Datei ausgewählt</p>
         </div>
       </div>
 
@@ -105,8 +107,9 @@
         <h4 class="functionHeader">Schritt 1: XRechnung-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige XRechnung-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="xRechnungToEbiInput" type="file" wicket:id="xRechnungToEbiInput"/>
+          <input class="inputFile" type="file" id="xRechnungToEbiInput" wicket:id="xRechnungToEbiInput" onchange="getFileName('xRechnungToEbiInput','xRechnungToEbiSelectedFile')"/>
           <label for="xRechnungToEbiInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <p class="upload-label" id="xRechnungToEbiSelectedFile">Keine Datei ausgewählt</p>
         </div>
       </div>
 
@@ -131,8 +134,9 @@
         <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="ebiToXRechnungInput" type="file" wicket:id="ebiToXRechnungInput"/>
+          <input class="inputFile" type="file" id="ebiToXRechnungInput" wicket:id="ebiToXRechnungInput" onchange="getFileName('ebiToXRechnungInput','ebiToXRechnungSelectedFile')"/>
           <label for="ebiToXRechnungInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <p class="upload-label" id="ebiToXRechnungSelectedFile">Keine Datei ausgewählt</p>
         </div>
       </div>
       

@@ -55,7 +55,7 @@ html, body {
   display: inline-block;
 }
 
-#uploadText {
+.upload-label {
   display: inline-block;
   border: 1px solid #304C59;
   padding: 10px;
