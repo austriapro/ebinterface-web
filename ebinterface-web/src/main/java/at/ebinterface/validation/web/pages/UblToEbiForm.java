@@ -80,51 +80,50 @@ final class UblToEbiForm extends Form <Object>
    * Dropdown choice for the ebInterface versions
    */
   private DropDownChoice <EEbInterfaceVersion> ebiVersions;
-  
+
   /**
    * Was the link called from the start page or from the /labs page?
    */
   private final boolean fromStartPage;
 
-  public UblToEbiForm (final String id, boolean fromStartPage)
+  public UblToEbiForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    this.fromStartPage = fromStartPage;
+    fromStartPage = bFromStartPage;
 
     // Add a feedback panel
-    feedbackPanel = new FeedbackPanel ("feedback", new ContainerFeedbackMessageFilter (this));
+    feedbackPanel = new FeedbackPanel ("ublToEbiFeedback", new ContainerFeedbackMessageFilter (this));
     feedbackPanel.setVisible (false);
     add (feedbackPanel);
 
     // Add the file upload field
-    fileUploadField = new FileUploadField ("ublInput");
+    fileUploadField = new FileUploadField ("ublToEbiInput");
     fileUploadField.setRequired (true);
     add (fileUploadField);
 
     // Add the drop down choice for the different rules which are currently
     // supported
-    ebiVersions = new DropDownChoice <> ("ebiVersionSelector",
+    ebiVersions = new DropDownChoice <> ("ublToEbiVersionSelector",
                                          Model.of (POSSIBLE_EBI_VERSIONS.getFirst ()),
                                          POSSIBLE_EBI_VERSIONS,
                                          new IChoiceRenderer <EEbInterfaceVersion> ()
                                          {
                                            @Override
-                                           public Object getDisplayValue (EEbInterfaceVersion object)
+                                           public Object getDisplayValue (final EEbInterfaceVersion object)
                                            {
                                              return "ebInterface " + object.getVersion ().getAsString (false, true);
                                            }
 
                                            @Override
-                                           public String getIdValue (EEbInterfaceVersion object, int index)
+                                           public String getIdValue (final EEbInterfaceVersion object, final int index)
                                            {
                                              return object.getNamespaceURI ();
                                            }
                                          });
-
     add (ebiVersions);
 
     // Add a submit button
-    add (new SubmitLink ("convertUblToEbi"));
+    add (new SubmitLink ("ublToEbiSubmit"));
   }
 
   @Override
@@ -157,7 +156,7 @@ final class UblToEbiForm extends Form <Object>
     final Locale aContentLocale = Constants.DE_AT;
 
     // Read UBL
-    ErrorList aReadErrors = new ErrorList ();
+    final ErrorList aReadErrors = new ErrorList ();
     // First try Invoice
     final InvoiceType aUBLInvoice = UBL21Reader.invoice ()
                                                .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
@@ -311,18 +310,18 @@ final class UblToEbiForm extends Form <Object>
         return;
       }
 
-      BaseRenderer renderer = new BaseRenderer ();
+      final BaseRenderer renderer = new BaseRenderer ();
 
       try
       {
         LOG.debug ("Load ebInterface JasperReport template from application context.");
-        JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
+        final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
         LOG.debug ("Rendering PDF.");
 
         pdf = renderer.renderReport (jrReport, ebInterface, null);
       }
-      catch (Exception ex)
+      catch (final Exception ex)
       {
         error ("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
         onError ();

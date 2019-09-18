@@ -59,35 +59,35 @@ final class EbiToXRechnungForm extends Form <Object>
   /**
    * Panel for providing feedback in case of erroneous input
    */
-  private FeedbackPanel feedbackPanel;
+  private final FeedbackPanel feedbackPanel;
 
   /**
    * Upload field for the ebInterface instance
    */
-  private FileUploadField fileUploadField;
+  private final FileUploadField fileUploadField;
 
   /**
    * Was the link called from the start page or from the /labs page?
    */
   private final boolean fromStartPage;
 
-  public EbiToXRechnungForm (final String id, boolean fromStartPage)
+  public EbiToXRechnungForm (final String id, final boolean fromStartPage)
   {
     super (id);
     this.fromStartPage = fromStartPage;
 
     // Add a feedback panel
-    feedbackPanel = new FeedbackPanel ("feedback", new ContainerFeedbackMessageFilter (this));
+    feedbackPanel = new FeedbackPanel ("ebiToXRechnungFeedback", new ContainerFeedbackMessageFilter (this));
     feedbackPanel.setVisible (false);
     add (feedbackPanel);
 
     // Add the file upload field
-    fileUploadField = new FileUploadField ("fileInputEbiToXRechnung");
+    fileUploadField = new FileUploadField ("ebiToXRechnungInput");
     fileUploadField.setRequired (true);
     add (fileUploadField);
 
     // Add a submit button
-    add (new SubmitLink ("convertEbiToXRechnung"));
+    add (new SubmitLink ("ebiToXRechnungSubmit"));
   }
 
   @Override
@@ -187,7 +187,7 @@ final class EbiToXRechnungForm extends Form <Object>
     LOG.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to XRechnung");
 
     final InvoiceType aUBLInvoice;
-    ErrorList aConvertErrorList = new ErrorList ();
+    final ErrorList aConvertErrorList = new ErrorList ();
     // Convert ebInterface to XRechnung
     switch (eVersion)
     {

@@ -61,35 +61,35 @@ final class EbiToUblForm extends Form <Object>
   /**
    * Panel for providing feedback in case of erroneous input
    */
-  private FeedbackPanel feedbackPanel;
+  private final FeedbackPanel feedbackPanel;
 
   /**
    * Upload field for the ebInterface instance
    */
-  private FileUploadField fileUploadField;
+  private final FileUploadField fileUploadField;
 
   /**
    * Was the link called from the start page or from the /labs page?
    */
   private final boolean fromStartPage;
 
-  public EbiToUblForm (final String id, boolean fromStartPage)
+  public EbiToUblForm (final String id, final boolean bFromStartPage)
   {
     super (id);
-    this.fromStartPage = fromStartPage;
+    fromStartPage = bFromStartPage;
 
     // Add a feedback panel
-    feedbackPanel = new FeedbackPanel ("feedback", new ContainerFeedbackMessageFilter (this));
+    feedbackPanel = new FeedbackPanel ("ebiToUblFeedback", new ContainerFeedbackMessageFilter (this));
     feedbackPanel.setVisible (false);
     add (feedbackPanel);
 
     // Add the file upload field
-    fileUploadField = new FileUploadField ("fileInputEbiToUbl");
+    fileUploadField = new FileUploadField ("ebiToUblInput");
     fileUploadField.setRequired (true);
     add (fileUploadField);
 
     // Add a submit button
-    add (new SubmitLink ("convertEbiToUbl"));
+    add (new SubmitLink ("ebiToUblSubmit"));
   }
 
   @Override
@@ -136,7 +136,7 @@ final class EbiToUblForm extends Form <Object>
       onError ();
       return;
     }
-    
+
     LOG.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
 
     // Parse ebInterface against XSD
@@ -236,7 +236,7 @@ final class EbiToUblForm extends Form <Object>
     else
     {
       LOG.info ("Conversion from ebInterface to UBL Invoice was successful");
-      // No need to collect errors here, because the validation was already performed previously 
+      // No need to collect errors here, because the validation was already performed previously
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
     }
 

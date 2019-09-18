@@ -70,22 +70,23 @@
     
     <form wicket:id="ublToEbiForm">
       <h2>UBL nach ebInterface konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
+      <div class="alert alert-danger" wicket:id="ublToEbiFeedback"></div>
       <div>
         <h4 class="functionHeader">Schritt 1: UBL-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige UBL-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="ublInput" type="file" wicket:id="ublInput"/>
-          <label for="ublInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <input class="inputFile" id="ublToEbiInput" type="file" wicket:id="ublToEbiInput"/>
+          <label for="ublToEbiInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
         </div>
       </div>
+      
       <div clss="form-actions">
         <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
+        <select class="wko-selector" id="ublToEbiVersionSelector" wicket:id="ublToEbiVersionSelector">
           <option>woo</option>
           <option>hoo</option>
         </select>
-        <button class="btn-wko" type="submit" wicket:id="convertUblToEbi">UBL nach ebInterface konvertieren</button>
+        <button class="btn-wko" type="submit" wicket:id="ublToEbiSubmit">UBL nach ebInterface konvertieren</button>
       </div>
     </form>
 
@@ -95,18 +96,19 @@
 
     <form wicket:id="ebiToUblForm">
       <h2>ebInterface nach UBL konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
+      <div class="alert alert-danger" wicket:id="ebiToUblFeedback"></div>
       <div>
         <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="fileInputEbiToUbl" type="file" wicket:id="fileInputEbiToUbl"/>
-          <label for="fileInputEbiToUbl"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <input class="inputFile" id="ebiToUblInput" type="file" wicket:id="ebiToUblInput"/>
+          <label for="ebiToUblInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
         </div>
       </div>
+
       <div clss="form-actions">
         <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <button class="btn-wko" type="submit" wicket:id="convertEbiToUbl">ebInterface nach UBL konvertieren</button>
+        <button class="btn-wko" type="submit" wicket:id="ebiToUblSubmit">ebInterface nach UBL konvertieren</button>
       </div>
     </form>
 
@@ -116,23 +118,23 @@
 
     <form wicket:id="xRechnungToEbiForm">
       <h2>XRechnung nach ebInterface konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
+      <div class="alert alert-danger" wicket:id="xRechnungToEbiFeedback"></div>
       <div>
         <h4 class="functionHeader">Schritt 1: XRechnung-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige XRechnung-Datei von Ihrer Festplatte</p>
-
         <div class="uploadFile">
-          <input class="inputFile" id="xRechnungInput" type="file" wicket:id="xRechnungInput"/>
-          <label for="xRechnungInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <input class="inputFile" id="xRechnungToEbiInput" type="file" wicket:id="xRechnungToEbiInput"/>
+          <label for="xRechnungToEbiInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
         </div>
       </div>
+
       <div clss="form-actions">
         <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <select class="wko-selector" id="ebiVersionSelector" wicket:id="ebiVersionSelector">
+        <select class="wko-selector" id="xRechnungToEbiVersionSelector" wicket:id="xRechnungToEbiVersionSelector">
           <option>woo</option>
           <option>hoo</option>
         </select>
-        <button class="btn-wko" type="submit" wicket:id="convertXRechnungToEbi">XRechnung nach ebInterface konvertieren</button>
+        <button class="btn-wko" type="submit" wicket:id="xRechnungToEbiSubmit">XRechnung nach ebInterface konvertieren</button>
       </div>
     </form>
 
@@ -142,23 +144,26 @@
     
     <form wicket:id="ebiToXRechnungForm">
       <h2>ebInterface nach XRechnung konvertieren</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
+      <div class="alert alert-danger" wicket:id="ebiToXRechnungFeedback"></div>
       <div>
         <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
         <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
         <div class="uploadFile">
-          <input class="inputFile" id="fileInputEbiToXRechnung" type="file" wicket:id="fileInputEbiToXRechnung"/>
-          <label for="fileInputEbiToXRechnung"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
+          <input class="inputFile" id="ebiToXRechnungInput" type="file" wicket:id="ebiToXRechnungInput"/>
+          <label for="ebiToXRechnungInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
         </div>
       </div>
+      
       <div clss="form-actions">
         <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
-        <button class="btn-wko" type="submit" wicket:id="convertEbiToXRechnung">ebInterface nach XRechnung konvertieren</button>
+        <button class="btn-wko" type="submit" wicket:id="ebiToXRechnungSubmit">ebInterface nach XRechnung konvertieren</button>
       </div>
     </form>
-    <br/><br/>
     
+    <br/>
     <hr class="section-line"/>
+    <br/>
+    
     <div style="text-align: center;">
       Code lizensiert unter <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
       License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den
