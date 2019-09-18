@@ -10,8 +10,8 @@ import org.apache.wicket.model.Model;
  * @author pl
  */
 public final class PrintViewPage extends WebPage {
-  public PrintViewPage(final String xsltOutput) {
-    final Label printViewLabel = new Label("printViewPanel", Model.of(xsltOutput));
+  public PrintViewPage(final String sHtml) {
+    final Label printViewLabel = new Label("printViewPanel", Model.of(sHtml));
     printViewLabel.setEscapeModelStrings(false);
     add(printViewLabel);
   }

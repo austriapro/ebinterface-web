@@ -21,8 +21,8 @@
   <properties>
     <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
     <ebinterface-rendering-version>1.0.1-SNAPSHOT</ebinterface-rendering-version>
-    <ebinterface-ubl-mapping-version>4.0.1-SNAPSHOT</ebinterface-ubl-mapping-version>
-    <ebinterface-xrechnung-mapping-version>1.0.0-SNAPSHOT</ebinterface-xrechnung-mapping-version>
+    <ebinterface-ubl-mapping-version>4.0.1</ebinterface-ubl-mapping-version>
+    <ebinterface-xrechnung-mapping-version>0.9.0</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>
     <wicket-version>6.30.0</wicket-version>
   </properties>
