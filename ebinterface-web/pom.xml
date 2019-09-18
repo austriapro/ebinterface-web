@@ -91,5 +91,6 @@
         <targetPath>${project.build.directory}/test-classes</targetPath>
       </resource>
     </resources>
+    <finalName>${project.artifactId}</finalName>
   </build>
 </project>
