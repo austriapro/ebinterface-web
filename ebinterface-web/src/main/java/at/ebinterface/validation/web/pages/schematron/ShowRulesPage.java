@@ -1,4 +1,4 @@
-package at.ebinterface.validation.web.pages;
+package at.ebinterface.validation.web.pages.schematron;
 
 import java.nio.charset.StandardCharsets;
 
@@ -11,6 +11,8 @@ import com.helger.commons.io.stream.StreamHelper;
 
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.web.components.CodeBox;
+import at.ebinterface.validation.web.pages.BasePage;
+import at.ebinterface.validation.web.pages.StartPage;
 
 
 /**

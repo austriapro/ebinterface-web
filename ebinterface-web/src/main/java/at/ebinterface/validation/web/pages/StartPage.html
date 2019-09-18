@@ -45,24 +45,6 @@
       </select>
       <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
     </form>
-    
-    <br/>
-    <hr class="section-line"/>
-    <br/>
-    
-    <form wicket:id="showRulesForm">
-      <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div class="form-actions">
-        <h5 class="functionHeader">Unterst&uuml;tzte Schematron Regeln</h5>
-        <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches sie einsehen m&ouml;chten.</p>
-        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
-      </div>
-    </form>
 
     <br/>
     <hr class="section-line"/>
@@ -157,6 +139,24 @@
       <div clss="form-actions">
         <h4 class="functionHeader">Schritt 2: Konvertieren</h4>
         <button class="btn-wko" type="submit" wicket:id="ebiToXRechnungSubmit">ebInterface nach XRechnung konvertieren</button>
+      </div>
+    </form>
+    
+    <br/>
+    <hr class="section-line"/>
+    <br/>
+    
+    <form wicket:id="showRulesForm">
+      <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
+      <div class="alert alert-danger" wicket:id="feedback"></div>
+      <div class="form-actions">
+        <h5 class="functionHeader">Unterst&uuml;tzte Schematron Regeln</h5>
+        <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches sie einsehen m&ouml;chten.</p>
+        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
+          <option>woo</option>
+          <option>hoo</option>
+        </select>
+        <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
       </div>
     </form>
     

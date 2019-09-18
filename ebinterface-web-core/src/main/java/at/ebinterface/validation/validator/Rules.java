@@ -10,56 +10,55 @@ import com.helger.ebinterface.EEbInterfaceVersion;
  *
  * @author pl
  */
-public class Rules {
+public final class Rules {
 
 
   /**
    * Stores the rules which are currently supported by this validation service. Use Rule as the key
    * in order to allow retrieval based on type and ebInterface version
    */
-  private static final List<Rule> rules;
+  private static final List<Rule> rules = new ArrayList<> ();
 
 
   static {
-
-    //Initialize the set of rules
-    rules = new ArrayList<>();
-
     //  https://github.com/austriapro/ebinterface-web/issues/11
     if (false) {
-      Rule
+      final Rule
           rule1 =
           new Rule("Sozialversicherung (ebInterface 4p0)", EEbInterfaceVersion.V40,
                    "/schematron/sv/sv-rules-4p0.sch");
       rules.add(rule1);
     }
 
-    Rule
+    final Rule
         rule2 =
         new Rule("Sozialversicherung (ebInterface 4p1)", EEbInterfaceVersion.V41,
                  "/schematron/sv/sv-rules-4p1.sch");
     rules.add(rule2);
 
-    Rule
+    final Rule
         rule3 =
         new Rule("Sozialversicherung (ebInterface 4p2)", EEbInterfaceVersion.V42,
                  "/schematron/sv/sv-rules-4p2.sch");
     rules.add(rule3);
 
-    Rule
+    final Rule
         rule4 =
         new Rule("Sozialversicherung (ebInterface 4p3)", EEbInterfaceVersion.V43,
                  "/schematron/sv/sv-rules-4p3.sch");
     rules.add(rule4);
-
   }
 
+  private Rules (){}
 
   /**
    * Get a certain rule
+   * @param name Name of the rule
+   * @param version ebInterface version to use
+   * @return <code>null</code> if no match is found
    */
-  public static Rule getRule(String name, EEbInterfaceVersion version) {
-    for (Rule r : rules) {
+  public static Rule getRule(final String name, final EEbInterfaceVersion version) {
+    for (final Rule r : rules) {
       if (r.getName().equals(name) && r.getEbInterfaceVersion().equals(version)) {
         return r;
       }

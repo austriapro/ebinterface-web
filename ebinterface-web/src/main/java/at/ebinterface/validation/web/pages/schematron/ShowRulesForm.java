@@ -1,4 +1,4 @@
-package at.ebinterface.validation.web.pages;
+package at.ebinterface.validation.web.pages.schematron;
 
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -9,6 +9,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
+import com.helger.commons.string.StringHelper;
+
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.validator.Rules;
 
@@ -17,7 +19,7 @@ import at.ebinterface.validation.validator.Rules;
  *
  * @author pl
  */
-final class ShowRulesForm extends Form<Object> {
+public final class ShowRulesForm extends Form<Object> {
 
   /**
    * Panel for providing feedback in case of erroneous input
@@ -42,12 +44,12 @@ final class ShowRulesForm extends Form<Object> {
         new DropDownChoice<>("ruleSelector", Model.of(new Rule()), Rules.getRules(),
                                  new IChoiceRenderer<Rule>() {
                                    @Override
-                                   public Object getDisplayValue(Rule object) {
+                                   public Object getDisplayValue(final Rule object) {
                                      return object.getName();
                                    }
 
                                    @Override
-                                   public String getIdValue(Rule object, int index) {
+                                   public String getIdValue(final Rule object, final int index) {
                                      return object.getName();
                                    }
                                  });
@@ -63,7 +65,7 @@ final class ShowRulesForm extends Form<Object> {
     super.onSubmit();
 
     //Did the user select a schematron file?
-    if (rules.getModelObject() == null || rules.getModelObject().toString().equals("")) {
+    if (rules.getModelObject() == null || StringHelper.hasNoText (rules.getModelObject().toString())) {
       error(new ResourceModel("ruleSelector.NoSelected").getObject());
       onError();
       return;

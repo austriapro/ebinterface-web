@@ -4,6 +4,7 @@ import at.ebinterface.validation.web.pages.convert.EbiToUblForm;
 import at.ebinterface.validation.web.pages.convert.EbiToXRechnungForm;
 import at.ebinterface.validation.web.pages.convert.UblToEbiForm;
 import at.ebinterface.validation.web.pages.convert.XRechnungToEbiForm;
+import at.ebinterface.validation.web.pages.schematron.ShowRulesForm;
 
 public final class LabsPage extends BasePage
 {
