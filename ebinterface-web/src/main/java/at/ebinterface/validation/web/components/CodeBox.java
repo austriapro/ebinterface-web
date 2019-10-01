@@ -17,15 +17,13 @@ import at.ebinterface.validation.web.components.prettyfy.PrettifyJSResourceRefer
 
 
 /**
- * A code block which does syntax highlighting of the code contents. <p/> Apply to ` <p/>
- * <pre></pre>
- * <p/> ` or `<code></code>` DOM element. <p/> Wraps the Prettify library by Google -
- * http://code.google.com/p/google-code-prettify/ <p/> It is not necessary to specify a language,
+ * A code block which does syntax highlighting of the code contents.
+ * Wraps the Prettify library by Google
+ * http://code.google.com/p/google-code-prettify/ <p>
+ * It is not necessary to specify a language,
  * prettify will guess the language based on content, however an override is available should it be
- * required. <p/> Apply to a ` <p/>
- * <pre>
- * ` or `
- * <code>` block.
+ * required. <p>
+ * Apply to a &lt;pre&gt; or &lt;code&gt;
  *
  * @author Richard Nichols
  * @version $Id: CodeBox.java 261 2011-03-08 20:53:16Z tibes80@gmail.com $
@@ -38,6 +36,7 @@ public class CodeBox extends WebComponent {
 
   /**
    * Create a Codebox with static content with the given `id`.
+   * @param id ID
    */
   public CodeBox(final String id) {
     super(id);
@@ -46,15 +45,17 @@ public class CodeBox extends WebComponent {
   /**
    * Create a Codebox with the provided code content and the given `id`.
    *
+   * @param id ID
    * @param code source code to display
    */
   public CodeBox(final String id, final String code) {
-    this(id, new Model<String>(code));
+    this(id, new Model<>(code));
   }
 
   /**
    * Create a codebox with source code provided by an `IModel` and the given `id`.
    *
+   * @param id ID
    * @param model a model that will provide the source code to display
    */
   public CodeBox(final String id, final IModel<?> model) {
@@ -73,7 +74,7 @@ public class CodeBox extends WebComponent {
 
 
   @Override
-  public void renderHead(IHeaderResponse response) {
+  public void renderHead(final IHeaderResponse response) {
     if (autoAddToHeader()) {
       response.render(CssHeaderItem.forReference(new PrettifyCSSResourceReference()));
       response.render(JavaScriptHeaderItem.forReference(new PrettifyJSResourceReference()));
@@ -139,6 +140,7 @@ public class CodeBox extends WebComponent {
   /**
    * Toggle the display of line numbers in the left gutter.
    *
+   * @param displayLineNumbers toggle
    * @return this
    */
   public CodeBox setDisplayLineNumbers(final boolean displayLineNumbers) {
@@ -151,8 +153,9 @@ public class CodeBox extends WebComponent {
   }
 
   /**
-   * Override the language used for syntax highligting.
+   * Override the language used for syntax highlighting.
    *
+   * @param languageOverride language
    * @return this
    */
   public CodeBox setLanguageOverride(final CodeBoxLanguage languageOverride) {

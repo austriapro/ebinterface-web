@@ -2,7 +2,7 @@ package at.ebinterface.validation.web.components;
 
 /**
  * Types of languages supported by the {@link CodeBox} component.
- * <p/>
+ * <p>
  * In general it is not necessary to specify a language, however you can force
  * one by using one of these enumerated types.
  *
@@ -48,13 +48,13 @@ public enum CodeBoxLanguage
   private final String cssClass;
   private final String extraJSfile;
 
-  CodeBoxLanguage (String cssClass)
+  CodeBoxLanguage (final String cssClass)
   {
     this.cssClass = cssClass;
     extraJSfile = null;
   }
 
-  CodeBoxLanguage (String cssClass, String extraJSfile)
+  CodeBoxLanguage (final String cssClass, final String extraJSfile)
   {
     this.cssClass = cssClass;
     this.extraJSfile = extraJSfile;

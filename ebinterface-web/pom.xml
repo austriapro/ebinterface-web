@@ -19,10 +19,10 @@
   </organization>
 
   <properties>
-    <ebinterface-mapping-version>1.0.0-SNAPSHOT</ebinterface-mapping-version>
-    <ebinterface-rendering-version>1.0.1-SNAPSHOT</ebinterface-rendering-version>
-    <ebinterface-ubl-mapping-version>4.0.1</ebinterface-ubl-mapping-version>
-    <ebinterface-xrechnung-mapping-version>0.9.0</ebinterface-xrechnung-mapping-version>
+    <ebinterface-mapping-version>1.0.0</ebinterface-mapping-version>
+    <ebinterface-rendering-version>1.0.0</ebinterface-rendering-version>
+    <ebinterface-ubl-mapping-version>4.5.0</ebinterface-ubl-mapping-version>
+    <ebinterface-xrechnung-mapping-version>1.0.0</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>
     <wicket-version>6.30.0</wicket-version>
   </properties>
@@ -50,13 +50,13 @@
 		</dependency>
 
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-ubl-mapping</artifactId>
       <version>${ebinterface-ubl-mapping-version}</version>
     </dependency>
     
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-xrechnung-mapping</artifactId>
       <version>${ebinterface-xrechnung-mapping-version}</version>
     </dependency>
@@ -103,5 +103,8 @@
       </resource>
     </resources>
     <finalName>${project.artifactId}</finalName>
+    
+    <plugins>
+    </plugins>
   </build>
 </project>
