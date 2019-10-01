@@ -3,11 +3,11 @@
   <parent>
     <groupId>at.austriapro</groupId>
     <artifactId>ebinterface-web-parent</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8-SNAPSHOT</version>
   </parent>
   <artifactId>ebinterface-web</artifactId>
   <packaging>war</packaging>
-  <version>1.0.7</version>
+  <version>1.0.8-SNAPSHOT</version>
   <name>ebinterface-web</name>
 
   <description>The ebInterface validation web interface offers a web-based interface for the ebinterface-core validation service</description>
