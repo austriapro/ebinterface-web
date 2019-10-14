@@ -23,7 +23,7 @@
     <ebinterface-ubl-mapping-version>4.5.1</ebinterface-ubl-mapping-version>
     <ebinterface-xrechnung-mapping-version>1.0.1</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>
-    <wicket-version>7.15.0</wicket-version>
+    <wicket-version>8.6.1</wicket-version>
   </properties>
 
 	<dependencies>
