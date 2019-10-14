@@ -20,7 +20,7 @@
   <properties>
     <ebinterface-mapping-version>1.0.0</ebinterface-mapping-version>
     <ebinterface-rendering-version>1.0.0</ebinterface-rendering-version>
-    <ebinterface-ubl-mapping-version>4.5.0</ebinterface-ubl-mapping-version>
+    <ebinterface-ubl-mapping-version>4.5.1</ebinterface-ubl-mapping-version>
     <ebinterface-xrechnung-mapping-version>1.0.0</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>
     <wicket-version>6.30.0</wicket-version>
