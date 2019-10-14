@@ -7,7 +7,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -48,6 +47,7 @@ import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
+import at.ebinterface.validation.web.components.AbstractChoiceRenderer;
 import at.ebinterface.validation.web.pages.LabsPage;
 import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageUblToEbi;
@@ -108,7 +108,7 @@ public final class UblToEbiForm extends Form <Object>
     ebiVersions = new DropDownChoice <> ("ublToEbiVersionSelector",
                                          Model.of (POSSIBLE_EBI_VERSIONS.getFirst ()),
                                          POSSIBLE_EBI_VERSIONS,
-                                         new IChoiceRenderer <EEbInterfaceVersion> ()
+                                         new AbstractChoiceRenderer <EEbInterfaceVersion> ()
                                          {
                                            @Override
                                            public Object getDisplayValue (final EEbInterfaceVersion object)

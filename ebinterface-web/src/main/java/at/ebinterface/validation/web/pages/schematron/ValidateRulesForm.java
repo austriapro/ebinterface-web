@@ -6,7 +6,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -25,6 +24,7 @@ import at.ebinterface.validation.validator.Rules;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.validator.jaxb.Result;
 import at.ebinterface.validation.web.Constants;
+import at.ebinterface.validation.web.components.AbstractChoiceRenderer;
 import at.ebinterface.validation.web.pages.LabsPage;
 import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.pages.schematron.result.ResultPageValidateRules;
@@ -79,7 +79,7 @@ public final class ValidateRulesForm extends Form <Object>
     rules = new DropDownChoice <> ("validateRulesSelector",
                                    Model.of (new Rule ()),
                                    Rules.getRules (),
-                                   new IChoiceRenderer <Rule> ()
+                                   new AbstractChoiceRenderer <Rule> ()
                                    {
                                      @Override
                                      public Object getDisplayValue (final Rule object)

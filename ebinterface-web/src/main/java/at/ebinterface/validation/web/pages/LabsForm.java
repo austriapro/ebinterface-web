@@ -15,7 +15,6 @@ import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -40,6 +39,7 @@ import at.austriapro.rendering.ZugferdRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
+import at.ebinterface.validation.web.components.AbstractChoiceRenderer;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import at.ebinterface.validation.web.pages.resultpages.ResultPageZugferd;
 import net.sf.jasperreports.engine.JasperReport;
@@ -95,7 +95,7 @@ final class LabsForm extends Form<Object> {
     zugferdlevels =
         new DropDownChoice<>(
             "zugferdSelector", Model.of(new String()), StartPage.ZUGFERD_LEVELS,
-            new IChoiceRenderer<String>() {
+            new AbstractChoiceRenderer<String>() {
               @Override
               public Object getDisplayValue(final String object) {
                 return object;

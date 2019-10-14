@@ -31,24 +31,24 @@ public abstract class BasePage extends WebPage {
 
 
   @Override
-  public void renderHead(HtmlHeaderContainer container) {
+  public void internalRenderHead(final HtmlHeaderContainer container) {
 
-    PackageResourceReference cssFile_wko =
+    final PackageResourceReference cssFile_wko =
         new PackageResourceReference(CssReference.class, "wkostyle.css");
-    CssHeaderItem cssItem_wko = CssHeaderItem.forReference(cssFile_wko);
+    final CssHeaderItem cssItem_wko = CssHeaderItem.forReference(cssFile_wko);
 
-    PackageResourceReference cssFile_page =
+    final PackageResourceReference cssFile_page =
         new PackageResourceReference(CssReference.class, "style.css");
-    CssHeaderItem cssItem_page = CssHeaderItem.forReference(cssFile_page);
+    final CssHeaderItem cssItem_page = CssHeaderItem.forReference(cssFile_page);
 
     container.getHeaderResponse().render(cssItem_wko);
     container.getHeaderResponse().render(cssItem_page);
 
-    PackageResourceReference
+    final PackageResourceReference
         jsReference =
         new PackageResourceReference(JsReference.class, "fileLabelChecker.js");
-    JavaScriptReferenceHeaderItem headerItem = JavaScriptHeaderItem.forReference(jsReference);
+    final JavaScriptReferenceHeaderItem headerItem = JavaScriptHeaderItem.forReference(jsReference);
     container.getHeaderResponse().render(headerItem);
-    super.renderHead(container);
+    super.internalRenderHead(container);
   }
 }

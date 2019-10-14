@@ -3,7 +3,6 @@ package at.ebinterface.validation.web.pages.schematron;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
@@ -13,6 +12,7 @@ import com.helger.commons.string.StringHelper;
 
 import at.ebinterface.validation.validator.Rule;
 import at.ebinterface.validation.validator.Rules;
+import at.ebinterface.validation.web.components.AbstractChoiceRenderer;
 import at.ebinterface.validation.web.pages.LabsPage;
 import at.ebinterface.validation.web.pages.StartPage;
 
@@ -52,7 +52,7 @@ public final class ShowRulesForm extends Form <Object>
     rules = new DropDownChoice <> ("ruleSelector",
                                    Model.of (new Rule ()),
                                    Rules.getRules (),
-                                   new IChoiceRenderer <Rule> ()
+                                   new AbstractChoiceRenderer <Rule> ()
                                    {
                                      @Override
                                      public Object getDisplayValue (final Rule object)

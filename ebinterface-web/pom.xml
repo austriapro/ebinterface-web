@@ -21,9 +21,9 @@
     <ebinterface-mapping-version>1.0.0</ebinterface-mapping-version>
     <ebinterface-rendering-version>1.0.0</ebinterface-rendering-version>
     <ebinterface-ubl-mapping-version>4.5.1</ebinterface-ubl-mapping-version>
-    <ebinterface-xrechnung-mapping-version>1.0.0</ebinterface-xrechnung-mapping-version>
+    <ebinterface-xrechnung-mapping-version>1.0.1</ebinterface-xrechnung-mapping-version>
     <logback-version>1.2.3</logback-version>
-    <wicket-version>6.30.0</wicket-version>
+    <wicket-version>7.15.0</wicket-version>
   </properties>
 
 	<dependencies>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-oton-jetty</artifactId>
-      <version>8.2.0</version>
+      <version>8.2.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
