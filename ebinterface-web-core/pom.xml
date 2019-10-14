@@ -3,12 +3,12 @@
   <parent>
     <groupId>at.austriapro</groupId>
     <artifactId>ebinterface-web-parent</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>ebinterface-web-core</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.8</version>
+  <version>1.0.9-SNAPSHOT</version>
   <name>ebinterface-web-core</name>
   <description>The ebInterface validation core service allows to check ebInterface instances against predefined Schema files and Schematron rules</description>
   <url>http://ebinterface.at</url>
