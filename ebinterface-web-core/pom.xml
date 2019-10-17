@@ -38,13 +38,13 @@
     </dependency>
     
     <!-- Java9 onwards:
-     -->
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-jaxws-pom</artifactId>
       <version>${ph-jaxws-pom-version}</version>
       <type>pom</type>
     </dependency>
+     -->
 
     <dependency>
       <groupId>org.slf4j</groupId>
