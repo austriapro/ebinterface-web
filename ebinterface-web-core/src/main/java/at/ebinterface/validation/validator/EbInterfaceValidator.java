@@ -306,11 +306,11 @@ public class EbInterfaceValidator {
       //Set the document
       request.setDocument(uploadedData);
       //No PDF report required
-      request.setRequestPDFReport(false);
+      request.setRequestPDFReport(Boolean.FALSE);
       //Expect German results
       request.setLanguage("de");
 
-      VerifyDocumentResponse response = null;
+      VerifyDocumentResponse response;
       try {
         response = VerificationServiceInvoker.verifyDocument(request);
         result.setVerifyDocumentResponse(response);

@@ -10,17 +10,12 @@ import org.apache.wicket.model.Model;
  * Shows the details of a signature verification (signature, certificate, manifest)
  */
 public class SignatureDetailsPanel extends Panel {
-
-
-  public SignatureDetailsPanel(String id, IModel<String> detailsModel, IModel<Boolean> isValid) {
+  public SignatureDetailsPanel(final String id, final IModel<String> detailsModel, final IModel<Boolean> isValid) {
     super(id);
 
-    add(new Label("status", isValid.getObject() ? "Gültig" : "Ungültig").add(
-        new AttributeAppender("class", isValid.getObject() ? Model.of("alert alert-success")
-                                                           : Model.of("alert alert-danger"))));
+    add(new Label("status", isValid.getObject().booleanValue () ? "Gültig" : "Ungültig").add(
+        new AttributeAppender("class", isValid.getObject().booleanValue () ? Model.of("alert alert-success")
+                                                                           : Model.of("alert alert-danger"))));
     add(new Label("details", detailsModel));
-
   }
-
-
 }

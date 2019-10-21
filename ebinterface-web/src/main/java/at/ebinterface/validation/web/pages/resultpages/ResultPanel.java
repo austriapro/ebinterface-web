@@ -97,19 +97,19 @@ public final class ResultPanel extends Panel {
 
     //Signature
     signatureResultContainer.add(new SignatureDetailsPanel("signatureDetails", Model
-        .of(signatureValidationResult.getSignatureText()), Model.of(signatureValidationResult
-                                                                        .isSignatureValid())));
+        .of(signatureValidationResult.getSignatureText()), Model.of(Boolean.valueOf(signatureValidationResult
+                                                                        .isSignatureValid()))));
 
     //Certificate
     signatureResultContainer.add(new SignatureDetailsPanel("certificateDetails", Model
-        .of(signatureValidationResult.getCertificateText()), Model.of(signatureValidationResult
-                                                                          .isCertificateValid())));
+        .of(signatureValidationResult.getCertificateText()), Model.of(Boolean.valueOf(signatureValidationResult
+                                                                          .isCertificateValid()))));
 
     //Manifest
     signatureResultContainer.add(new SignatureDetailsPanel("manifestDetails", Model
         .of(signatureValidationResult.getManifestText()),
-                                                           Model.of(signatureValidationResult
-                                                                        .isManifestValid())));
+                                                           Model.of(Boolean.valueOf(signatureValidationResult
+                                                                        .isManifestValid()))));
 
     add(signatureResultContainer);
 

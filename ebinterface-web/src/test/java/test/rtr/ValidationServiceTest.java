@@ -28,11 +28,11 @@ public class ValidationServiceTest {
     static {
         //Set the manual keystore, otherwise the RTR certificate is not trusted
         try {
-            URL url = ValidationServiceTest.class.getResource("/keystore.jks");
+            final URL url = ValidationServiceTest.class.getResource("/keystore.jks");
             System.setProperty("javax.net.ssl.trustStore", url.getPath());
             System.setProperty("javax.net.ssl.trustStorePassword", "");
 
-        } catch (Exception e1) {
+        } catch (final Exception e1) {
             throw new RuntimeException("Error while reading SSL Keystore. Unable to proceed.", e1);
         }
 
@@ -50,7 +50,7 @@ public class ValidationServiceTest {
         //Set the document
         request.setDocument(invoice.getBytes());
         //No PDF report required
-        request.setRequestPDFReport(false);
+        request.setRequestPDFReport(Boolean.FALSE);
         //Expect German results
         request.setLanguage("de");
 
@@ -64,17 +64,17 @@ public class ValidationServiceTest {
             }
 
 
-            VerifyDocumentResponse response = VerificationServiceInvoker.verifyDocument(request);
+            final VerifyDocumentResponse response = VerificationServiceInvoker.verifyDocument(request);
 
-            SignatureValidationResult result = new SignatureValidationResult(response);
+            final SignatureValidationResult result = new SignatureValidationResult(response);
             Assert.assertTrue(result.isCertificateValid());
             Assert.assertTrue(result.isSignatureValid());
             Assert.assertTrue(result.isManifestValid());
 
 
-        } catch (VerificationFault verificationFault) {
+        } catch (final VerificationFault verificationFault) {
             LOG.error("Fehler bei der Verarbeitung. Error code {}, Error message {}", verificationFault.getFaultInfo().getErrorCode(), verificationFault.getFaultInfo().getInfo());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Unable to get validation result. ", e);
             fail();
         }
@@ -86,18 +86,18 @@ public class ValidationServiceTest {
         //Set the document
         request.setDocument(invoice.getBytes());
         //No PDF report required
-        request.setRequestPDFReport(false);
+        request.setRequestPDFReport(Boolean.FALSE);
         //Expect German results
         request.setLanguage("de");
 
         //Get a response
         try {
-            VerifyDocumentResponse response = VerificationServiceInvoker.verifyDocument(request);
+            VerificationServiceInvoker.verifyDocument(request);
             fail();
 
-        } catch (VerificationFault verificationFault) {
+        } catch (final VerificationFault verificationFault) {
             LOG.error("Fehler bei der Verarbeitung. Error code {}, Error message {}", verificationFault.getFaultInfo().getErrorCode(), verificationFault.getFaultInfo().getInfo());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Unable to get validation result. ", e);
         }
 
