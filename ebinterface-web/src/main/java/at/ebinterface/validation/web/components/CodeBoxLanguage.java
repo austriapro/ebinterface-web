@@ -45,29 +45,29 @@ public enum CodeBoxLanguage
   SHELL ("lang-sh"),
   XHTML ("lang-xhtml");
 
-  private final String cssClass;
-  private final String extraJSfile;
+  private final String m_sCssClass;
+  private final String m_sExtraJSfile;
 
   CodeBoxLanguage (final String cssClass)
   {
-    this.cssClass = cssClass;
-    extraJSfile = null;
+    this.m_sCssClass = cssClass;
+    m_sExtraJSfile = null;
   }
 
   CodeBoxLanguage (final String cssClass, final String extraJSfile)
   {
-    this.cssClass = cssClass;
-    this.extraJSfile = extraJSfile;
+    this.m_sCssClass = cssClass;
+    this.m_sExtraJSfile = extraJSfile;
   }
 
   public String getCSSClass ()
   {
-    return this.cssClass;
+    return this.m_sCssClass;
   }
 
   public String getExtraJSfile ()
   {
-    return extraJSfile;
+    return m_sExtraJSfile;
   }
 
 }

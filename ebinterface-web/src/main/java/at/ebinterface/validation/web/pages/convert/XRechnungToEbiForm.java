@@ -164,14 +164,18 @@ public final class XRechnungToEbiForm extends Form <Object>
     final InvoiceType aUBLInvoice = UBL21Reader.invoice ()
                                                .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
                                                .read (uploadedData);
-    // TODO add CreditNote
-    final CreditNoteType aUBLCreditNote = null;
+    CreditNoteType aUBLCreditNote = null;
+    if (aUBLInvoice == null)
+    {
+      // Try CreditNote
+      aUBLCreditNote = UBL21Reader.creditNote ()
+                                  .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
+                                  .read (uploadedData);
+    }
 
     if (aUBLInvoice == null && aUBLCreditNote == null)
     {
-      error ("Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice" +
-             (false ? " und CreditNote" : "") +
-             " Dokumente verarbeitet werden.");
+      error ("Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice und CreditNote Dokumente verarbeitet werden.");
       // Log errors in case somebody cares
       LOG.warn ("UBL parsing errors:");
       for (final IError aError : aReadErrors.getAllFailures ())
