@@ -80,7 +80,6 @@
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-oton-jetty</artifactId>
-      <version>8.2.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
