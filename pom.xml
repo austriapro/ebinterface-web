@@ -28,10 +28,6 @@
     <module>ebinterface-web-core</module>
     <module>ebinterface-web</module>
   </modules>
-
-	<properties>
-		<logback-version>1.2.3</logback-version>
-	</properties>
   
   <dependencyManagement>
     <dependencies>
@@ -115,6 +111,12 @@
         <version>8.7.0</version>
       </dependency>
 
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+
       <!-- ebInterface core for the validation logic -->
       <dependency>
         <groupId>at.austriapro</groupId>
@@ -123,7 +125,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement> 
-  
 
 	<dependencies>
 		<!-- logging -->
@@ -147,7 +148,6 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback-version}</version>
 		</dependency>
 
     <!-- testing -->

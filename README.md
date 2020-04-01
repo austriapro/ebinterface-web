@@ -22,12 +22,9 @@ The validation contains two main artifacts
  * [ebinterface-mappings](https://github.com/austriapro/ebinterface-mappings): PDF rendering
  * [ebinterface-rendering](https://github.com/austriapro/ebinterface-rendering): mappings in general (e. g. ebInterface -> ZUGFeRD mapping)
  * [ebinterface-ubl-mapping](https://github.com/austriapro/ebinterface-ubl-mapping): UBL <-> ebInterface mapping
+ * [ebinterface-xrechnung-mapping](https://github.com/austriapro/ebinterface-xrechnung-mapping): XRechnung <-> ebInterface mapping
 
-Please note, these projects have to be checked out, to be able to build *ebinterface-web*.
-
-## Code style
-
-For this project the Google code style is used. Please [download the code style file](https://code.google.com/p/google-styleguide/source/browse/trunk/intellij-java-google-style.xml) and set it in your IDE, before you commit to the repository. 
+Please note that all these projects are now available on Maven Central.
 
 ## Prerequisites
 
