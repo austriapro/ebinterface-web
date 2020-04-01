@@ -7,7 +7,6 @@
   </parent>
   <artifactId>ebinterface-web</artifactId>
   <packaging>war</packaging>
-  <version>1.0.9-SNAPSHOT</version>
   <name>ebinterface-web</name>
 
   <description>The ebInterface validation web interface offers a web-based interface for the ebinterface-core validation service</description>
@@ -17,55 +16,39 @@
     <url>http://ebinterface.at</url>
   </organization>
 
-  <properties>
-    <ebinterface-mapping-version>1.0.0</ebinterface-mapping-version>
-    <ebinterface-rendering-version>1.0.0</ebinterface-rendering-version>
-    <ebinterface-ubl-mapping-version>4.5.3</ebinterface-ubl-mapping-version>
-    <ebinterface-xrechnung-mapping-version>1.0.3</ebinterface-xrechnung-mapping-version>
-    <logback-version>1.2.3</logback-version>
-    <wicket-version>8.7.0</wicket-version>
-    <ph-jaxws-pom-version>1.1.3</ph-jaxws-pom-version>
-  </properties>
-
 	<dependencies>
 		<!-- ebInterface core for the validation logic -->
 		<dependency>
 			<groupId>at.austriapro</groupId>
 			<artifactId>ebinterface-web-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- ebInterface rendering for PDF rendering and ZUGFeRD generation-->
 		<dependency>
 			<groupId>at.austriapro</groupId>
 			<artifactId>ebinterface-rendering</artifactId>
-			<version>${ebinterface-rendering-version}</version>
 		</dependency>
 
 		<!-- ebInterface mappings for ebInterface -> ZUGFeRD mapping-->
 		<dependency>
 			<groupId>at.austriapro</groupId>
 			<artifactId>ebinterface-mappings-zugferd</artifactId>
-			<version>${ebinterface-mapping-version}</version>
 		</dependency>
 
     <dependency>
       <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-ubl-mapping</artifactId>
-      <version>${ebinterface-ubl-mapping-version}</version>
     </dependency>
     
     <dependency>
       <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-xrechnung-mapping</artifactId>
-      <version>${ebinterface-xrechnung-mapping-version}</version>
     </dependency>
 
     <!-- Wicket -->
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-core</artifactId>
-      <version>${wicket-version}</version>
     </dependency>
     
     <!-- Java9 onwards:
@@ -73,7 +56,6 @@
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-jaxws-pom</artifactId>
-      <version>${ph-jaxws-pom-version}</version>
       <type>pom</type>
     </dependency>
     

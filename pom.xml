@@ -63,6 +63,64 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+       <!-- Saxon XSLT processing for Java -->
+      <dependency>
+        <groupId>net.sf.saxon</groupId>
+        <artifactId>Saxon-HE</artifactId>
+        <version>10.0</version>
+      </dependency>
+  
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-ebinterface</artifactId>
+        <version>6.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-jaxws-pom</artifactId>
+        <version>1.1.3</version>
+        <type>pom</type>
+      </dependency>
+
+      <!-- ebInterface rendering for PDF rendering and ZUGFeRD generation-->
+      <dependency>
+        <groupId>at.austriapro</groupId>
+        <artifactId>ebinterface-rendering</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+  
+      <!-- ebInterface mappings for ebInterface -> ZUGFeRD mapping-->
+      <dependency>
+        <groupId>at.austriapro</groupId>
+        <artifactId>ebinterface-mappings-zugferd</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+  
+      <dependency>
+        <groupId>at.austriapro</groupId>
+        <artifactId>ebinterface-ubl-mapping</artifactId>
+        <version>4.5.4</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>at.austriapro</groupId>
+        <artifactId>ebinterface-xrechnung-mapping</artifactId>
+        <version>1.0.4</version>
+      </dependency>
+  
+      <!-- Wicket -->
+      <dependency>
+        <groupId>org.apache.wicket</groupId>
+        <artifactId>wicket-core</artifactId>
+        <version>8.7.0</version>
+      </dependency>
+
+      <!-- ebInterface core for the validation logic -->
+      <dependency>
+        <groupId>at.austriapro</groupId>
+        <artifactId>ebinterface-web-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement> 
   
