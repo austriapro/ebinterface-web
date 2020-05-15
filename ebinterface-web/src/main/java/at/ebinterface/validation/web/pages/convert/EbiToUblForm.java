@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -28,16 +29,18 @@ import com.helger.ebinterface.v41.Ebi41InvoiceType;
 import com.helger.ebinterface.v42.Ebi42InvoiceType;
 import com.helger.ebinterface.v43.Ebi43InvoiceType;
 import com.helger.ebinterface.v50.Ebi50InvoiceType;
+import com.helger.ebinterface.v60.Ebi60InvoiceType;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
 import com.helger.ubl21.UBL21Validator;
 import com.helger.ubl21.UBL21Writer;
-import com.helger.xml.sax.InputSourceFactory;
+import com.helger.xml.serialize.read.DOMReader;
 
 import at.austriapro.ebinterface.ubl.to.EbInterface40ToInvoiceConverter;
 import at.austriapro.ebinterface.ubl.to.EbInterface41ToInvoiceConverter;
 import at.austriapro.ebinterface.ubl.to.EbInterface42ToInvoiceConverter;
 import at.austriapro.ebinterface.ubl.to.EbInterface43ToInvoiceConverter;
 import at.austriapro.ebinterface.ubl.to.EbInterface50ToInvoiceConverter;
+import at.austriapro.ebinterface.ubl.to.EbInterface60ToInvoiceConverter;
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
@@ -58,7 +61,8 @@ public final class EbiToUblForm extends Form <Object>
                                                                                                            EEbInterfaceVersion.V41,
                                                                                                            EEbInterfaceVersion.V42,
                                                                                                            EEbInterfaceVersion.V43,
-                                                                                                           EEbInterfaceVersion.V50);
+                                                                                                           EEbInterfaceVersion.V50,
+                                                                                                           EEbInterfaceVersion.V60);
 
   /**
    * Panel for providing feedback in case of erroneous input
@@ -111,15 +115,24 @@ public final class EbiToUblForm extends Form <Object>
       LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
+    // Step 0 - read XML
+    final Document aDoc = DOMReader.readXMLDOM (uploadedData);
+    if (aDoc == null)
+    {
+      error ("Die hochgeladene Datei konnte nicht als XML interpretiert werden.");
+      onError ();
+      return;
+    }
+
     // Step 1 - determine the correct ebInterface version
-    EEbInterfaceVersion eVersion;
+    EEbInterfaceVersion eVersion = null;
     try
     {
-      eVersion = CustomParser.INSTANCE.getEbInterfaceDetails (InputSourceFactory.create (uploadedData)).getVersion ();
+      eVersion = CustomParser.INSTANCE.getEbInterfaceDetails (aDoc).getVersion ();
     }
     catch (final NamespaceUnknownException e1)
     {
-      eVersion = null;
+      // Ignore
     }
 
     if (eVersion == null)
@@ -132,9 +145,7 @@ public final class EbiToUblForm extends Form <Object>
     if (!POSSIBLE_EBI_VERSIONS.contains (eVersion))
     {
       error ("Es können nur ebInterface-Dateien in den folgenden Versionen konvertiert werden: " +
-             StringHelper.getImplodedMapped (", ",
-                                             POSSIBLE_EBI_VERSIONS,
-                                             x -> x.getVersion ().getAsString (false, true)));
+             StringHelper.getImplodedMapped (", ", POSSIBLE_EBI_VERSIONS, x -> x.getVersion ().getAsString (false, true)));
       onError ();
       return;
     }
@@ -148,29 +159,22 @@ public final class EbiToUblForm extends Form <Object>
     switch (eVersion)
     {
       case V40:
-        aParsedInvoice = EbInterfaceReader.ebInterface40 ()
-                                          .setValidationEventHandler (aValidationHdl)
-                                          .read (uploadedData);
+        aParsedInvoice = EbInterfaceReader.ebInterface40 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V41:
-        aParsedInvoice = EbInterfaceReader.ebInterface41 ()
-                                          .setValidationEventHandler (aValidationHdl)
-                                          .read (uploadedData);
+        aParsedInvoice = EbInterfaceReader.ebInterface41 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V42:
-        aParsedInvoice = EbInterfaceReader.ebInterface42 ()
-                                          .setValidationEventHandler (aValidationHdl)
-                                          .read (uploadedData);
+        aParsedInvoice = EbInterfaceReader.ebInterface42 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V43:
-        aParsedInvoice = EbInterfaceReader.ebInterface43 ()
-                                          .setValidationEventHandler (aValidationHdl)
-                                          .read (uploadedData);
+        aParsedInvoice = EbInterfaceReader.ebInterface43 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V50:
-        aParsedInvoice = EbInterfaceReader.ebInterface50 ()
-                                          .setValidationEventHandler (aValidationHdl)
-                                          .read (uploadedData);
+        aParsedInvoice = EbInterfaceReader.ebInterface50 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        break;
+      case V60:
+        aParsedInvoice = EbInterfaceReader.ebInterface60 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       default:
         throw new IllegalStateException ("Internal inconsistency: " + eVersion);
@@ -214,6 +218,10 @@ public final class EbiToUblForm extends Form <Object>
         aUBLInvoice = new EbInterface50ToInvoiceConverter (aDisplayLocale,
                                                            aContentLocale).convertInvoice ((Ebi50InvoiceType) aParsedInvoice);
         break;
+      case V60:
+        aUBLInvoice = new EbInterface60ToInvoiceConverter (aDisplayLocale,
+                                                           aContentLocale).convertInvoice ((Ebi60InvoiceType) aParsedInvoice);
+        break;
       default:
         throw new IllegalStateException ("This ebInterface version is unknown: " + eVersion);
     }
@@ -228,10 +236,7 @@ public final class EbiToUblForm extends Form <Object>
       aErrorLog.append ("<b>Bei der ebInterface-UBL-Konvertierung sind folgende Fehler aufgetreten:</b><br/>");
       for (final IError error : aUBLErrorList.getAllErrors ())
       {
-        aErrorLog.append (error.getErrorFieldName ())
-                 .append (":<br/>")
-                 .append (error.getErrorText (aDisplayLocale))
-                 .append ("<br/><br/>");
+        aErrorLog.append (error.getErrorFieldName ()).append (":<br/>").append (error.getErrorText (aDisplayLocale)).append ("<br/><br/>");
       }
       aUBLXML = null;
     }
@@ -244,9 +249,7 @@ public final class EbiToUblForm extends Form <Object>
     }
 
     // Redirect
-    setResponsePage (new ResultPageEbiToUbl (aUBLXML,
-                                             aErrorLog.toString (),
-                                             m_bFromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageEbiToUbl (aUBLXML, aErrorLog.toString (), m_bFromStartPage ? StartPage.class : LabsPage.class));
   }
 
   /**
