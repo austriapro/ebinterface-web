@@ -60,7 +60,7 @@
     </dependency>
     
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.photon</groupId>
       <artifactId>ph-oton-jetty</artifactId>
       <scope>test</scope>
     </dependency>
