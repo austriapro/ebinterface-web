@@ -34,7 +34,6 @@ public final class StartPage extends BasePage
     final StartForm inputForm = new StartForm ("inputForm");
     add (inputForm);
 
-
     // Add the form for convert UBL to ebInterface
     final UblToEbiForm ublToEbiForm = new UblToEbiForm ("ublToEbiForm", bIsStartPage);
     add (ublToEbiForm);
@@ -51,13 +50,16 @@ public final class StartPage extends BasePage
     final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", bIsStartPage);
     add (ebiToXRechnungForm);
 
+    // Disable according to mail from Alex Foidl
+    if (false)
+    {
+      // Add the form for validating against the Schematrons
+      final ValidateRulesForm validateRulesForm = new ValidateRulesForm ("validateRulesForm", bIsStartPage);
+      add (validateRulesForm);
 
-    // Add the form for validating against the Schematrons
-    final ValidateRulesForm validateRulesForm = new ValidateRulesForm ("validateRulesForm", bIsStartPage);
-    add (validateRulesForm);
-
-    // Add the form for showing the supported Schematrons
-    final ShowRulesForm showRulesForm = new ShowRulesForm ("showRulesForm", bIsStartPage);
-    add (showRulesForm);
+      // Add the form for showing the supported Schematrons
+      final ShowRulesForm showRulesForm = new ShowRulesForm ("showRulesForm", bIsStartPage);
+      add (showRulesForm);
+    }
   }
 }

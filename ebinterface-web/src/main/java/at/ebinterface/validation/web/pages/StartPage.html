@@ -140,54 +140,6 @@
     <hr class="section-line"/>
     <br/>
     
-    <form wicket:id="validateRulesForm">
-      <h2>Prüfen gegen Schematronregeln</h2>
-      <div class="alert alert-danger" wicket:id="validateRulesFeedback"></div>
-      <div>
-        <h4 class="functionHeader">Schritt 1: ebInterface-Datei</h4>
-        <p class="help-block">W&auml;hlen Sie eine g&uuml;ltige ebInterface-Datei von Ihrer Festplatte</p>
-        <div class="uploadFile">
-          <input class="inputFile" type="file" id="validateRulesInput" wicket:id="validateRulesInput" onchange="getFileName('validateRulesInput','validateRulesSelectedFile')"/>
-          <label for="validateRulesInput"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
-          <p class="upload-label" id="validateRulesSelectedFile">Keine Datei ausgewählt</p>
-        </div>
-      </div>
-      
-      <div clss="form-actions">
-        <h4 class="functionHeader">Schritt 2: Prüfen gegen Schematronregeln</h4>
-        <p class="help-block">Wählen Sie ein Set von Schematron Regeln, gegen welches Sie prüfen möchten.</p>
-        <div class="inline-btn">
-          <select class="wko-selector" id="validateRulesSelector" wicket:id="validateRulesSelector">
-            <option>woo</option>
-            <option>hoo</option>
-          </select>
-          <button class="btn-wko" type="submit" wicket:id="validateRulesSubmit">ebInterface gegen Schematronregeln prüfen</button>
-        </div>
-      </div>
-    </form>
-
-    <br/>
-    <hr class="section-line"/>
-    <br/>
-    
-    <form wicket:id="showRulesForm">
-      <h2>Unterst&uuml;tzte ebInterface 4.1/4.2/4.3 Schematrondateien einsehen</h2>
-      <div class="alert alert-danger" wicket:id="feedback"></div>
-      <div class="form-actions">
-        <h5 class="functionHeader">Unterst&uuml;tzte Schematron Regeln</h5>
-        <p class="help-block">W&auml;hlen Sie ein Set von Schematron Regeln, welches sie einsehen m&ouml;chten.</p>
-        <select class="wko-selector" id="ruleSelector" wicket:id="ruleSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="showSchematron">Schematrondatei anzeigen</button>
-      </div>
-    </form>
-    
-    <br/>
-    <hr class="section-line"/>
-    <br/>
-    
     <!-- footer -->
     <div style="text-align: center;">
       Code lizensiert unter <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
