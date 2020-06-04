@@ -2,7 +2,7 @@
 
 # ebInterface Web [![Build Status](https://travis-ci.org/austriapro/ebinterface-web.svg)](https://travis-ci.org/austriapro/ebinterface-web)
 
-ebInterface Web allows to validate ebInterface instances according to ebInterface XML Schema version 3.0, 3.02, 4.0, 4.1, 4.2, 4.3 and 5.0.
+ebInterface Web allows to validate ebInterface instances according to ebInterface XML Schema version 3.0, 3.02, 4.0, 4.1, 4.2, 4.3, 5.0 and 6.0.
 Furthermore, XML instances may be converted to human-readable HTML representations as well as PDF files.
 
 The validation includes XML Schema conformance, conformance to predefined Schematron rules and the validation of digital signatures. For the validation of digital signatures the Web Service of [Rundfunk & Telekom Regulierungs-GmbH](http://www.rtr.at) [https://pruefung.signatur.rtr.at/](https://pruefung.signatur.rtr.at/) is used.
