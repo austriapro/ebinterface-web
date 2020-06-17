@@ -55,12 +55,12 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 public final class EbiToXRechnungForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (EbiToXRechnungForm.class);
-  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V40,
-                                                                                                           EEbInterfaceVersion.V41,
-                                                                                                           EEbInterfaceVersion.V42,
-                                                                                                           EEbInterfaceVersion.V43,
+  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V60,
                                                                                                            EEbInterfaceVersion.V50,
-                                                                                                           EEbInterfaceVersion.V60);
+                                                                                                           EEbInterfaceVersion.V43,
+                                                                                                           EEbInterfaceVersion.V42,
+                                                                                                           EEbInterfaceVersion.V41,
+                                                                                                           EEbInterfaceVersion.V40);
 
   /**
    * Panel for providing feedback in case of erroneous input
