@@ -33,6 +33,7 @@ import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
 import com.helger.ubl21.UBL21Writer;
 import com.helger.xml.serialize.read.DOMReader;
 
+import at.austriapro.ebinterface.xrechnung.EXRechnungVersion;
 import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface40ToXRechnungUBLConverter;
 import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface41ToXRechnungUBLConverter;
 import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface42ToXRechnungUBLConverter;
@@ -194,32 +195,45 @@ public final class EbiToXRechnungForm extends Form <Object>
 
     final InvoiceType aUBLInvoice;
     final ErrorList aConvertErrorList = new ErrorList ();
+    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V122;
     // Convert ebInterface to XRechnung
     switch (eVersion)
     {
       case V40:
-        aUBLInvoice = new EbInterface40ToXRechnungUBLConverter (aDisplayLocale, aContentLocale).convert ((Ebi40InvoiceType) aParsedInvoice,
-                                                                                                         aConvertErrorList);
+        aUBLInvoice = new EbInterface40ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi40InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
         break;
       case V41:
-        aUBLInvoice = new EbInterface41ToXRechnungUBLConverter (aDisplayLocale, aContentLocale).convert ((Ebi41InvoiceType) aParsedInvoice,
-                                                                                                         aConvertErrorList);
+        aUBLInvoice = new EbInterface41ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi41InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
         break;
       case V42:
-        aUBLInvoice = new EbInterface42ToXRechnungUBLConverter (aDisplayLocale, aContentLocale).convert ((Ebi42InvoiceType) aParsedInvoice,
-                                                                                                         aConvertErrorList);
+        aUBLInvoice = new EbInterface42ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi42InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
         break;
       case V43:
-        aUBLInvoice = new EbInterface43ToXRechnungUBLConverter (aDisplayLocale, aContentLocale).convert ((Ebi43InvoiceType) aParsedInvoice,
-                                                                                                         aConvertErrorList);
+        aUBLInvoice = new EbInterface43ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi43InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
         break;
       case V50:
-        aUBLInvoice = new EbInterface50ToXRechnungUBLConverter (aDisplayLocale, aContentLocale).convert ((Ebi50InvoiceType) aParsedInvoice,
-                                                                                                         aConvertErrorList);
+        aUBLInvoice = new EbInterface50ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi50InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
         break;
       case V60:
-        aUBLInvoice = new EbInterface60ToXRechnungUBLConverter (aDisplayLocale, aContentLocale).convert ((Ebi60InvoiceType) aParsedInvoice,
-                                                                                                         aConvertErrorList);
+        aUBLInvoice = new EbInterface60ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi60InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
         break;
       default:
         throw new IllegalStateException ("This ebInterface version is unknown: " + eVersion);

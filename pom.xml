@@ -48,7 +48,7 @@
       <dependency>
         <groupId>com.helger.peppol</groupId>
         <artifactId>peppol-commons-parent-pom</artifactId>
-        <version>8.2.2</version>
+        <version>8.2.5</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -70,7 +70,7 @@
       <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>Saxon-HE</artifactId>
-        <version>10.2</version>
+        <version>10.3</version>
       </dependency>
   
       <dependency>
@@ -102,20 +102,20 @@
       <dependency>
         <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-ubl-mapping</artifactId>
-        <version>4.6.1</version>
+        <version>4.6.3</version>
       </dependency>
       
       <dependency>
         <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-xrechnung-mapping</artifactId>
-        <version>1.0.9</version>
+        <version>1.1.0</version>
       </dependency>
   
       <!-- Wicket -->
       <dependency>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-core</artifactId>
-        <version>8.9.0</version>
+        <version>8.10.0</version>
       </dependency>
 
       <dependency>
