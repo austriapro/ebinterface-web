@@ -195,7 +195,7 @@ public final class EbiToXRechnungForm extends Form <Object>
 
     final InvoiceType aUBLInvoice;
     final ErrorList aConvertErrorList = new ErrorList ();
-    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V122;
+    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V200;
     // Convert ebInterface to XRechnung
     switch (eVersion)
     {
