@@ -104,13 +104,6 @@
       <dependency>
         <groupId>at.austriapro</groupId>
         <artifactId>ebinterface-rendering</artifactId>
-        <version>1.0.0</version>
-      </dependency>
-  
-      <!-- ebInterface mappings for ebInterface -> ZUGFeRD mapping-->
-      <dependency>
-        <groupId>at.austriapro</groupId>
-        <artifactId>ebinterface-mappings-zugferd</artifactId>
         <version>1.0.1</version>
       </dependency>
   

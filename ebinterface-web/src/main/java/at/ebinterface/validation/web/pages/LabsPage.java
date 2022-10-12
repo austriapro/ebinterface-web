@@ -4,8 +4,6 @@ import at.ebinterface.validation.web.pages.convert.EbiToUblForm;
 import at.ebinterface.validation.web.pages.convert.EbiToXRechnungForm;
 import at.ebinterface.validation.web.pages.convert.UblToEbiForm;
 import at.ebinterface.validation.web.pages.convert.XRechnungToEbiForm;
-import at.ebinterface.validation.web.pages.schematron.ShowRulesForm;
-import at.ebinterface.validation.web.pages.schematron.ValidateRulesForm;
 
 public final class LabsPage extends BasePage
 {
@@ -35,17 +33,5 @@ public final class LabsPage extends BasePage
     // Add the form for convert ebInterface to XRechnung
     final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", bIsStartPage);
     add (ebiToXRechnungForm);
-
-    // Disable according to mail from Alex Foidl
-    if (false)
-    {
-      // Add the form for validating against the Schematrons
-      final ValidateRulesForm validateRulesForm = new ValidateRulesForm ("validateRulesForm", bIsStartPage);
-      add (validateRulesForm);
-
-      // Add the form for showing the supported Schematrons
-      final ShowRulesForm showRulesForm = new ShowRulesForm ("showRulesForm", bIsStartPage);
-      add (showRulesForm);
-    }
   }
 }

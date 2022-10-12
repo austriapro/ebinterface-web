@@ -78,7 +78,6 @@ final class ServiceForm extends Form <Object>
         submit (EBasicEbiActionType.VISUALIZATION_PDF);
       }
     });
-
   }
 
   /**
@@ -89,11 +88,6 @@ final class ServiceForm extends Form <Object>
 
     // Hide the feedback panel first (will be shown in case of an error)
     feedbackPanel.setVisible (false);
-
-    // Schematron validation?
-    // Schematron set must be selected
-
-    byte [] pdf = null;
 
     // Get the file input
     final FileUpload upload = fileUploadField.getFileUpload ();
@@ -120,52 +114,49 @@ final class ServiceForm extends Form <Object>
       return;
     }
 
-    // Schematron validation too?
-    // Visualization HTML?
-    if (selectedAction == EBasicEbiActionType.VISUALIZATION_HTML)
+    switch (selectedAction)
     {
-      // Visualization is only possible for valid instances
-      if (StringHelper.hasText (validationResult.getSchemaValidationErrorMessage ()))
-      {
-        error ("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
-        onError ();
-        return;
-      }
-
-      // Get the transformed string
-      final String s = validator.transformInput (uploadedData, validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
-      // Redirect to the printview page
-      setResponsePage (new PrintViewPage (s));
-      return;
-
-    }
-    // ebInterface PDF-Generation
-    else
-      if (selectedAction == EBasicEbiActionType.VISUALIZATION_PDF)
-      {
+      case SCHEMA_VALIDATION:
+        // Redirect to the ebInterface result page
+        setResponsePage (new ServicePage (validationResult, null));
+        break;
+      case VISUALIZATION_HTML:
+        // Visualization is only possible for valid instances
+        if (StringHelper.hasText (validationResult.getSchemaValidationErrorMessage ()))
+        {
+          error ("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
+          onError ();
+        }
+        else
+        {
+          // Get the transformed string
+          final String s = validator.transformInput (uploadedData, validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
+          // Redirect to the printview page
+          setResponsePage (new PrintViewPage (s));
+        }
+        break;
+      case VISUALIZATION_PDF:
         final BaseRenderer renderer = new BaseRenderer ();
 
         try
         {
           LOG.debug ("Load ebInterface JasperReport template from application context.");
           final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
-
           LOG.debug ("Rendering PDF from ebInterface file.");
-
-          pdf = renderer.renderReport (jrReport, uploadedData, null);
-
+          final byte [] pdf = renderer.renderReport (jrReport, uploadedData, null);
+          // Redirect to the ebInterface result page
+          setResponsePage (new ServicePage (validationResult, pdf));
         }
         catch (final Exception ex)
         {
           LOG.error ("Error when generating PDF from ebInterface", ex);
           error ("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
           onError ();
-          return;
         }
-      }
-
-    // Redirect to the ebInterface result page
-    setResponsePage (new ServicePage (validationResult, pdf));
+        break;
+      default:
+        throw new IllegalStateException ();
+    }
   }
 
   /**

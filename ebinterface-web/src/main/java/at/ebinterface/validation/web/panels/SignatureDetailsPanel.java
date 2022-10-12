@@ -7,15 +7,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Shows the details of a signature verification (signature, certificate, manifest)
+ * Shows the details of a signature verification (signature, certificate,
+ * manifest)
  */
-public class SignatureDetailsPanel extends Panel {
-  public SignatureDetailsPanel(final String id, final IModel<String> detailsModel, final IModel<Boolean> isValid) {
-    super(id);
-
-    add(new Label("status", isValid.getObject().booleanValue () ? "Gültig" : "Ungültig").add(
-        new AttributeAppender("class", isValid.getObject().booleanValue () ? Model.of("alert alert-success")
-                                                                           : Model.of("alert alert-danger"))));
-    add(new Label("details", detailsModel));
+public class SignatureDetailsPanel extends Panel
+{
+  public SignatureDetailsPanel (final String id, final IModel <Boolean> isValid, final IModel <String> detailsModel)
+  {
+    super (id);
+    final boolean bValid = isValid.getObject ().booleanValue ();
+    add (new Label ("status", bValid ? "Gültig" : "Ungültig").add (new AttributeAppender ("class",
+                                                                                          bValid ? Model.of ("alert alert-success")
+                                                                                                 : Model.of ("alert alert-danger"))));
+    add (new Label ("details", detailsModel));
   }
 }

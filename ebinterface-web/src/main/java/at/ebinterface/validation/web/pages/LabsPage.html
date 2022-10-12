@@ -25,17 +25,6 @@
 
       <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
       <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" wicket:id="submitButtonSchemaOnly">ebInterface gegen Schema prüfen</button>
-
-      <div wicket:id="zugferdWrapper">
-        <!-- hidden because no ID handler is present -->
-        <h5 class="functionHeader">Konvertieren</h5>
-        <p class="help-block">W&auml;hlen Sie ein ZUGFeRD-Profil, in welches Sie konvertieren m&ouml;chten.</p>
-        <select class="wko-selector" id="zugferdSelector" wicket:id="zugferdSelector">
-          <option>woo</option>
-          <option>hoo</option>
-        </select>
-        <button class="btn-wko" type="submit" wicket:id="submitButtonConvertZUGFeRD">ebInterface nach ZUGFeRD konvertieren</button>
-      </div>
     </form>
 
     <br/>
@@ -143,15 +132,12 @@
     <br/>
 
     <!-- footer -->
-    <div style="text-align: center;">
-      Code lizensiert unter <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT
-      License (MIT)</a>. F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den
-      Sourcecode besuchen
-      Sie bitte die <a href="https://github.com/austriapro/ebinterface-web" target="_blank">Projekthomepage</a>. <br/><br/>
+    <div style="text-align: center;" class="mb-3">
+      Code lizensiert unter 
+      <a href="https://github.com/austriapro/ebinterface-web/blob/master/LICENSE">The MIT License (MIT)</a>.
+      F&uuml;r Kommentare, Bug Reports oder den Zugriff auf den Sourcecode besuchen Sie bitte die <a href="https://github.com/austriapro/ebinterface-web" target="_blank">Projekthomepage</a>. <br/><br/>
 
-      Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at" target="_blank">AUSTRIAPRO</a>
-      entwickelt.
+      Das Validierungsservice wurde im Auftrag von <a href="http://www.austriapro.at" target="_blank">AUSTRIAPRO</a> entwickelt.
     </div>
-    <br/><br/>
   </div>
 </wicket:extend>

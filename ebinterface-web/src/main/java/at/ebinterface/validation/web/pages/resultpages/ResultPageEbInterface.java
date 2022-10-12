@@ -10,18 +10,14 @@ import at.ebinterface.validation.web.pages.BasePage;
  *
  * @author pl
  */
-public final class ResultPageEbInterface extends BasePage {
-
-  public ResultPageEbInterface(final ValidationResult validationResult,
-                               final byte[] pdf,
-                               final byte[] xml,
-                               final String log,
-                               final Class<? extends WebPage> returnPage) {
-
-    final ResultPanel resultPanel =
-        new ResultPanel("resultPanel", validationResult, pdf,
-                        xml, log, returnPage);
-    add(resultPanel);
+public final class ResultPageEbInterface extends BasePage
+{
+  public ResultPageEbInterface (final ValidationResult validationResult,
+                                final byte [] pdf,
+                                final byte [] xml,
+                                final String log,
+                                final Class <? extends WebPage> returnPage)
+  {
+    add (new ResultPanel ("resultPanel", validationResult, pdf, xml, log, returnPage));
   }
 }
-

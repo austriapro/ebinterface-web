@@ -16,30 +16,24 @@
     <url>http://ebinterface.at</url>
   </organization>
 
-	<dependencies>
-		<!-- ebInterface core for the validation logic -->
-		<dependency>
-			<groupId>at.austriapro</groupId>
-			<artifactId>ebinterface-web-core</artifactId>
-		</dependency>
+  <dependencies>
+    <!-- ebInterface core for the validation logic -->
+    <dependency>
+      <groupId>at.austriapro</groupId>
+      <artifactId>ebinterface-web-core</artifactId>
+    </dependency>
 
-		<!-- ebInterface rendering for PDF rendering and ZUGFeRD generation-->
-		<dependency>
-			<groupId>at.austriapro</groupId>
-			<artifactId>ebinterface-rendering</artifactId>
-		</dependency>
-
-		<!-- ebInterface mappings for ebInterface -> ZUGFeRD mapping-->
-		<dependency>
-			<groupId>at.austriapro</groupId>
-			<artifactId>ebinterface-mappings-zugferd</artifactId>
-		</dependency>
+    <!-- ebInterface rendering for PDF rendering -->
+    <dependency>
+      <groupId>at.austriapro</groupId>
+      <artifactId>ebinterface-rendering</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-ubl-mapping</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-xrechnung-mapping</artifactId>
@@ -50,7 +44,12 @@
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-core</artifactId>
     </dependency>
-    
+
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+
     <!-- Java9 onwards:
      -->
     <dependency>
@@ -58,7 +57,7 @@
       <artifactId>ph-jaxws-pom</artifactId>
       <type>pom</type>
     </dependency>
-    
+
     <dependency>
       <groupId>com.helger.photon</groupId>
       <artifactId>ph-oton-jetty</artifactId>
@@ -93,8 +92,5 @@
       </resource>
     </resources>
     <finalName>${project.artifactId}</finalName>
-    
-    <plugins>
-    </plugins>
   </build>
 </project>

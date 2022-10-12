@@ -17,12 +17,6 @@
   </organization>
 
   <dependencies>
-     <!-- Saxon XSLT processing for Java -->
-    <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>Saxon-HE</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-ebinterface</artifactId>

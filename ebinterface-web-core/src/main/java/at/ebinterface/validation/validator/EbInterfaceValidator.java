@@ -5,18 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.util.JAXBResult;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
@@ -27,7 +18,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.io.stream.NonBlockingStringReader;
 import com.helger.commons.io.stream.NonBlockingStringWriter;
 import com.helger.ebinterface.CEbInterface;
 import com.helger.ebinterface.EEbInterfaceVersion;
@@ -43,7 +33,6 @@ import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.rtr.VerificationServiceInvoker;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
-import at.ebinterface.validation.validator.jaxb.Result;
 
 /**
  * This class validates a given ebInterface XML instance against a schematron
@@ -67,26 +56,6 @@ public class EbInterfaceValidator
   private static final Validator VALIDATOR_50;
   private static final Validator VALIDATOR_60;
   private static final Validator VALIDATOR_61;
-
-  /**
-   * Transformer factory
-   */
-  private static final TransformerFactory TRANSFORMER_FACTORY;
-
-  /**
-   * Interim transformer
-   */
-  private static final Transformer TRANSFORMER_INTERIM;
-
-  /**
-   * Transformer for generating the final report from schematron
-   */
-  private static final Transformer TRANSFORMER_REPORT;
-
-  /**
-   * JAXBContext for generating the result
-   */
-  private static final JAXBContext JAXB_RESULT;
 
   @Nonnull
   private static Source [] _map (@Nonnull final List <ClassPathResource> xsds)
@@ -136,42 +105,6 @@ public class EbInterfaceValidator
       throw new RuntimeException (e);
     }
 
-    LOGGER.info ("Start initializing Schematron stuff");
-
-    // Get a transformer factory
-    TRANSFORMER_FACTORY = TransformerFactory.newInstance ();
-
-    /*
-     * Initialize the XSLT Transformer for generating the interim XSLTs based on
-     * the implementation
-     */
-    final String schematronImplUrl = EbInterfaceValidator.class.getResource ("/schematron-resources/iso-schematron-xslt2/iso_svrl_for_xslt2.xsl")
-                                                               .toString ();
-    final String reportUrl = EbInterfaceValidator.class.getResource ("/schematron-resources/custom/report.xsl").toString ();
-    try
-    {
-      // Schematron transformers
-
-      // Initialize the interim transformer
-      TRANSFORMER_INTERIM = TRANSFORMER_FACTORY.newTransformer (new StreamSource (schematronImplUrl));
-      // Initialize the final transformer
-      TRANSFORMER_REPORT = TRANSFORMER_FACTORY.newTransformer (new StreamSource (reportUrl));
-    }
-    catch (final TransformerConfigurationException e)
-    {
-      throw new RuntimeException (e);
-    }
-
-    // JAXB context
-    try
-    {
-      JAXB_RESULT = JAXBContext.newInstance (Result.class);
-    }
-    catch (final JAXBException e)
-    {
-      throw new RuntimeException (e);
-    }
-
     LOGGER.info ("Finished initializing ebInterface stuff");
   }
 
@@ -184,6 +117,7 @@ public class EbInterfaceValidator
    */
   public ValidationResult validateXMLInstanceAgainstSchema (final byte [] uploadedData)
   {
+    LOGGER.info ("Performing XML validation");
     final ValidationResult result = new ValidationResult ();
 
     // Step 0 - read XML
@@ -206,6 +140,8 @@ public class EbInterfaceValidator
       result.setSchemaValidationErrorMessage (ex.getMessage ());
       return result;
     }
+
+    LOGGER.info ("XML determined as " + version.getCaption ());
 
     // Step 2 - invoke the correct parser for the determined ebInterface
     // version
@@ -257,31 +193,38 @@ public class EbInterfaceValidator
     }
 
     // Step 3 - in case the document is signed, check the signature as well
-
     if (version.isSigned ())
     {
-      // Build the request for the verification Web Service
-      // Create a verification request
-      final VerifyDocumentRequest request = new VerifyDocumentRequest ();
-
-      // Set the document
-      request.setDocument (uploadedData);
-      // No PDF report required
-      request.setRequestPDFReport (Boolean.FALSE);
-      // Expect German results
-      request.setLanguage ("de");
-
-      VerifyDocumentResponse response;
-      try
+      if (VerificationServiceInvoker.isActivated ())
       {
-        response = VerificationServiceInvoker.verifyDocument (request);
-        result.setVerifyDocumentResponse (response);
-      }
-      catch (final Exception e)
-      {
-        result.setSignatureValidationExceptionMessage (e.getMessage ());
-      }
+        LOGGER.info ("XML document is signed and the VerificationService is active");
 
+        // Build the request for the verification Web Service
+        // Create a verification request
+        final VerifyDocumentRequest request = new VerifyDocumentRequest ();
+
+        // Set the document
+        request.setDocument (uploadedData);
+        // No PDF report required
+        request.setRequestPDFReport (Boolean.FALSE);
+        // Expect German results
+        request.setLanguage ("de");
+
+        try
+        {
+          final VerifyDocumentResponse response = VerificationServiceInvoker.verifyDocument (request);
+          result.setVerifyDocumentResponse (response);
+        }
+        catch (final Exception e)
+        {
+          LOGGER.warn ("Error in signature validation: " + e.getMessage ());
+          result.setSignatureValidationExceptionMessage (e.getMessage ());
+        }
+      }
+      else
+      {
+        LOGGER.info ("XML document is signed but the VerificationService is disabled");
+      }
     }
 
     return result;
@@ -294,6 +237,8 @@ public class EbInterfaceValidator
    */
   public String transformInput (final byte [] uploadedData, final EEbInterfaceVersion version)
   {
+    LOGGER.info ("Creating HTML output for ebInterface " + version.getVersion ());
+
     try
     {
       final Document aDoc = DOMReader.readXMLDOM (uploadedData);
@@ -309,59 +254,6 @@ public class EbInterfaceValidator
     catch (final Exception e)
     {
       return "XSLT Transformation konnte nicht ausgeführt werden. Fehler: " + e.getMessage ();
-    }
-  }
-
-  /**
-   * Get the right schematron transformer using the url path
-   */
-  private static Transformer _getTransformer (final String urlPath) throws TransformerException
-  {
-    /* Read the Schematron source */
-    final String schematronDocumentUrl = EbInterfaceValidator.class.getResource (urlPath).toString ();
-
-    try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
-    {
-      TRANSFORMER_INTERIM.transform (new StreamSource (schematronDocumentUrl), new StreamResult (sw));
-      try (final NonBlockingStringReader r = new NonBlockingStringReader (sw.getAsString ()))
-      {
-        return TRANSFORMER_FACTORY.newTransformer (new StreamSource (r));
-      }
-    }
-  }
-
-  /**
-   * Validate the given XML instance against the given schematron file
-   *
-   * @param uploadedData
-   *        XML to be validated
-   * @param schematronFileReference
-   *        Schematron file URL
-   * @return The non-<code>null</code> validation result
-   */
-  public Result validateXMLInstanceAgainstSchematron (final byte [] uploadedData, final String schematronFileReference)
-  {
-    try
-    {
-      final Transformer transformer = _getTransformer (schematronFileReference);
-
-      // create a new string writer to hold the output of the validation
-      // transformation
-      final NonBlockingStringWriter sw = new NonBlockingStringWriter ();
-
-      // apply the validating XSLT to the ebInterface document
-      transformer.transform (TransformSourceFactory.create (uploadedData), TransformResultFactory.create (sw));
-
-      final JAXBResult jaxbResult = new JAXBResult (JAXB_RESULT);
-
-      // apply the final transformation
-      TRANSFORMER_REPORT.transform (new StreamSource (new NonBlockingStringReader (sw.getAsString ())), jaxbResult);
-
-      return (Result) jaxbResult.getResult ();
-    }
-    catch (final TransformerException | JAXBException e)
-    {
-      throw new RuntimeException (e);
     }
   }
 }
