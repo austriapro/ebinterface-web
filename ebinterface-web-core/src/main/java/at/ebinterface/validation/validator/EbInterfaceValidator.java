@@ -20,8 +20,9 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import javax.xml.ws.soap.SOAPFaultException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -52,37 +53,40 @@ import at.ebinterface.validation.validator.jaxb.Result;
  */
 public class EbInterfaceValidator
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (EbInterfaceValidator.class);
+
   /**
-   * Validators for checking XML instances against the ebinterface schemas
+   * Validators for checking XML instances against the ebInterface schemas
    */
-  private static Validator ebInterface3p0Validator;
-  private static Validator ebInterface3p02Validator;
-  private static Validator ebInterface4p0Validator;
-  private static Validator ebInterface4p1Validator;
-  private static Validator ebInterface4p2Validator;
-  private static Validator ebInterface4p3Validator;
-  private static Validator ebInterface5p0Validator;
-  private static Validator ebInterface6p0Validator;
+  private static final Validator VALIDATOR_30;
+  private static final Validator VALIDATOR_302;
+  private static final Validator VALIDATOR_40;
+  private static final Validator VALIDATOR_41;
+  private static final Validator VALIDATOR_42;
+  private static final Validator VALIDATOR_43;
+  private static final Validator VALIDATOR_50;
+  private static final Validator VALIDATOR_60;
+  private static final Validator VALIDATOR_61;
 
   /**
    * Transformer factory
    */
-  private static TransformerFactory tFactory;
+  private static final TransformerFactory TRANSFORMER_FACTORY;
 
   /**
    * Interim transformer
    */
-  private static Transformer interimTransformer;
+  private static final Transformer TRANSFORMER_INTERIM;
 
   /**
    * Transformer for generating the final report from schematron
    */
-  private static Transformer reportTransformer;
+  private static final Transformer TRANSFORMER_REPORT;
 
   /**
    * JAXBContext for generating the result
    */
-  private static JAXBContext jaxb;
+  private static final JAXBContext JAXB_RESULT;
 
   @Nonnull
   private static Source [] _map (@Nonnull final List <ClassPathResource> xsds)
@@ -99,6 +103,8 @@ public class EbInterfaceValidator
    */
   static
   {
+    LOGGER.info ("Start initializing ebInterface XML Schemas");
+
     final SchemaFactory factory = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
     try
@@ -111,25 +117,29 @@ public class EbInterfaceValidator
       final Schema schema4p3 = factory.newSchema (_map (CEbInterface.EBINTERFACE_43_XSDS));
       final Schema schema5p0 = factory.newSchema (_map (CEbInterface.EBINTERFACE_50_XSDS));
       final Schema schema6p0 = factory.newSchema (_map (CEbInterface.EBINTERFACE_60_XSDS));
+      final Schema schema6p1 = factory.newSchema (_map (CEbInterface.EBINTERFACE_61_XSDS));
 
       // Create a Validator object, which can be used to validate
       // an instance document.
-      ebInterface3p0Validator = schema3p0.newValidator ();
-      ebInterface3p02Validator = schema3p02.newValidator ();
-      ebInterface4p0Validator = schema4p0.newValidator ();
-      ebInterface4p1Validator = schema4p1.newValidator ();
-      ebInterface4p2Validator = schema4p2.newValidator ();
-      ebInterface4p3Validator = schema4p3.newValidator ();
-      ebInterface5p0Validator = schema5p0.newValidator ();
-      ebInterface6p0Validator = schema6p0.newValidator ();
+      VALIDATOR_30 = schema3p0.newValidator ();
+      VALIDATOR_302 = schema3p02.newValidator ();
+      VALIDATOR_40 = schema4p0.newValidator ();
+      VALIDATOR_41 = schema4p1.newValidator ();
+      VALIDATOR_42 = schema4p2.newValidator ();
+      VALIDATOR_43 = schema4p3.newValidator ();
+      VALIDATOR_50 = schema5p0.newValidator ();
+      VALIDATOR_60 = schema6p0.newValidator ();
+      VALIDATOR_61 = schema6p1.newValidator ();
     }
     catch (final Exception e)
     {
       throw new RuntimeException (e);
     }
 
+    LOGGER.info ("Start initializing Schematron stuff");
+
     // Get a transformer factory
-    tFactory = TransformerFactory.newInstance ();
+    TRANSFORMER_FACTORY = TransformerFactory.newInstance ();
 
     /*
      * Initialize the XSLT Transformer for generating the interim XSLTs based on
@@ -143,9 +153,9 @@ public class EbInterfaceValidator
       // Schematron transformers
 
       // Initialize the interim transformer
-      interimTransformer = tFactory.newTransformer (new StreamSource (schematronImplUrl));
+      TRANSFORMER_INTERIM = TRANSFORMER_FACTORY.newTransformer (new StreamSource (schematronImplUrl));
       // Initialize the final transformer
-      reportTransformer = tFactory.newTransformer (new StreamSource (reportUrl));
+      TRANSFORMER_REPORT = TRANSFORMER_FACTORY.newTransformer (new StreamSource (reportUrl));
     }
     catch (final TransformerConfigurationException e)
     {
@@ -155,12 +165,14 @@ public class EbInterfaceValidator
     // JAXB context
     try
     {
-      jaxb = JAXBContext.newInstance (Result.class);
+      JAXB_RESULT = JAXBContext.newInstance (Result.class);
     }
     catch (final JAXBException e)
     {
       throw new RuntimeException (e);
     }
+
+    LOGGER.info ("Finished initializing ebInterface stuff");
   }
 
   /**
@@ -205,28 +217,31 @@ public class EbInterfaceValidator
       switch (v)
       {
         case V30:
-          ebInterface3p0Validator.validate (saxSource);
+          VALIDATOR_30.validate (saxSource);
           break;
         case V302:
-          ebInterface3p02Validator.validate (saxSource);
+          VALIDATOR_302.validate (saxSource);
           break;
         case V40:
-          ebInterface4p0Validator.validate (saxSource);
+          VALIDATOR_40.validate (saxSource);
           break;
         case V41:
-          ebInterface4p1Validator.validate (saxSource);
+          VALIDATOR_41.validate (saxSource);
           break;
         case V42:
-          ebInterface4p2Validator.validate (saxSource);
+          VALIDATOR_42.validate (saxSource);
           break;
         case V43:
-          ebInterface4p3Validator.validate (saxSource);
+          VALIDATOR_43.validate (saxSource);
           break;
         case V50:
-          ebInterface5p0Validator.validate (saxSource);
+          VALIDATOR_50.validate (saxSource);
           break;
         case V60:
-          ebInterface6p0Validator.validate (saxSource);
+          VALIDATOR_60.validate (saxSource);
+          break;
+        case V61:
+          VALIDATOR_61.validate (saxSource);
           break;
         default:
           throw new IllegalStateException ("Unsupported version " + v);
@@ -245,7 +260,6 @@ public class EbInterfaceValidator
 
     if (version.isSigned ())
     {
-
       // Build the request for the verification Web Service
       // Create a verification request
       final VerifyDocumentRequest request = new VerifyDocumentRequest ();
@@ -262,10 +276,6 @@ public class EbInterfaceValidator
       {
         response = VerificationServiceInvoker.verifyDocument (request);
         result.setVerifyDocumentResponse (response);
-      }
-      catch (final SOAPFaultException sfe)
-      {
-        result.setSignatureValidationExceptionMessage (sfe.getMessage ());
       }
       catch (final Exception e)
       {
@@ -289,13 +299,34 @@ public class EbInterfaceValidator
       final Document aDoc = DOMReader.readXMLDOM (uploadedData);
       if (aDoc == null)
         return "XSLT Transformation konnte nicht ausgeführt werden. Fehler: die hochgeladene Datei konnte nicht als XML interpretiert werden.";
-      final NonBlockingStringWriter sw = new NonBlockingStringWriter ();
-      VisualizationManager.visualize (version, new DOMSource (aDoc), TransformResultFactory.create (sw));
-      return sw.getAsString ();
+
+      try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
+      {
+        VisualizationManager.visualize (version, new DOMSource (aDoc), TransformResultFactory.create (sw));
+        return sw.getAsString ();
+      }
     }
     catch (final Exception e)
     {
       return "XSLT Transformation konnte nicht ausgeführt werden. Fehler: " + e.getMessage ();
+    }
+  }
+
+  /**
+   * Get the right schematron transformer using the url path
+   */
+  private static Transformer _getTransformer (final String urlPath) throws TransformerException
+  {
+    /* Read the Schematron source */
+    final String schematronDocumentUrl = EbInterfaceValidator.class.getResource (urlPath).toString ();
+
+    try (final NonBlockingStringWriter sw = new NonBlockingStringWriter ())
+    {
+      TRANSFORMER_INTERIM.transform (new StreamSource (schematronDocumentUrl), new StreamResult (sw));
+      try (final NonBlockingStringReader r = new NonBlockingStringReader (sw.getAsString ()))
+      {
+        return TRANSFORMER_FACTORY.newTransformer (new StreamSource (r));
+      }
     }
   }
 
@@ -312,41 +343,25 @@ public class EbInterfaceValidator
   {
     try
     {
-      final Transformer transformer = getTransformer (schematronFileReference);
+      final Transformer transformer = _getTransformer (schematronFileReference);
 
       // create a new string writer to hold the output of the validation
       // transformation
       final NonBlockingStringWriter sw = new NonBlockingStringWriter ();
 
-      // apply the validating XSLT to the ebinterface document
+      // apply the validating XSLT to the ebInterface document
       transformer.transform (TransformSourceFactory.create (uploadedData), TransformResultFactory.create (sw));
 
-      final JAXBResult jaxbResult = new JAXBResult (jaxb);
+      final JAXBResult jaxbResult = new JAXBResult (JAXB_RESULT);
 
       // apply the final transformation
-      reportTransformer.transform (new StreamSource (new NonBlockingStringReader (sw.getAsString ())), jaxbResult);
+      TRANSFORMER_REPORT.transform (new StreamSource (new NonBlockingStringReader (sw.getAsString ())), jaxbResult);
 
       return (Result) jaxbResult.getResult ();
-
     }
     catch (final TransformerException | JAXBException e)
     {
       throw new RuntimeException (e);
     }
-  }
-
-  /**
-   * Get the right schematron transformer using the url path
-   */
-  private Transformer getTransformer (final String urlPath) throws TransformerException
-  {
-    final NonBlockingStringWriter sw = new NonBlockingStringWriter ();
-
-    /* Read the Schematron source */
-    final String schematronDocumentUrl = this.getClass ().getResource (urlPath).toString ();
-
-    interimTransformer.transform (new StreamSource (schematronDocumentUrl), new StreamResult (sw));
-
-    return tFactory.newTransformer (new StreamSource (new NonBlockingStringReader (sw.getAsString ())));
   }
 }

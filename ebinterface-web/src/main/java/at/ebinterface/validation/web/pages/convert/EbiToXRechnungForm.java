@@ -29,6 +29,7 @@ import com.helger.ebinterface.v42.Ebi42InvoiceType;
 import com.helger.ebinterface.v43.Ebi43InvoiceType;
 import com.helger.ebinterface.v50.Ebi50InvoiceType;
 import com.helger.ebinterface.v60.Ebi60InvoiceType;
+import com.helger.ebinterface.v61.Ebi61InvoiceType;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
 import com.helger.ubl21.UBL21Writer;
 import com.helger.xml.serialize.read.DOMReader;
@@ -40,6 +41,7 @@ import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface42ToXRechnungUBLCon
 import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface43ToXRechnungUBLConverter;
 import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface50ToXRechnungUBLConverter;
 import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface60ToXRechnungUBLConverter;
+import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface61ToXRechnungUBLConverter;
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
@@ -56,7 +58,8 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 public final class EbiToXRechnungForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (EbiToXRechnungForm.class);
-  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V60,
+  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V61,
+                                                                                                           EEbInterfaceVersion.V60,
                                                                                                            EEbInterfaceVersion.V50,
                                                                                                            EEbInterfaceVersion.V43,
                                                                                                            EEbInterfaceVersion.V42,
@@ -175,6 +178,9 @@ public final class EbiToXRechnungForm extends Form <Object>
       case V60:
         aParsedInvoice = EbInterfaceReader.ebInterface60 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
+      case V61:
+        aParsedInvoice = EbInterfaceReader.ebInterface61 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        break;
       default:
         throw new IllegalStateException ("Internal inconsistency: " + eVersion);
     }
@@ -195,7 +201,7 @@ public final class EbiToXRechnungForm extends Form <Object>
 
     final InvoiceType aUBLInvoice;
     final ErrorList aConvertErrorList = new ErrorList ();
-    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V200;
+    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V20;
     // Convert ebInterface to XRechnung
     switch (eVersion)
     {
@@ -233,6 +239,12 @@ public final class EbiToXRechnungForm extends Form <Object>
         aUBLInvoice = new EbInterface60ToXRechnungUBLConverter (aDisplayLocale,
                                                                 aContentLocale,
                                                                 eXRechnungVersion).convert ((Ebi60InvoiceType) aParsedInvoice,
+                                                                                            aConvertErrorList);
+        break;
+      case V61:
+        aUBLInvoice = new EbInterface61ToXRechnungUBLConverter (aDisplayLocale,
+                                                                aContentLocale,
+                                                                eXRechnungVersion).convert ((Ebi61InvoiceType) aParsedInvoice,
                                                                                             aConvertErrorList);
         break;
       default:

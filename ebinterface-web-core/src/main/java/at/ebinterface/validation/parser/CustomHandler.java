@@ -66,6 +66,7 @@ public class CustomHandler
       _parseRecursive (node);
   }
 
+  @Nonnull
   public String getFoundNameSpace ()
   {
     return foundNameSpace;
@@ -76,6 +77,7 @@ public class CustomHandler
     return containsSignature;
   }
 
+  @Nonnull
   public String getSignatureNamespacePrefix ()
   {
     return signatureNamespacePrefix;

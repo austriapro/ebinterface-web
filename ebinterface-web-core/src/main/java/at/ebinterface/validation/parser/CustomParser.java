@@ -17,7 +17,6 @@ import at.ebinterface.validation.exception.NamespaceUnknownException;
  */
 public enum CustomParser
 {
-
   INSTANCE;
 
   /**

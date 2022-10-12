@@ -3,6 +3,7 @@ package at.ebinterface.validation.web.pages;
 import java.io.IOException;
 
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXSource;
@@ -50,7 +51,8 @@ import net.sf.saxon.serialize.MessageWarner;
  *
  * @author pl
  */
-final class StartForm extends Form<Object> {
+final class StartForm extends Form <Object>
+{
   private static final Logger LOG = LoggerFactory.getLogger (StartForm.class);
 
   /**
@@ -61,76 +63,89 @@ final class StartForm extends Form<Object> {
   /**
    * Dropdown choice for the ZUGFeRD level
    */
-  private DropDownChoice<String> zugferdlevels;
+  private DropDownChoice <String> zugferdlevels;
 
   /**
    * Upload field for the ebInterface instance
    */
   private FileUploadField fileUploadField;
 
-  public StartForm(final String id) {
-    super(id);
+  public StartForm (final String id)
+  {
+    super (id);
 
-    //Set the form to multi part since we use file upload
-    setMultiPart(true);
+    // Set the form to multi part since we use file upload
+    setMultiPart (true);
 
-    //Add a feedback panel
-    feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-    feedbackPanel.setVisible(false);
-    add(feedbackPanel);
+    // Add a feedback panel
+    feedbackPanel = new FeedbackPanel ("feedback", new ContainerFeedbackMessageFilter (this));
+    feedbackPanel.setVisible (false);
+    add (feedbackPanel);
 
-    //Add the file upload field
-    fileUploadField = new FileUploadField("fileInput");
-    fileUploadField.setRequired(true);
-    add(fileUploadField);
+    // Add the file upload field
+    fileUploadField = new FileUploadField ("fileInput");
+    fileUploadField.setRequired (true);
+    add (fileUploadField);
 
-    //Add the drop down choice for the different ZUGFeRD levels which are currently supported
-    zugferdlevels =
-        new DropDownChoice<>(
-            "zugferdSelector", Model.of(new String()), StartPage.ZUGFERD_LEVELS,
-            new AbstractChoiceRenderer<String>() {
-              @Override
-              public Object getDisplayValue(final String object) {
-                return object;
-              }
+    // Add the drop down choice for the different ZUGFeRD levels which are
+    // currently supported
+    zugferdlevels = new DropDownChoice <> ("zugferdSelector",
+                                           Model.of (new String ()),
+                                           StartPage.ZUGFERD_LEVELS,
+                                           new AbstractChoiceRenderer <String> ()
+                                           {
+                                             @Override
+                                             public Object getDisplayValue (final String object)
+                                             {
+                                               return object;
+                                             }
 
-              @Override
-              public String getIdValue(final String object, final int index) {
-                return object;
-              }
-            });
+                                             @Override
+                                             public String getIdValue (final String object, final int index)
+                                             {
+                                               return object;
+                                             }
+                                           });
 
-    add(zugferdlevels);
+    add (zugferdlevels);
 
-    //Add a second submit button
-    add(new SubmitLink("submitButtonSchemaOnly") {
+    // Add a second submit button
+    add (new SubmitLink ("submitButtonSchemaOnly")
+    {
       @Override
-      public void onSubmit() {
-        submit(EBasicEbiActionType.SCHEMA_VALIDATION);
+      public void onSubmit ()
+      {
+        submit (EBasicEbiActionType.SCHEMA_VALIDATION);
       }
     });
 
-    //Add a button to visualize it as HTML
-    add(new SubmitLink("submitButtonVisualizeHTML") {
+    // Add a button to visualize it as HTML
+    add (new SubmitLink ("submitButtonVisualizeHTML")
+    {
       @Override
-      public void onSubmit() {
-        submit(EBasicEbiActionType.VISUALIZATION_HTML);
+      public void onSubmit ()
+      {
+        submit (EBasicEbiActionType.VISUALIZATION_HTML);
       }
     });
 
-    //Add a button to visualize it as PDF
-    add(new SubmitLink("submitButtonVisualizePDF") {
+    // Add a button to visualize it as PDF
+    add (new SubmitLink ("submitButtonVisualizePDF")
+    {
       @Override
-      public void onSubmit() {
-        submit(EBasicEbiActionType.VISUALIZATION_PDF);
+      public void onSubmit ()
+      {
+        submit (EBasicEbiActionType.VISUALIZATION_PDF);
       }
     });
 
-    //Add a button to convert to ZUGFerD
-    add(new SubmitLink("submitButtonConvertZUGFeRD") {
+    // Add a button to convert to ZUGFerD
+    add (new SubmitLink ("submitButtonConvertZUGFeRD")
+    {
       @Override
-      public void onSubmit() {
-        submit(EBasicEbiActionType.CONVERSION_ZUGFERD);
+      public void onSubmit ()
+      {
+        submit (EBasicEbiActionType.CONVERSION_ZUGFERD);
       }
     });
   }
@@ -138,212 +153,236 @@ final class StartForm extends Form<Object> {
   /**
    * Process the input
    */
-  protected void submit(final EBasicEbiActionType selectedAction) {
+  protected void submit (final EBasicEbiActionType selectedAction)
+  {
 
-    //Hide the feedback panel first (will be shown in case of an error)
-    feedbackPanel.setVisible(false);
+    // Hide the feedback panel first (will be shown in case of an error)
+    feedbackPanel.setVisible (false);
 
-    byte[] pdf = null;
-    byte[] zugferd = null;
-    final StringBuilder sbLog = new StringBuilder();
+    byte [] pdf = null;
+    byte [] zugferd = null;
+    final StringBuilder sbLog = new StringBuilder ();
 
-    //Get the file input
-    final FileUpload upload = fileUploadField.getFileUpload();
-    byte[] uploadedData = null;
+    // Get the file input
+    final FileUpload upload = fileUploadField.getFileUpload ();
+    byte [] uploadedData = null;
 
-    try {
-      uploadedData = StreamHelper.getAllBytes(upload.getInputStream());
-    } catch (final IOException e) {
-      LOG.error("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+    try
+    {
+      uploadedData = StreamHelper.getAllBytes (upload.getInputStream ());
+    }
+    catch (final IOException e)
+    {
+      LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
-    //Validate the XML instance - performed in any case
-    final EbInterfaceValidator validator = Application.get().getMetaData(
-        Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
-    final ValidationResult
-        validationResult =
-        validator.validateXMLInstanceAgainstSchema(uploadedData);
+    // Validate the XML instance - performed in any case
+    final EbInterfaceValidator validator = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+    final ValidationResult validationResult = validator.validateXMLInstanceAgainstSchema (uploadedData);
 
-    if (validationResult.getDeterminedEbInterfaceVersion() == null) {
-      error(
-          "Das XML kann nicht verarbeitet werden, das es keiner ebInterface Version entspricht.");
-      onError();
+    if (validationResult.getDeterminedEbInterfaceVersion () == null)
+    {
+      error ("Das XML kann nicht verarbeitet werden, das es keiner ebInterface Version entspricht.");
+      onError ();
       return;
     }
-    //Visualization HTML?
-    else if (selectedAction == EBasicEbiActionType.VISUALIZATION_HTML) {
-      //Visualization is only possible for valid instances
-      if (StringHelper.hasText(validationResult.getSchemaValidationErrorMessage())) {
-        error("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
-        onError();
-        return;
-      }
 
-      //Get the transformed string
-      final String
-          s =
-          validator
-              .transformInput(uploadedData, validationResult.getDeterminedEbInterfaceVersion().getVersion ());
-      //Redirect to the printview page
-      setResponsePage(new PrintViewPage(s));
+    // Visualization HTML?
+    if (selectedAction == EBasicEbiActionType.VISUALIZATION_HTML)
+    {
+      // Visualization is only possible for valid instances
+      if (StringHelper.hasText (validationResult.getSchemaValidationErrorMessage ()))
+      {
+        error ("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
+        onError ();
+      }
+      else
+      {
+        // Get the transformed string
+        final String s = validator.transformInput (uploadedData, validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
+        // Redirect to the printview page
+        setResponsePage (new PrintViewPage (s));
+      }
       return;
-
-
     }
-    //ebInterface PDF-Generation
-    else if (selectedAction == EBasicEbiActionType.VISUALIZATION_PDF) {
-      final BaseRenderer renderer = new BaseRenderer();
 
-      try {
-        LOG.debug("Load ebInterface JasperReport template from application context.");
-        final JasperReport
-            jrReport =
-            Application.get().getMetaData(Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
+    // ebInterface PDF-Generation
+    if (selectedAction == EBasicEbiActionType.VISUALIZATION_PDF)
+    {
+      final BaseRenderer renderer = new BaseRenderer ();
 
-        LOG.debug("Rendering PDF from ebInterface file.");
-
-        pdf = renderer.renderReport(jrReport, uploadedData, null);
-
-      } catch (final Exception ex) {
-        LOG.error("Error when generating PDF from ebInterface", ex);
-        error("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
-        onError();
+      try
+      {
+        LOG.debug ("Load ebInterface JasperReport template from application context.");
+        final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
+        LOG.debug ("Rendering PDF from ebInterface file.");
+        pdf = renderer.renderReport (jrReport, uploadedData, null);
+      }
+      catch (final Exception ex)
+      {
+        LOG.error ("Error when generating PDF from ebInterface", ex);
+        error ("Bei der ebInterface-PDF-Erstellung ist ein Fehler aufgetreten.");
+        onError ();
         return;
       }
     }
-    //Conversion ZUGFerD?
-    else if (selectedAction == EBasicEbiActionType.CONVERSION_ZUGFERD) {
-      if (zugferdlevels.getModelObject() == null){
-        error("Bitte wählen Sie ein ZUGFeRD Profil zur Konvertierung aus.");
-        onError();
-        return;
-      }
-
-      sbLog.append("<b>Ausgewähltes ZUGFeRD Profil: ").append(zugferdlevels.getModelObject()).append("</b><br/><br/>");
-
-      final MappingFactory mf = new MappingFactory();
-
-      final MappingFactory.ZugferdMappingType zugferdLevel;
-
-      if (zugferdlevels.getModelObject().endsWith("Basic")){
-        zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0;
-      } else if (zugferdlevels.getModelObject().endsWith("Comfort")){
-        zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0;
-      } else /*if (selectedZugferdLevel.startsWith("Extended"))*/{
-        zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0;
-      }
-
-      final EEbInterfaceVersion ebType;
-      switch (validationResult.getDeterminedEbInterfaceVersion().getVersion ()) {
-        case V41:
-        case V42:
-        case V43:
-          // These versions are supported
-          ebType = validationResult.getDeterminedEbInterfaceVersion().getVersion ();
-          break;
-        default:
-          error("ZUGFeRD Konvertierung für "+validationResult.getDeterminedEbInterfaceVersion ().getCaption ()+" nicht unterstützt.");
-          onError();
+    // Conversion ZUGFerD?
+    else
+      if (selectedAction == EBasicEbiActionType.CONVERSION_ZUGFERD)
+      {
+        if (zugferdlevels.getModelObject () == null)
+        {
+          error ("Bitte wählen Sie ein ZUGFeRD Profil zur Konvertierung aus.");
+          onError ();
           return;
-      }
-
-      final Mapping zugFeRDMapping = mf.getMapper(zugferdLevel, ebType);
-
-      SAXSource saxSource;
-
-      //Map to ZUGFeRD Basic
-      try {
-        LOG.debug("Map ebInterface to ZUGFeRD.");
-        zugferd = zugFeRDMapping.mapFromebInterface(uploadedData);
-
-        saxSource = new SAXSource(new InputSource(
-            new NonBlockingByteArrayInputStream(zugferd)));
-
-        final Validator
-            zugSchemaValidator = Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator();
-        final MappingErrorHandler eh = new MappingErrorHandler();
-        zugSchemaValidator.setErrorHandler(eh);
-        zugSchemaValidator.validate(saxSource);
-
-        if (eh.catchedError()) {
-          zugferd = null;
-          sbLog.append("<b>ZUGFeRD XSD Validierung fehlgeschlagen:</b><br/>").append(
-              eh.toString().replace("\n", "<br/>"));
         }
-      } catch (final Exception e) {
-        LOG.error("ZUGFeRD conversion failed", e);
-        error("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
-        onError();
-        return;
-      }
 
-      if (zugferd != null) {
-        sbLog.append(zugFeRDMapping.getMappingLogHTML());
+        sbLog.append ("<b>Ausgewähltes ZUGFeRD Profil: ").append (zugferdlevels.getModelObject ()).append ("</b><br/><br/>");
 
-        final Source source = new StreamSource(new NonBlockingByteArrayInputStream (zugferd));
-        final javax.xml.transform.Result result = new StreamResult(new NonBlockingStringWriter());
+        final MappingFactory mf = new MappingFactory ();
 
-        try {
-          final Transformer transformer = Application.get().getMetaData(
-              Constants.METADATAKEY_ZUGFERD_SCHEMATRONTEMPLATE).newTransformer();
+        final MappingFactory.ZugferdMappingType zugferdLevel;
 
-          transformer.reset();
+        if (zugferdlevels.getModelObject ().endsWith ("Basic"))
+        {
+          zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_BASIC_1p0;
+        }
+        else
+          if (zugferdlevels.getModelObject ().endsWith ("Comfort"))
+          {
+            zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_COMFORT_1p0;
+          }
+          else
+          /* if (selectedZugferdLevel.startsWith("Extended")) */ {
+            zugferdLevel = MappingFactory.ZugferdMappingType.ZUGFeRD_EXTENDED_1p0;
+          }
 
-          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        final EEbInterfaceVersion ebType;
+        switch (validationResult.getDeterminedEbInterfaceVersion ().getVersion ())
+        {
+          case V41:
+          case V42:
+          case V43:
+            // These versions are supported
+            ebType = validationResult.getDeterminedEbInterfaceVersion ().getVersion ();
+            break;
+          default:
+            error ("ZUGFeRD Konvertierung für " +
+                   validationResult.getDeterminedEbInterfaceVersion ().getCaption () +
+                   " nicht unterstützt.");
+            onError ();
+            return;
+        }
 
-          final MappingErrorListener el = new MappingErrorListener();
+        final Mapping zugFeRDMapping = mf.getMapper (zugferdLevel, ebType);
 
-          transformer.setErrorListener(el);
+        SAXSource saxSource;
 
-          //saxon is used, MessageErmitter has to be set, otherwise, ErrorListener will mention Errors
-          ((TransformerImpl) transformer).getUnderlyingXsltTransformer ()
-                                         .getUnderlyingController ()
-                                         .setMessageEmitter (new MessageWarner ());
+        // Map to ZUGFeRD Basic
+        try
+        {
+          LOG.debug ("Map ebInterface to ZUGFeRD.");
+          zugferd = zugFeRDMapping.mapFromebInterface (uploadedData);
 
-          transformer.transform(source, result);
+          saxSource = new SAXSource (new InputSource (new NonBlockingByteArrayInputStream (zugferd)));
 
-          if (el.catchedError()) {
+          final Validator zugSchemaValidator = Application.get ().getMetaData (Constants.METADATAKEY_ZUGFERD_XMLSCHEMA).newValidator ();
+          final MappingErrorHandler eh = new MappingErrorHandler ();
+          zugSchemaValidator.setErrorHandler (eh);
+          zugSchemaValidator.validate (saxSource);
+
+          if (eh.catchedError ())
+          {
             zugferd = null;
-            sbLog.append("<br/><p>").append("<b>Schematron Validierung fehlgeschlagen:</b><br/>")
-                .append(el.toString().replace("\n", "<br/>"));
-          } else {
-            sbLog.append("<br/><p>").append(
-                "<b>Schematron Validierung erfolgreich durchgeführt!</b><br/>");
+            sbLog.append ("<b>ZUGFeRD XSD Validierung fehlgeschlagen:</b><br/>").append (eh.toString ().replace ("\n", "<br/>"));
+          }
+        }
+        catch (final Exception e)
+        {
+          LOG.error ("ZUGFeRD conversion failed", e);
+          error ("Bei der ZUGFeRD-Konvertierung ist ein Fehler aufgetreten.");
+          onError ();
+          return;
+        }
 
-            final ZugferdRenderer renderer = new ZugferdRenderer();
+        if (zugferd != null)
+        {
+          sbLog.append (zugFeRDMapping.getMappingLogHTML ());
 
-            try {
-              LOG.debug("Load ZUGFeRD JasperReport template from application context.");
-              final JasperReport
-                  jrReport =
-                  Application.get().getMetaData(Constants.METADATAKEY_ZUGFERD_JRTEMPLATE);
+          final Source source = new StreamSource (new NonBlockingByteArrayInputStream (zugferd));
+          final Result result = new StreamResult (new NonBlockingStringWriter ());
 
-              LOG.debug("Rendering PDF.");
+          try
+          {
+            final Transformer transformer = Application.get ()
+                                                       .getMetaData (Constants.METADATAKEY_ZUGFERD_SCHEMATRONTEMPLATE)
+                                                       .newTransformer ();
 
-              pdf = renderer.renderReport(jrReport, zugferd, null);
+            transformer.reset ();
 
-            } catch (final Exception ex) {
-              error("Bei der ZUGFeRD-PDF-Erstellung ist ein Fehler aufgetreten.");
-              onError();
-              return;
+            transformer.setOutputProperty (OutputKeys.INDENT, "yes");
+
+            final MappingErrorListener el = new MappingErrorListener ();
+
+            transformer.setErrorListener (el);
+
+            // saxon is used, MessageErmitter has to be set, otherwise,
+            // ErrorListener will mention Errors
+            ((TransformerImpl) transformer).getUnderlyingXsltTransformer ()
+                                           .getUnderlyingController ()
+                                           .setMessageEmitter (new MessageWarner ());
+
+            transformer.transform (source, result);
+
+            if (el.catchedError ())
+            {
+              zugferd = null;
+              sbLog.append ("<br/><p>")
+                   .append ("<b>Schematron Validierung fehlgeschlagen:</b><br/>")
+                   .append (el.toString ().replace ("\n", "<br/>"));
+            }
+            else
+            {
+              sbLog.append ("<br/><p>").append ("<b>Schematron Validierung erfolgreich durchgeführt!</b><br/>");
+
+              final ZugferdRenderer renderer = new ZugferdRenderer ();
+
+              try
+              {
+                LOG.debug ("Load ZUGFeRD JasperReport template from application context.");
+                final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_ZUGFERD_JRTEMPLATE);
+
+                LOG.debug ("Rendering PDF.");
+
+                pdf = renderer.renderReport (jrReport, zugferd, null);
+
+              }
+              catch (final Exception ex)
+              {
+                error ("Bei der ZUGFeRD-PDF-Erstellung ist ein Fehler aufgetreten.");
+                onError ();
+                return;
+              }
             }
           }
-        } catch (final Exception e) {
-          error("Bei der ZUGFeRD-Überprüfung ist ein Fehler aufgetreten.");
-          onError();
-          return;
+          catch (final Exception e)
+          {
+            error ("Bei der ZUGFeRD-Überprüfung ist ein Fehler aufgetreten.");
+            onError ();
+            return;
+          }
         }
       }
-    }
 
-    if (selectedAction != EBasicEbiActionType.CONVERSION_ZUGFERD) {
-      //Redirect to the ebInterface result page
-      setResponsePage(
-          new ResultPageEbInterface(validationResult, pdf, null, null, StartPage.class));
-    } else {
-      //Redirect to the ZUGFeRD result page
-      setResponsePage(
-          new ResultPageZugferd(validationResult, zugferd, sbLog.toString(), pdf));
+    if (selectedAction == EBasicEbiActionType.CONVERSION_ZUGFERD)
+    {
+      // Redirect to the ZUGFeRD result page
+      setResponsePage (new ResultPageZugferd (validationResult, zugferd, sbLog.toString (), pdf));
+    }
+    else
+    {
+      // Redirect to the ebInterface result page
+      setResponsePage (new ResultPageEbInterface (validationResult, pdf, null, null, StartPage.class));
     }
   }
 
@@ -351,8 +390,9 @@ final class StartForm extends Form<Object> {
    * Process errors
    */
   @Override
-  protected void onError() {
-    //Show the feedback panel in case on an error
-    feedbackPanel.setVisible(true);
+  protected void onError ()
+  {
+    // Show the feedback panel in case on an error
+    feedbackPanel.setVisible (true);
   }
 }

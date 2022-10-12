@@ -27,11 +27,13 @@ import com.helger.ebinterface.EbInterface42Marshaller;
 import com.helger.ebinterface.EbInterface43Marshaller;
 import com.helger.ebinterface.EbInterface50Marshaller;
 import com.helger.ebinterface.EbInterface60Marshaller;
+import com.helger.ebinterface.EbInterface61Marshaller;
 import com.helger.ebinterface.v41.Ebi41InvoiceType;
 import com.helger.ebinterface.v42.Ebi42InvoiceType;
 import com.helger.ebinterface.v43.Ebi43InvoiceType;
 import com.helger.ebinterface.v50.Ebi50InvoiceType;
 import com.helger.ebinterface.v60.Ebi60InvoiceType;
+import com.helger.ebinterface.v61.Ebi61InvoiceType;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
 import com.helger.ubl21.UBL21Reader;
 
@@ -42,11 +44,13 @@ import at.austriapro.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface42Co
 import at.austriapro.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface43Converter;
 import at.austriapro.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface50Converter;
 import at.austriapro.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface60Converter;
+import at.austriapro.ebinterface.ubl.from.creditnote.CreditNoteToEbInterface61Converter;
 import at.austriapro.ebinterface.ubl.from.invoice.InvoiceToEbInterface41Converter;
 import at.austriapro.ebinterface.ubl.from.invoice.InvoiceToEbInterface42Converter;
 import at.austriapro.ebinterface.ubl.from.invoice.InvoiceToEbInterface43Converter;
 import at.austriapro.ebinterface.ubl.from.invoice.InvoiceToEbInterface50Converter;
 import at.austriapro.ebinterface.ubl.from.invoice.InvoiceToEbInterface60Converter;
+import at.austriapro.ebinterface.ubl.from.invoice.InvoiceToEbInterface61Converter;
 import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
@@ -67,7 +71,8 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 public final class UblToEbiForm extends Form <Object>
 {
   private static final Logger LOG = LoggerFactory.getLogger (UblToEbiForm.class);
-  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V60,
+  private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V61,
+                                                                                                           EEbInterfaceVersion.V60,
                                                                                                            EEbInterfaceVersion.V50,
                                                                                                            EEbInterfaceVersion.V43,
                                                                                                            EEbInterfaceVersion.V42,
@@ -291,15 +296,33 @@ public final class UblToEbiForm extends Form <Object>
         if (aEb60Invoice != null)
           ebInterface = new EbInterface60Marshaller ().getAsBytes (aEb60Invoice);
         break;
+      case V61:
+        final Ebi61InvoiceType aEb61Invoice;
+        if (aUBLInvoice != null)
+        {
+          // It's an invoice
+          aEb61Invoice = new InvoiceToEbInterface61Converter (aDisplayLocale,
+                                                              aContentLocale,
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+        }
+        else
+        {
+          // It' a credit note
+          aEb61Invoice = new CreditNoteToEbInterface61Converter (aDisplayLocale,
+                                                                 aContentLocale,
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+        }
+        if (aEb61Invoice != null)
+          ebInterface = new EbInterface61Marshaller ().getAsBytes (aEb61Invoice);
+        break;
       default:
         throw new IllegalStateException ("This ebInterface version is unknown: " + eVersion);
     }
 
-    ValidationResult validationResult = null;
-    byte [] pdf = null;
-
     final StringBuilder sbLog = new StringBuilder ();
 
+    final ValidationResult validationResult;
+    byte [] pdf = null;
     if (aErrorList.containsAtLeastOneError () || ebInterface == null)
     {
       validationResult = new ValidationResult ();
@@ -325,7 +348,6 @@ public final class UblToEbiForm extends Form <Object>
       }
 
       final BaseRenderer renderer = new BaseRenderer ();
-
       try
       {
         LOG.debug ("Load ebInterface JasperReport template from application context.");
