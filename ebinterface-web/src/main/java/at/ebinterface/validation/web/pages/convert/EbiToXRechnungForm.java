@@ -57,7 +57,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  */
 public final class EbiToXRechnungForm extends Form <Object>
 {
-  private static final Logger LOG = LoggerFactory.getLogger (EbiToXRechnungForm.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (EbiToXRechnungForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V61,
                                                                                                            EEbInterfaceVersion.V60,
                                                                                                            EEbInterfaceVersion.V50,
@@ -114,7 +114,7 @@ public final class EbiToXRechnungForm extends Form <Object>
     }
     catch (final IOException e)
     {
-      LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOGGER.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     // Step 0 - read XML
@@ -152,7 +152,7 @@ public final class EbiToXRechnungForm extends Form <Object>
       return;
     }
 
-    LOG.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
+    LOGGER.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
 
     // Parse ebInterface against XSD
     final ErrorList aErrorListEbi = new ErrorList ();
@@ -197,11 +197,11 @@ public final class EbiToXRechnungForm extends Form <Object>
       return;
     }
 
-    LOG.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to XRechnung");
+    LOGGER.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to XRechnung");
 
     final InvoiceType aUBLInvoice;
     final ErrorList aConvertErrorList = new ErrorList ();
-    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V20;
+    final EXRechnungVersion eXRechnungVersion = EXRechnungVersion.V22;
     // Convert ebInterface to XRechnung
     switch (eVersion)
     {
@@ -264,7 +264,7 @@ public final class EbiToXRechnungForm extends Form <Object>
     }
     else
     {
-      LOG.info ("Conversion from ebInterface to XRechnung was successful");
+      LOGGER.info ("Conversion from ebInterface to XRechnung was successful");
       // No need to collect errors here, because the validation was already
       // performed previously
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
