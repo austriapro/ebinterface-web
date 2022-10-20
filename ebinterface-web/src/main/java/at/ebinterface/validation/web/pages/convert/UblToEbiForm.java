@@ -3,8 +3,11 @@ package at.ebinterface.validation.web.pages.convert;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
@@ -56,8 +59,6 @@ import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.components.AbstractChoiceRenderer;
-import at.ebinterface.validation.web.pages.LabsPage;
-import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageUblToEbi;
 import net.sf.jasperreports.engine.JasperReport;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
@@ -70,7 +71,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  */
 public final class UblToEbiForm extends Form <Object>
 {
-  private static final Logger LOG = LoggerFactory.getLogger (UblToEbiForm.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (UblToEbiForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V61,
                                                                                                            EEbInterfaceVersion.V60,
                                                                                                            EEbInterfaceVersion.V50,
@@ -94,14 +95,14 @@ public final class UblToEbiForm extends Form <Object>
   private DropDownChoice <EEbInterfaceVersion> ebiVersions;
 
   /**
-   * Was the link called from the start page or from the /labs page?
+   * The return page
    */
-  private final boolean m_bFromStartPage;
+  private final Class <? extends WebPage> m_aReturnPage;
 
-  public UblToEbiForm (final String id, final boolean bFromStartPage)
+  public UblToEbiForm (final String id, @Nonnull final Class <? extends WebPage> aReturnPage)
   {
     super (id);
-    m_bFromStartPage = bFromStartPage;
+    m_aReturnPage = aReturnPage;
 
     // Add a feedback panel
     m_aFeedbackPanel = new FeedbackPanel ("ublToEbiFeedback", new ContainerFeedbackMessageFilter (this));
@@ -161,7 +162,7 @@ public final class UblToEbiForm extends Form <Object>
     }
     catch (final IOException e)
     {
-      LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOGGER.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     final Locale aDisplayLocale = Constants.DE_AT;
@@ -188,9 +189,9 @@ public final class UblToEbiForm extends Form <Object>
     {
       error ("Das UBL kann nicht verarbeitet werden. Es können nur UBL Invoice und CreditNote Dokumente verarbeitet werden.");
       // Log errors in case somebody cares
-      LOG.warn ("UBL parsing errors:");
+      LOGGER.warn ("UBL parsing errors:");
       for (final IError aError : aReadErrors.getAllFailures ())
-        LOG.warn ("  " + aError.getAsString (aDisplayLocale));
+        LOGGER.warn ("  " + aError.getAsString (aDisplayLocale));
       onError ();
       return;
     }
@@ -350,10 +351,10 @@ public final class UblToEbiForm extends Form <Object>
       final BaseRenderer renderer = new BaseRenderer ();
       try
       {
-        LOG.debug ("Load ebInterface JasperReport template from application context.");
+        LOGGER.debug ("Load ebInterface JasperReport template from application context.");
         final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
 
-        LOG.debug ("Rendering PDF.");
+        LOGGER.debug ("Rendering PDF.");
 
         pdf = renderer.renderReport (jrReport, ebInterface, null);
       }
@@ -366,7 +367,7 @@ public final class UblToEbiForm extends Form <Object>
     }
 
     // Redirect
-    setResponsePage (new ResultPageUblToEbi (pdf, ebInterface, sbLog.toString (), m_bFromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageUblToEbi (pdf, ebInterface, sbLog.toString (), m_aReturnPage));
   }
 
   /**

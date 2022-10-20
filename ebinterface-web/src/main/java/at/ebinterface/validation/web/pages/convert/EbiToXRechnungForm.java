@@ -3,9 +3,11 @@ package at.ebinterface.validation.web.pages.convert;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.ValidationEventHandler;
 
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -45,8 +47,6 @@ import at.austriapro.ebinterface.xrechnung.to.ubl.EbInterface61ToXRechnungUBLCon
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.LabsPage;
-import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageEbiToXRechnung;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
@@ -77,14 +77,14 @@ public final class EbiToXRechnungForm extends Form <Object>
   private final FileUploadField fileUploadField;
 
   /**
-   * Was the link called from the start page or from the /labs page?
+   * The return page
    */
-  private final boolean m_bFromStartPage;
+  private final Class <? extends WebPage> m_aReturnPage;
 
-  public EbiToXRechnungForm (final String id, final boolean bFromStartPage)
+  public EbiToXRechnungForm (final String id, @Nonnull final Class <? extends WebPage> aReturnPage)
   {
     super (id);
-    m_bFromStartPage = bFromStartPage;
+    m_aReturnPage = aReturnPage;
 
     // Add a feedback panel
     feedbackPanel = new FeedbackPanel ("ebiToXRechnungFeedback", new ContainerFeedbackMessageFilter (this));
@@ -271,7 +271,7 @@ public final class EbiToXRechnungForm extends Form <Object>
     }
 
     // Redirect
-    setResponsePage (new ResultPageEbiToXRechnung (aUBLXML, aErrorLog.toString (), m_bFromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageEbiToXRechnung (aUBLXML, aErrorLog.toString (), m_aReturnPage));
   }
 
   /**

@@ -12,26 +12,24 @@ public final class LabsPage extends BasePage
   {
     super.onInitialize ();
 
-    final boolean bIsStartPage = false;
-
     // Add the input form
     final LabsForm inputForm = new LabsForm ("inputForm");
     add (inputForm);
 
     // Add the form for converting UBL to ebInterface
-    final UblToEbiForm ublToEbiForm = new UblToEbiForm ("ublToEbiForm", bIsStartPage);
+    final UblToEbiForm ublToEbiForm = new UblToEbiForm ("ublToEbiForm", LabsPage.class);
     add (ublToEbiForm);
 
     // Add the form for convert ebInterface to UBL
-    final EbiToUblForm ebiToUblForm = new EbiToUblForm ("ebiToUblForm", bIsStartPage);
+    final EbiToUblForm ebiToUblForm = new EbiToUblForm ("ebiToUblForm", LabsPage.class);
     add (ebiToUblForm);
 
     // Add the form for convert XRechnung to ebInterface
-    final XRechnungToEbiForm xRechnungToEbiForm = new XRechnungToEbiForm ("xRechnungToEbiForm", bIsStartPage);
+    final XRechnungToEbiForm xRechnungToEbiForm = new XRechnungToEbiForm ("xRechnungToEbiForm", LabsPage.class);
     add (xRechnungToEbiForm);
 
     // Add the form for convert ebInterface to XRechnung
-    final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", bIsStartPage);
+    final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", LabsPage.class);
     add (ebiToXRechnungForm);
   }
 }

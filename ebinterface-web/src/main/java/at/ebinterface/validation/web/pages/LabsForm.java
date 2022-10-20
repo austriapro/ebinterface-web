@@ -23,7 +23,7 @@ import at.ebinterface.validation.web.pages.resultpages.ResultPageEbInterface;
 import net.sf.jasperreports.engine.JasperReport;
 
 /**
- * The input form class
+ * The input form class for labs.ebinterface.at
  *
  * @author pl
  */
@@ -67,6 +67,26 @@ final class LabsForm extends Form <Object>
         submit (EBasicEbiActionType.SCHEMA_VALIDATION);
       }
     });
+
+    // Add a button to visualize it as HTML
+    add (new SubmitLink ("submitButtonVisualizeHTML")
+    {
+      @Override
+      public void onSubmit ()
+      {
+        submit (EBasicEbiActionType.VISUALIZATION_HTML);
+      }
+    });
+
+    // Add a button to visualize it as PDF
+    add (new SubmitLink ("submitButtonVisualizePDF")
+    {
+      @Override
+      public void onSubmit ()
+      {
+        submit (EBasicEbiActionType.VISUALIZATION_PDF);
+      }
+    });
   }
 
   /*
@@ -104,6 +124,7 @@ final class LabsForm extends Form <Object>
     switch (selectedAction)
     {
       case SCHEMA_VALIDATION:
+        // Redirect to the ebInterface result page
         setResponsePage (new ResultPageEbInterface (validationResult, null, null, null, LabsPage.class));
         break;
       case VISUALIZATION_HTML:
@@ -123,14 +144,14 @@ final class LabsForm extends Form <Object>
         break;
       case VISUALIZATION_PDF:
         final BaseRenderer renderer = new BaseRenderer ();
-        byte [] pdf = null;
         try
         {
           LOGGER.debug ("Load ebInterface JasperReport template from application context.");
           final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
           LOGGER.debug ("Rendering PDF from ebInterface file.");
-          pdf = renderer.renderReport (jrReport, uploadedData, null);
+          final byte [] pdf = renderer.renderReport (jrReport, uploadedData, null);
 
+          // Redirect to the ebInterface result page
           setResponsePage (new ResultPageEbInterface (validationResult, pdf, null, null, LabsPage.class));
         }
         catch (final Exception ex)

@@ -1,5 +1,5 @@
 <wicket:extend>
-  <h1>ebInterface Rechnungen prüfen und konvertieren</h1>
+  <h1>ebInterface Rechnungen prüfen, anzeigen und konvertieren</h1>
   <h3>Auf dieser Seite finden Sie Services rund um die E-Rechnung im Format ebInterface für Fortgeschrittene und Entwickler.</h3>
 
   <div>
@@ -13,8 +13,8 @@
       <div class="alert alert-danger" wicket:id="feedback"></div>
       
       <h4>Schritt 1: ebInterface Datei (Rechnung, Gutschrift, etc.)</h4>
-      
-      <p class="help-block">Wählen Sie eine ebInterface Datei von Ihrer Festplatte</p>
+      <p class="help-block">Wählen Sie eine ebInterface 3.0, 3.02, 4.0, 4.1, 4.2, 4.3, 5.0, 6.0 oder 6.1 Datei von Ihrer Festplatte</p>
+
       <div class="uploadFile">
         <input class="inputFile" type="file" id="fileInput1" wicket:id="fileInput" onchange="getFileName('fileInput1','uploadText')" />
         <label for="fileInput1"><i class="fas fa-file"></i>&nbsp;durchsuchen</label>
@@ -25,6 +25,12 @@
 
       <h5 class="functionHeader">Prüfen gegen das XML Schema</h5>
       <button class="btn-wko" type="submit" id="submitButtonSchemaOnly" wicket:id="submitButtonSchemaOnly">ebInterface gegen Schema prüfen</button>
+
+      <h5 class="functionHeader">Anzeigen</h5>
+      <div class="inline-btn">
+        <button class="btn-wko" type="submit" wicket:id="submitButtonVisualizeHTML">ebInterface in HTML Druckansicht anzeigen</button>
+        <button class="btn-wko" type="submit" wicket:id="submitButtonVisualizePDF">ebInterface als PDF anzeigen</button>
+      </div>
     </form>
 
     <hr class="section-line my-5"/>
