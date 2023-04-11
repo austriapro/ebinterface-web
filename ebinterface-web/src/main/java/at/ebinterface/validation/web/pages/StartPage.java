@@ -17,26 +17,24 @@ public final class StartPage extends BasePage
   {
     super.onInitialize ();
 
-    final boolean bIsStartPage = true;
-
     // Add the input form
     final StartForm inputForm = new StartForm ("inputForm");
     add (inputForm);
 
-    // Add the form for convert UBL to ebInterface
-    final UblToEbiForm ublToEbiForm = new UblToEbiForm ("ublToEbiForm", bIsStartPage);
+    // Add the form for converting UBL to ebInterface
+    final UblToEbiForm ublToEbiForm = new UblToEbiForm ("ublToEbiForm", StartPage.class);
     add (ublToEbiForm);
 
     // Add the form for convert ebInterface to UBL
-    final EbiToUblForm ebiToUblForm = new EbiToUblForm ("ebiToUblForm", bIsStartPage);
+    final EbiToUblForm ebiToUblForm = new EbiToUblForm ("ebiToUblForm", StartPage.class);
     add (ebiToUblForm);
 
     // Add the form for convert XRechnung to ebInterface
-    final XRechnungToEbiForm xRechnungToEbiForm = new XRechnungToEbiForm ("xRechnungToEbiForm", bIsStartPage);
+    final XRechnungToEbiForm xRechnungToEbiForm = new XRechnungToEbiForm ("xRechnungToEbiForm", StartPage.class);
     add (xRechnungToEbiForm);
 
     // Add the form for convert ebInterface to XRechnung
-    final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", bIsStartPage);
+    final EbiToXRechnungForm ebiToXRechnungForm = new EbiToXRechnungForm ("ebiToXRechnungForm", StartPage.class);
     add (ebiToXRechnungForm);
   }
 }

@@ -3,9 +3,11 @@ package at.ebinterface.validation.web.pages.convert;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.ValidationEventHandler;
 
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -46,8 +48,6 @@ import at.austriapro.ebinterface.ubl.to.EbInterface61ToInvoiceConverter;
 import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
-import at.ebinterface.validation.web.pages.LabsPage;
-import at.ebinterface.validation.web.pages.StartPage;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageEbiToUbl;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
@@ -58,7 +58,7 @@ import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
  */
 public final class EbiToUblForm extends Form <Object>
 {
-  private static final Logger LOG = LoggerFactory.getLogger (EbiToUblForm.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (EbiToUblForm.class);
   private static final ICommonsList <EEbInterfaceVersion> POSSIBLE_EBI_VERSIONS = new CommonsArrayList <> (EEbInterfaceVersion.V61,
                                                                                                            EEbInterfaceVersion.V60,
                                                                                                            EEbInterfaceVersion.V50,
@@ -78,14 +78,14 @@ public final class EbiToUblForm extends Form <Object>
   private final FileUploadField fileUploadField;
 
   /**
-   * Was the link called from the start page or from the /labs page?
+   * The return page
    */
-  private final boolean m_bFromStartPage;
+  private final Class <? extends WebPage> m_aReturnPage;
 
-  public EbiToUblForm (final String id, final boolean bFromStartPage)
+  public EbiToUblForm (final String id, @Nonnull final Class <? extends WebPage> aReturnPage)
   {
     super (id);
-    m_bFromStartPage = bFromStartPage;
+    m_aReturnPage = aReturnPage;
 
     // Add a feedback panel
     feedbackPanel = new FeedbackPanel ("ebiToUblFeedback", new ContainerFeedbackMessageFilter (this));
@@ -115,7 +115,7 @@ public final class EbiToUblForm extends Form <Object>
     }
     catch (final IOException e)
     {
-      LOG.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
+      LOGGER.error ("Die hochgeladene Datei kann nicht verarbeitet werden.", e);
     }
 
     // Step 0 - read XML
@@ -153,7 +153,7 @@ public final class EbiToUblForm extends Form <Object>
       return;
     }
 
-    LOG.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
+    LOGGER.info ("Parsing upload as ebInterface " + eVersion.getVersion ().getAsString ());
 
     // Parse ebInterface against XSD
     final ErrorList aErrorList = new ErrorList ();
@@ -198,7 +198,7 @@ public final class EbiToUblForm extends Form <Object>
       return;
     }
 
-    LOG.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to UBL Invoice");
+    LOGGER.info ("Converting ebInterface " + eVersion.getVersion ().getAsString () + " to UBL Invoice");
 
     final InvoiceType aUBLInvoice;
     // Convert ebInterface to UBL
@@ -252,14 +252,14 @@ public final class EbiToUblForm extends Form <Object>
     }
     else
     {
-      LOG.info ("Conversion from ebInterface to UBL Invoice was successful");
+      LOGGER.info ("Conversion from ebInterface to UBL Invoice was successful");
       // No need to collect errors here, because the validation was already
       // performed previously
       aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
     }
 
     // Redirect
-    setResponsePage (new ResultPageEbiToUbl (aUBLXML, aErrorLog.toString (), m_bFromStartPage ? StartPage.class : LabsPage.class));
+    setResponsePage (new ResultPageEbiToUbl (aUBLXML, aErrorLog.toString (), m_aReturnPage));
   }
 
   /**
