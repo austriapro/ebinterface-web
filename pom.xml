@@ -14,8 +14,8 @@
   <url>http://ebinterface.at</url>
 
   <scm>
-    <connection>scm:git:git@github.com:austriapro/ebinterface-web.git</connection>
-    <developerConnection>scm:git:git@github.com:austriapro/ebinterface-web.git</developerConnection>
+    <connection>scm:git:https://github.com/austriapro/ebinterface-web.git</connection>
+    <developerConnection>scm:git:https://github.com/austriapro/ebinterface-web.git</developerConnection>
     <url>https://github.com/austriapro/ebinterface-web</url>
     <tag>HEAD</tag>
   </scm>
