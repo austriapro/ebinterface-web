@@ -85,7 +85,7 @@
       <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>Saxon-HE</artifactId>
-        <version>11.4</version>
+        <version>11.6</version>
       </dependency>
   
       <dependency>
@@ -123,14 +123,14 @@
       <dependency>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-core</artifactId>
-        <version>8.14.0</version>
+        <version>8.15.0</version>
       </dependency>
 
       <!-- Last version for SLF4J 1.x -->
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.2.11</version>
+        <version>1.5.3</version>
       </dependency>
 
       <!-- ebInterface core for the validation logic -->
