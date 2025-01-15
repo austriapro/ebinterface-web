@@ -11,27 +11,31 @@ import org.apache.wicket.model.Model;
 import at.ebinterface.validation.validator.jaxb.Result;
 
 /**
- * This class is used to show the generated error messages from the schematron validation
+ * This class is used to show the generated error messages from the schematron
+ * validation
  *
  * @author pl
  */
-public class ErrorDetailsPanel extends Panel {
+public class ErrorDetailsPanel extends Panel
+{
 
-  public ErrorDetailsPanel(String id, List<Result.Error> errors) {
-    super(id);
+  public ErrorDetailsPanel (final String id, final List <Result.Error> errors)
+  {
+    super (id);
 
-    //Create a table with the error messages
-    ListView<Result.Error> listview = new ListView<Result.Error>("repeater", errors) {
+    // Create a table with the error messages
+    final ListView <Result.Error> listview = new ListView <> ("repeater", errors)
+    {
       @Override
-      protected void populateItem(ListItem<Result.Error> item) {
-        item.add(new Label("errorElement", Model.of(item.getModelObject().getViolatingElement())));
-        item.add(new Label("errorMessage", Model.of(item.getModelObject().getErrorMessage())));
+      protected void populateItem (final ListItem <Result.Error> item)
+      {
+        item.add (new Label ("errorElement", Model.of (item.getModelObject ().getViolatingElement ())));
+        item.add (new Label ("errorMessage", Model.of (item.getModelObject ().getErrorMessage ())));
       }
 
     };
-    this.add(listview);
+    this.add (listview);
 
   }
-
 
 }

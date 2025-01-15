@@ -5,8 +5,6 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.util.Properties;
 
-import javax.xml.ws.BindingProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +13,7 @@ import at.ebinterface.validation.rtr.generated.VerificationService;
 import at.ebinterface.validation.rtr.generated.VerificationServicePortType;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
+import jakarta.xml.ws.BindingProvider;
 
 /**
  * Used to invoke the validation service - adds the HTTP basic parameters to the
@@ -33,19 +32,14 @@ public class VerificationServiceInvoker
 
   static
   {
-    // Crap
-    if (false)
-    {
-      // Set correct JAXB Context
-      System.setProperty ("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory");
-    }
-
     // Get username and password for the RTR Web Service, which requires HTTP
     // Basic Authentication
     // That may be done more nicely using Spring, but we abstain to use Spring
     // dependencies in this project...
     final Properties prop = new Properties ();
-    try (final InputStream input = Thread.currentThread ().getContextClassLoader ().getResourceAsStream ("rtr.properties"))
+    try (final InputStream input = Thread.currentThread ()
+                                         .getContextClassLoader ()
+                                         .getResourceAsStream ("rtr.properties"))
     {
       prop.load (input);
 
@@ -63,7 +57,6 @@ public class VerificationServiceInvoker
           return new PasswordAuthentication (USERNAME, PASSWORD.toCharArray ());
         }
       });
-
     }
     catch (final Exception ex)
     {
@@ -96,7 +89,6 @@ public class VerificationServiceInvoker
    */
   public static VerifyDocumentResponse verifyDocument (final VerifyDocumentRequest request) throws VerificationFault
   {
-
     final VerificationService verificationService = new VerificationService ();
     final VerificationServicePortType portType = verificationService.getVerificationServicePortSOAP ();
 
@@ -113,5 +105,4 @@ public class VerificationServiceInvoker
   {
     return activated;
   }
-
 }

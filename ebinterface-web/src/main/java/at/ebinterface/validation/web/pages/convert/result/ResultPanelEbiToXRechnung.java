@@ -46,7 +46,7 @@ public final class ResultPanelEbiToXRechnung extends Panel
       mappingLogErrorContainer.setVisible (false);
     }
 
-    final Link <Void> xmllink = new Link <Void> ("linkXMLDownload")
+    final Link <Void> xmllink = new Link <> ("linkXMLDownload")
     {
       @Override
       public void onClick ()
@@ -60,14 +60,15 @@ public final class ResultPanelEbiToXRechnung extends Panel
           }
         };
 
-        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler (rstream, "XRechnung-Invoice.xml");
+        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler (rstream,
+                                                                                       "XRechnung-Invoice.xml");
         getRequestCycle ().scheduleRequestHandlerAfterCurrent (handler);
       }
     };
     xmllink.setVisible (xml != null);
     add (xmllink);
 
-    add (new Link <Object> ("returnLink")
+    add (new Link <> ("returnLink")
     {
       @Override
       public void onClick ()

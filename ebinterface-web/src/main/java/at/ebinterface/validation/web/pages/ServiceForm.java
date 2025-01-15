@@ -82,6 +82,9 @@ final class ServiceForm extends Form <Object>
 
   /**
    * Process the input
+   *
+   * @param selectedAction
+   *        selected action
    */
   protected void submit (final EBasicEbiActionType selectedAction)
   {
@@ -104,7 +107,8 @@ final class ServiceForm extends Form <Object>
     }
 
     // Validate the XML instance - performed in any case
-    final EbInterfaceValidator validator = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+    final EbInterfaceValidator validator = Application.get ()
+                                                      .getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
     final ValidationResult validationResult = validator.validateXMLInstanceAgainstSchema (uploadedData);
 
     if (validationResult.getDeterminedEbInterfaceVersion () == null)
@@ -130,7 +134,8 @@ final class ServiceForm extends Form <Object>
         else
         {
           // Get the transformed string
-          final String s = validator.transformInput (uploadedData, validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
+          final String s = validator.transformInput (uploadedData,
+                                                     validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
           // Redirect to the printview page
           setResponsePage (new PrintViewPage (s));
         }

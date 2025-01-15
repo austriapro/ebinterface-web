@@ -38,7 +38,7 @@ import com.helger.ebinterface.v50.Ebi50InvoiceType;
 import com.helger.ebinterface.v60.Ebi60InvoiceType;
 import com.helger.ebinterface.v61.Ebi61InvoiceType;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
-import com.helger.ubl21.UBL21Reader;
+import com.helger.ubl21.UBL21Marshaller;
 
 import at.austriapro.ebinterface.ubl.from.IToEbinterfaceSettings;
 import at.austriapro.ebinterface.ubl.from.ToEbinterfaceSettings;
@@ -117,7 +117,7 @@ public final class UblToEbiForm extends Form <Object>
     // Add the drop down choice for the different rules which are currently
     // supported
     ebiVersions = new DropDownChoice <> ("ublToEbiVersionSelector",
-                                         Model.of (POSSIBLE_EBI_VERSIONS.getFirst ()),
+                                         Model.of (POSSIBLE_EBI_VERSIONS.getFirstOrNull ()),
                                          POSSIBLE_EBI_VERSIONS,
                                          new AbstractChoiceRenderer <EEbInterfaceVersion> ()
                                          {
@@ -171,16 +171,16 @@ public final class UblToEbiForm extends Form <Object>
     // Read UBL
     final ErrorList aReadErrors = new ErrorList ();
     // First try Invoice
-    final InvoiceType aUBLInvoice = UBL21Reader.invoice ()
-                                               .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
-                                               .read (uploadedData);
+    final InvoiceType aUBLInvoice = UBL21Marshaller.invoice ()
+                                                   .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
+                                                   .read (uploadedData);
     final CreditNoteType aUBLCreditNote;
     if (aUBLInvoice == null)
     {
       // No Invoice - try credit note
-      aUBLCreditNote = UBL21Reader.creditNote ()
-                                  .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
-                                  .read (uploadedData);
+      aUBLCreditNote = UBL21Marshaller.creditNote ()
+                                      .setValidationEventHandler (new WrappedCollectingValidationEventHandler (aReadErrors))
+                                      .read (uploadedData);
     }
     else
       aUBLCreditNote = null;
@@ -209,14 +209,16 @@ public final class UblToEbiForm extends Form <Object>
           // It's an invoice
           aEb41Invoice = new InvoiceToEbInterface41Converter (aDisplayLocale,
                                                               aContentLocale,
-                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
         }
         else
         {
           // It' a credit note
           aEb41Invoice = new CreditNoteToEbInterface41Converter (aDisplayLocale,
                                                                  aContentLocale,
-                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
         }
         if (aEb41Invoice != null)
           ebInterface = new EbInterface41Marshaller ().getAsBytes (aEb41Invoice);
@@ -228,14 +230,16 @@ public final class UblToEbiForm extends Form <Object>
           // It's an invoice
           aEb42Invoice = new InvoiceToEbInterface42Converter (aDisplayLocale,
                                                               aContentLocale,
-                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
         }
         else
         {
           // It' a credit note
           aEb42Invoice = new CreditNoteToEbInterface42Converter (aDisplayLocale,
                                                                  aContentLocale,
-                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
         }
         if (aEb42Invoice != null)
           ebInterface = new EbInterface42Marshaller ().getAsBytes (aEb42Invoice);
@@ -247,14 +251,16 @@ public final class UblToEbiForm extends Form <Object>
           // It's an invoice
           aEb43Invoice = new InvoiceToEbInterface43Converter (aDisplayLocale,
                                                               aContentLocale,
-                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
         }
         else
         {
           // It' a credit note
           aEb43Invoice = new CreditNoteToEbInterface43Converter (aDisplayLocale,
                                                                  aContentLocale,
-                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
         }
         if (aEb43Invoice != null)
           ebInterface = new EbInterface43Marshaller ().getAsBytes (aEb43Invoice);
@@ -266,14 +272,16 @@ public final class UblToEbiForm extends Form <Object>
           // It's an invoice
           aEb50Invoice = new InvoiceToEbInterface50Converter (aDisplayLocale,
                                                               aContentLocale,
-                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
         }
         else
         {
           // It' a credit note
           aEb50Invoice = new CreditNoteToEbInterface50Converter (aDisplayLocale,
                                                                  aContentLocale,
-                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
         }
         if (aEb50Invoice != null)
           ebInterface = new EbInterface50Marshaller ().getAsBytes (aEb50Invoice);
@@ -285,14 +293,16 @@ public final class UblToEbiForm extends Form <Object>
           // It's an invoice
           aEb60Invoice = new InvoiceToEbInterface60Converter (aDisplayLocale,
                                                               aContentLocale,
-                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
         }
         else
         {
           // It' a credit note
           aEb60Invoice = new CreditNoteToEbInterface60Converter (aDisplayLocale,
                                                                  aContentLocale,
-                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
         }
         if (aEb60Invoice != null)
           ebInterface = new EbInterface60Marshaller ().getAsBytes (aEb60Invoice);
@@ -304,14 +314,16 @@ public final class UblToEbiForm extends Form <Object>
           // It's an invoice
           aEb61Invoice = new InvoiceToEbInterface61Converter (aDisplayLocale,
                                                               aContentLocale,
-                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice, aErrorList);
+                                                              aToEbiSettings).convertToEbInterface (aUBLInvoice,
+                                                                                                    aErrorList);
         }
         else
         {
           // It' a credit note
           aEb61Invoice = new CreditNoteToEbInterface61Converter (aDisplayLocale,
                                                                  aContentLocale,
-                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote, aErrorList);
+                                                                 aToEbiSettings).convertToEbInterface (aUBLCreditNote,
+                                                                                                       aErrorList);
         }
         if (aEb61Invoice != null)
           ebInterface = new EbInterface61Marshaller ().getAsBytes (aEb61Invoice);
@@ -332,13 +344,17 @@ public final class UblToEbiForm extends Form <Object>
       sbLog.append ("<b>Bei der UBL-ebInterface-Konvertierung sind folgende Fehler aufgetreten:</b><br/>");
       for (final IError error : aErrorList.getAllErrors ())
       {
-        sbLog.append (error.getErrorFieldName ()).append (":<br/>").append (error.getErrorText (aDisplayLocale)).append ("<br/><br/>");
+        sbLog.append (error.getErrorFieldName ())
+             .append (":<br/>")
+             .append (error.getErrorText (aDisplayLocale))
+             .append ("<br/><br/>");
       }
     }
     else
     {
       // Validate the XML instance - performed in any case
-      final EbInterfaceValidator validator = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+      final EbInterfaceValidator validator = Application.get ()
+                                                        .getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
       validationResult = validator.validateXMLInstanceAgainstSchema (ebInterface);
 
       if (validationResult.getDeterminedEbInterfaceVersion () == null)

@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
+import at.ebinterface.validation.rtr.VerificationServiceInvoker;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 
@@ -187,26 +188,23 @@ public class EbInterfaceValidatorTest
   @Test
   public void test4p0SchemaValidatorWithSignedSamples () throws IOException
   {
-
-    InputStream input;
-    byte [] uploadedData;
-    EbInterfaceValidator validator;
-    ValidationResult result;
-
     // Test a sample with is entirely incorrect (signature as ROOT element,
     // which is not allowed)
-    input = this.getClass ().getResourceAsStream ("/ebinterface/4p0/ebinterface4_signed_and_invalid.xml");
-    uploadedData = IOUtils.toByteArray (input);
-    validator = new EbInterfaceValidator ();
-    result = validator.validateXMLInstanceAgainstSchema (uploadedData);
+    InputStream input = this.getClass ().getResourceAsStream ("/ebinterface/4p0/ebinterface4_signed_and_invalid.xml");
+    byte [] uploadedData = IOUtils.toByteArray (input);
+    EbInterfaceValidator validator = new EbInterfaceValidator ();
+    ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
     // Must be ebinterface 4p0
     assertEquals (EEbInterfaceVersion.V40, result.getDeterminedEbInterfaceVersion ().getVersion ());
     // Must be signed
     assertTrue (result.getDeterminedEbInterfaceVersion ().isSigned ());
     // Signature is invalid - thus no response
     assertNull (result.getVerifyDocumentResponse ());
-    // Signature validation exception message must be present
-    assertFalse (StringHelper.hasNoText (result.getSignatureValidationExceptionMessage ()));
+    if (VerificationServiceInvoker.isActivated ())
+    {
+      // Signature validation exception message must be present
+      assertTrue (StringHelper.hasText (result.getSignatureValidationExceptionMessage ()));
+    }
 
     // Test a correctly signed sample
     // on the Web interface)

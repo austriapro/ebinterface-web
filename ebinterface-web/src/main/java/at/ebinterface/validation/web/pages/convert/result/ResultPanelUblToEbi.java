@@ -39,7 +39,7 @@ public final class ResultPanelUblToEbi extends Panel
     {
       mappingContainer.setVisible (true);
 
-      final Label slog = new Label ("logErrorPanel", Model.of (new String (log).trim ()));
+      final Label slog = new Label ("logErrorPanel", Model.of (log.trim ()));
       errorContainer.add (slog.setEscapeModelStrings (false));
     }
     else
@@ -50,7 +50,7 @@ public final class ResultPanelUblToEbi extends Panel
       errorContainer.add (slog);
     }
 
-    add (new Link <Object> ("returnLink")
+    add (new Link <> ("returnLink")
     {
       @Override
       public void onClick ()
@@ -59,7 +59,7 @@ public final class ResultPanelUblToEbi extends Panel
       }
     }.setVisibilityAllowed (returnPage != null));
 
-    final Link <Void> pdflink = new Link <Void> ("linkPDFDownload")
+    final Link <Void> pdflink = new Link <> ("linkPDFDownload")
     {
       @Override
       public void onClick ()
@@ -82,7 +82,7 @@ public final class ResultPanelUblToEbi extends Panel
     // Add a PDF-download button
     add (pdflink);
 
-    final Link <Void> xmllink = new Link <Void> ("linkXMLDownload")
+    final Link <Void> xmllink = new Link <> ("linkXMLDownload")
     {
       @Override
       public void onClick ()

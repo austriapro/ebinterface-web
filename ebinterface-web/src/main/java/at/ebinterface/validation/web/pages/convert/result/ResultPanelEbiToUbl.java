@@ -18,7 +18,10 @@ import com.helger.commons.string.StringHelper;
 
 public final class ResultPanelEbiToUbl extends Panel
 {
-  public ResultPanelEbiToUbl (final String id, final byte [] xml, final String sErrorLog, @Nullable final Class <? extends WebPage> returnPage)
+  public ResultPanelEbiToUbl (final String id,
+                              final byte [] xml,
+                              final String sErrorLog,
+                              @Nullable final Class <? extends WebPage> returnPage)
   {
     super (id);
 
@@ -28,7 +31,6 @@ public final class ResultPanelEbiToUbl extends Panel
 
     final WebMarkupContainer mappingLogErrorContainer = new WebMarkupContainer ("mappingLogError");
     add (mappingLogErrorContainer);
-
 
     if (StringHelper.hasText (sErrorLog))
     {
@@ -44,7 +46,7 @@ public final class ResultPanelEbiToUbl extends Panel
       mappingLogErrorContainer.setVisible (false);
     }
 
-    final Link <Void> xmllink = new Link <Void> ("linkXMLDownload")
+    final Link <Void> xmllink = new Link <> ("linkXMLDownload")
     {
       @Override
       public void onClick ()
@@ -65,7 +67,7 @@ public final class ResultPanelEbiToUbl extends Panel
     xmllink.setVisible (xml != null);
     add (xmllink);
 
-    add (new Link <Object> ("returnLink")
+    add (new Link <> ("returnLink")
     {
       @Override
       public void onClick ()

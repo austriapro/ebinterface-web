@@ -12,10 +12,10 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 public final class Constants
 {
-  public static final MetaDataKey <JasperReport> METADATAKEY_EBINTERFACE_JRTEMPLATE = new MetaDataKey <JasperReport> ()
+  public static final MetaDataKey <JasperReport> METADATAKEY_EBINTERFACE_JRTEMPLATE = new MetaDataKey <> ()
   {};
 
-  public static final MetaDataKey <EbInterfaceValidator> METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR = new MetaDataKey <EbInterfaceValidator> ()
+  public static final MetaDataKey <EbInterfaceValidator> METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR = new MetaDataKey <> ()
   {};
 
   public static final Locale DE_AT = new Locale ("de", "AT");

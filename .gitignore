@@ -2,8 +2,11 @@
 target/
 
 .classpath
-.project
+.factorypath
 .idea
+.project
 zz
+
+private-*
 
 *.iml

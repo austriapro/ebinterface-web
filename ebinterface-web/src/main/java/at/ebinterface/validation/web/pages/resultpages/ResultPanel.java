@@ -38,7 +38,8 @@ public final class ResultPanel extends Panel
     {
       schemaVersion.append (validationResult.getDeterminedEbInterfaceVersion ().getCaption ());
       if (validationResult.getDeterminedEbInterfaceVersion ().supportsSigning ())
-        schemaVersion.append (validationResult.getDeterminedEbInterfaceVersion ().isSigned () ? " (signiert)" : " (unsigniert)");
+        schemaVersion.append (validationResult.getDeterminedEbInterfaceVersion ().isSigned () ? " (signiert)"
+                                                                                              : " (unsigniert)");
     }
 
     final Label schemaVersionLabel;
@@ -63,7 +64,8 @@ public final class ResultPanel extends Panel
     // Schema NOK Container
     final WebMarkupContainer schemaNOkContainer = new WebMarkupContainer ("schemvalidationNOK");
     schemaNOkContainer.add (schemaVersionLabelNoOk);
-    schemaNOkContainer.add (new Label ("schemaValidationError", Model.of (validationResult.getSchemaValidationErrorMessage ())));
+    schemaNOkContainer.add (new Label ("schemaValidationError",
+                                       Model.of (validationResult.getSchemaValidationErrorMessage ())));
     add (schemaNOkContainer);
 
     // Schema is OK
@@ -121,7 +123,7 @@ public final class ResultPanel extends Panel
     {
       mappingContainer.setVisible (true);
 
-      final Label slog = new Label ("logErrorPanel", Model.of (new String (log).trim ()));
+      final Label slog = new Label ("logErrorPanel", Model.of (log.trim ()));
       errorContainer.add (slog.setEscapeModelStrings (false));
     }
     else
@@ -132,7 +134,7 @@ public final class ResultPanel extends Panel
       errorContainer.add (slog);
     }
 
-    add (new Link <Object> ("returnLink")
+    add (new Link <> ("returnLink")
     {
       @Override
       public void onClick ()
@@ -141,7 +143,7 @@ public final class ResultPanel extends Panel
       }
     }.setVisibilityAllowed (returnPage != null));
 
-    final Link <Void> pdflink = new Link <Void> ("linkPDFDownload")
+    final Link <Void> pdflink = new Link <> ("linkPDFDownload")
     {
       @Override
       public void onClick ()
@@ -155,7 +157,8 @@ public final class ResultPanel extends Panel
           }
         };
 
-        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler (rstream, "ebInterface-Invoice.pdf");
+        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler (rstream,
+                                                                                       "ebInterface-Invoice.pdf");
         getRequestCycle ().scheduleRequestHandlerAfterCurrent (handler);
       }
     };
@@ -163,7 +166,7 @@ public final class ResultPanel extends Panel
     // Add a PDF-download button
     add (pdflink);
 
-    final Link <Void> xmllink = new Link <Void> ("linkXMLDownload")
+    final Link <Void> xmllink = new Link <> ("linkXMLDownload")
     {
       @Override
       public void onClick ()
@@ -177,7 +180,8 @@ public final class ResultPanel extends Panel
           }
         };
 
-        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler (rstream, "ebInterface-Invoice.xml");
+        final ResourceStreamRequestHandler handler = new ResourceStreamRequestHandler (rstream,
+                                                                                       "ebInterface-Invoice.xml");
         getRequestCycle ().scheduleRequestHandlerAfterCurrent (handler);
       }
     };

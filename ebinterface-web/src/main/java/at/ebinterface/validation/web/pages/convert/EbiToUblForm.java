@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.ValidationEventHandler;
 
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
@@ -25,7 +24,13 @@ import com.helger.commons.error.list.IErrorList;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
-import com.helger.ebinterface.builder.EbInterfaceReader;
+import com.helger.ebinterface.EbInterface40Marshaller;
+import com.helger.ebinterface.EbInterface41Marshaller;
+import com.helger.ebinterface.EbInterface42Marshaller;
+import com.helger.ebinterface.EbInterface43Marshaller;
+import com.helger.ebinterface.EbInterface50Marshaller;
+import com.helger.ebinterface.EbInterface60Marshaller;
+import com.helger.ebinterface.EbInterface61Marshaller;
 import com.helger.ebinterface.v40.Ebi40InvoiceType;
 import com.helger.ebinterface.v41.Ebi41InvoiceType;
 import com.helger.ebinterface.v42.Ebi42InvoiceType;
@@ -34,8 +39,7 @@ import com.helger.ebinterface.v50.Ebi50InvoiceType;
 import com.helger.ebinterface.v60.Ebi60InvoiceType;
 import com.helger.ebinterface.v61.Ebi61InvoiceType;
 import com.helger.jaxb.validation.WrappedCollectingValidationEventHandler;
-import com.helger.ubl21.UBL21Validator;
-import com.helger.ubl21.UBL21Writer;
+import com.helger.ubl21.UBL21Marshaller;
 import com.helger.xml.serialize.read.DOMReader;
 
 import at.austriapro.ebinterface.ubl.to.EbInterface40ToInvoiceConverter;
@@ -49,6 +53,7 @@ import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageEbiToUbl;
+import jakarta.xml.bind.ValidationEventHandler;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 /**
@@ -148,7 +153,9 @@ public final class EbiToUblForm extends Form <Object>
     if (!POSSIBLE_EBI_VERSIONS.contains (eVersion))
     {
       error ("Es können nur ebInterface-Dateien in den folgenden Versionen konvertiert werden: " +
-             StringHelper.getImplodedMapped (", ", POSSIBLE_EBI_VERSIONS, x -> x.getVersion ().getAsString (false, true)));
+             StringHelper.getImplodedMapped (", ",
+                                             POSSIBLE_EBI_VERSIONS,
+                                             x -> x.getVersion ().getAsString (false, true)));
       onError ();
       return;
     }
@@ -162,25 +169,25 @@ public final class EbiToUblForm extends Form <Object>
     switch (eVersion)
     {
       case V40:
-        aParsedInvoice = EbInterfaceReader.ebInterface40 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface40Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V41:
-        aParsedInvoice = EbInterfaceReader.ebInterface41 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface41Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V42:
-        aParsedInvoice = EbInterfaceReader.ebInterface42 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface42Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V43:
-        aParsedInvoice = EbInterfaceReader.ebInterface43 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface43Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V50:
-        aParsedInvoice = EbInterfaceReader.ebInterface50 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface50Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V60:
-        aParsedInvoice = EbInterfaceReader.ebInterface60 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface60Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       case V61:
-        aParsedInvoice = EbInterfaceReader.ebInterface61 ().setValidationEventHandler (aValidationHdl).read (uploadedData);
+        aParsedInvoice = new EbInterface61Marshaller ().setValidationEventHandler (aValidationHdl).read (uploadedData);
         break;
       default:
         throw new IllegalStateException ("Internal inconsistency: " + eVersion);
@@ -237,7 +244,7 @@ public final class EbiToUblForm extends Form <Object>
     }
 
     // Check if the result is okay or not
-    final IErrorList aUBLErrorList = UBL21Validator.invoice ().validate (aUBLInvoice);
+    final IErrorList aUBLErrorList = UBL21Marshaller.invoice ().validate (aUBLInvoice);
 
     final StringBuilder aErrorLog = new StringBuilder ();
     final byte [] aUBLXML;
@@ -246,7 +253,10 @@ public final class EbiToUblForm extends Form <Object>
       aErrorLog.append ("<b>Bei der ebInterface-UBL-Konvertierung sind folgende Fehler aufgetreten:</b><br/>");
       for (final IError error : aUBLErrorList.getAllErrors ())
       {
-        aErrorLog.append (error.getErrorFieldName ()).append (":<br/>").append (error.getErrorText (aDisplayLocale)).append ("<br/><br/>");
+        aErrorLog.append (error.getErrorFieldName ())
+                 .append (":<br/>")
+                 .append (error.getErrorText (aDisplayLocale))
+                 .append ("<br/><br/>");
       }
       aUBLXML = null;
     }
@@ -255,7 +265,7 @@ public final class EbiToUblForm extends Form <Object>
       LOGGER.info ("Conversion from ebInterface to UBL Invoice was successful");
       // No need to collect errors here, because the validation was already
       // performed previously
-      aUBLXML = UBL21Writer.invoice ().getAsBytes (aUBLInvoice);
+      aUBLXML = UBL21Marshaller.invoice ().getAsBytes (aUBLInvoice);
     }
 
     // Redirect

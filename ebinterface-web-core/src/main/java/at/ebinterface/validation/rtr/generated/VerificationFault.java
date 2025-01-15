@@ -1,6 +1,6 @@
 package at.ebinterface.validation.rtr.generated;
 
-import javax.xml.ws.WebFault;
+import jakarta.xml.ws.WebFault;
 
 
 /**

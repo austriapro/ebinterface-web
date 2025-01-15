@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" 
+         xmlns="http://java.sun.com/xml/ns/javaee" 
+         metadata-complete="false">
+  <display-name>botanik-manager</display-name>
+  <description>Botanik Manager WebApp</description>
+  
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
+  
+  <listener>
+    <listener-class>at.ebinterface.web2.servlet.AppWebAppListener</listener-class>
+  </listener>
+  
+  <servlet>
+    <servlet-name>BMPublicApplicationServlet</servlet-name>
+    <servlet-class>at.ebinterface.web2.servlet.AppPublicApplicationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BMPublicApplicationServlet</servlet-name>
+    <url-pattern>/public/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>BMRootServlet</servlet-name>
+    <servlet-class>at.ebinterface.web2.servlet.AppRootServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BMRootServlet</servlet-name>
+    <url-pattern></url-pattern>
+  </servlet-mapping>
+</web-app>
