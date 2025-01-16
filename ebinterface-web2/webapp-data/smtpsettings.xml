@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--This file was generated automatically - do NOT modify!
-Written at Jan 15, 2025, 9:01:41 PM Z-->
+Written at Jan 16, 2025, 1:31:48 PM Z-->
 <namedsmtpsettingslist>
   <namedsmtpsettings id="default">
     <name>default</name>
-    <smtpsettings host="localhost" port="25" charset="UTF-8" sslenabled="false" starttlsenabled="false" connectiontimeout="5000" timeout="10000" debugsmtp="false" />
+    <smtpsettings host="localhost" port="25" charset="UTF-8" sslenabled="false" starttlsenabled="false" connectiontimeout="5000" timeout="10000" debugsmtp="true" />
   </namedsmtpsettings>
 </namedsmtpsettingslist>

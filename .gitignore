@@ -1,5 +1,6 @@
 .settings/
 target/
+webapp-data/
 
 .classpath
 .factorypath
@@ -7,6 +8,7 @@ target/
 .project
 zz
 
+hs_err_*.log
 private-*
 
 *.iml

@@ -2,8 +2,8 @@
 <web-app version="3.0" 
          xmlns="http://java.sun.com/xml/ns/javaee" 
          metadata-complete="false">
-  <display-name>botanik-manager</display-name>
-  <description>Botanik Manager WebApp</description>
+  <display-name>ebinterface-services</display-name>
+  <description>ebInterface Services WebApp</description>
   
   <session-config>
     <session-timeout>60</session-timeout>

@@ -2,11 +2,23 @@ package at.ebinterface.web2.servlet;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import com.helger.commons.debug.GlobalDebug;
+import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.system.SystemProperties;
 import com.helger.commons.vendor.VendorInfo;
+import com.helger.html.hc.config.HCConversionSettings;
+import com.helger.html.hc.config.HCSettings;
+import com.helger.html.hc.ext.HCCustomizerAutoFocusFirstCtrl;
+import com.helger.html.hc.impl.HCCustomizerList;
 import com.helger.html.jquery.JQueryAjaxBuilder;
 import com.helger.html.jscode.JSAssocArray;
 import com.helger.photon.ajax.IAjaxRegistry;
+import com.helger.photon.app.html.PhotonCSS;
+import com.helger.photon.app.html.PhotonJS;
 import com.helger.photon.bootstrap4.ext.BootstrapSystemMessage;
+import com.helger.photon.bootstrap4.servlet.BootstrapCustomizer;
 import com.helger.photon.bootstrap4.servlet.WebAppListenerBootstrap;
 import com.helger.photon.bootstrap4.uictrls.datatables.BootstrapDataTables;
 import com.helger.photon.core.appid.CApplicationID;
@@ -16,20 +28,26 @@ import com.helger.photon.core.locale.ILocaleManager;
 import com.helger.photon.core.menu.MenuTree;
 import com.helger.photon.core.requestparam.RequestParameterHandlerURLPathNamed;
 import com.helger.photon.core.requestparam.RequestParameterManager;
+import com.helger.photon.core.servlet.AbstractPublicApplicationServlet;
+import com.helger.photon.uictrls.autonumeric.AbstractHCAutoNumeric;
 import com.helger.photon.uictrls.datatables.DataTablesLengthMenu;
 import com.helger.photon.uictrls.datatables.EDataTablesFilterType;
 import com.helger.photon.uictrls.datatables.ajax.AjaxExecutorDataTables;
 import com.helger.photon.uictrls.datatables.ajax.AjaxExecutorDataTablesI18N;
 import com.helger.photon.uictrls.datatables.plugins.DataTablesPluginSearchHighlight;
+import com.helger.photon.uictrls.famfam.EFamFamIcon;
+import com.helger.scope.ScopeHelper;
 import com.helger.scope.singleton.SingletonHelper;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
+import com.helger.web.scope.mgr.WebScopeManager;
+import com.helger.xservlet.requesttrack.RequestTrackerSettings;
 
 import at.ebinterface.web2.app.AppConfig;
 import at.ebinterface.web2.app.AppInternalErrorHandler;
+import at.ebinterface.web2.app.AppMenuPublic;
 import at.ebinterface.web2.app.CApp;
 import at.ebinterface.web2.app.CAppAjax;
 import at.ebinterface.web2.app.DefaultSecurity;
-import at.ebinterface.web2.app.menu.AppMenuPublic;
 import jakarta.servlet.ServletContext;
 
 /**
@@ -69,8 +87,56 @@ public final class AppWebAppListener extends WebAppListenerBootstrap
   }
 
   @Override
+  protected void beforeContextInitialized (final ServletContext aSC)
+  {
+    // Logging: JUL to SLF4J
+    SLF4JBridgeHandler.removeHandlersForRootLogger ();
+    SLF4JBridgeHandler.install ();
+
+    if (GlobalDebug.isDebugMode ())
+    {
+      if (false)
+        ScopeHelper.setDebugSessionScopeEnabled (true);
+
+      // Enable Java Serialization debug
+      SystemProperties.setPropertyValue ("sun.io.serialization.extendedDebugInfo", "true");
+
+      if (false)
+      {
+        // Not production ready yet
+        WebScopeManager.setSessionPassivationAllowed (true);
+      }
+
+      // Disable in debug mode
+      RequestTrackerSettings.setLongRunningRequestsCheckEnabled (false);
+      RequestTrackerSettings.setParallelRunningRequestsCheckEnabled (false);
+    }
+  }
+
+  @Override
   protected void initGlobalSettings ()
   {
+    // Set new customizer only if the default customizer is present
+    if (HCConversionSettings.isDefaultCustomizer (HCSettings.getConversionSettings ().getCustomizer ()))
+    {
+      // Special Bootstrap customizer
+      HCSettings.getMutableConversionSettings ()
+                .setCustomizer (new HCCustomizerList (new BootstrapCustomizer (),
+                                                      new HCCustomizerAutoFocusFirstCtrl ()));
+    }
+
+    // Set default icon set if none is defined
+    EFamFamIcon.setAsDefault ();
+
+    // Never use a thousand separator in HCAutoNumeric fields because of
+    // parsing problems
+    AbstractHCAutoNumeric.setDefaultThousandSeparator ("");
+
+    // Add default mapping from Application ID to path
+    PhotonGlobalState.state (CApplicationID.APP_ID_PUBLIC)
+                     .setServletPath (AbstractPublicApplicationServlet.SERVLET_DEFAULT_PATH);
+    PhotonGlobalState.getInstance ().setDefaultApplicationID (CApplicationID.APP_ID_PUBLIC);
+
     // Internal stuff:
     VendorInfo.setInceptionYear (2024);
 
@@ -138,5 +204,8 @@ public final class AppWebAppListener extends WebAppListenerBootstrap
 
     // By default allow markdown in system message
     BootstrapSystemMessage.setDefaultUseMarkdown (true);
+
+    PhotonCSS.readCSSIncludesForGlobal (new ClassPathResource (PhotonCSS.DEFAULT_FILENAME));
+    PhotonJS.readJSIncludesForGlobal (new ClassPathResource (PhotonJS.DEFAULT_FILENAME));
   }
 }

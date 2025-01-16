@@ -12,7 +12,7 @@ public final class CApp
   public static final Locale LOCALE_DE = LocaleCache.getInstance ().getLocale ("de", "AT");
   public static final Locale DEFAULT_LOCALE = LOCALE_DE;
 
-  public static final String APP_NAME = "BoZoo";
+  public static final String APP_NAME = "ebInterface Services";
 
   private CApp ()
   {}

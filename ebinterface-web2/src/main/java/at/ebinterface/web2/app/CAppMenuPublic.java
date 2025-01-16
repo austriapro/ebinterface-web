@@ -1,4 +1,4 @@
-package at.ebinterface.web2.app.menu;
+package at.ebinterface.web2.app;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -6,9 +6,6 @@ import javax.annotation.concurrent.Immutable;
 public final class CAppMenuPublic
 {
   public static final String MENU_ROOT = "root";
-
-  // flags
-  public static final String FLAG_FOOTER = "footer";
 
   private CAppMenuPublic ()
   {}

@@ -5,8 +5,8 @@ import com.helger.photon.core.servlet.AbstractApplicationXServletHandler;
 import com.helger.photon.core.servlet.AbstractPublicApplicationServlet;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import at.ebinterface.web2.app.layout.AppLayoutHTMLProvider;
-import at.ebinterface.web2.app.layout.AppRendererPublic;
+import at.ebinterface.web2.ui.AppLayoutHTMLProvider;
+import at.ebinterface.web2.ui.AppRendererPublic;
 
 public final class AppPublicApplicationServlet extends AbstractPublicApplicationServlet
 {

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <items>
-  <js path="/js/default.js" />
+  <js path="/js/fileLabelChecker.js" />
 </items>
