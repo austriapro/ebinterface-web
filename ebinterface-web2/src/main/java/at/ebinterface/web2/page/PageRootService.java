@@ -1,5 +1,7 @@
 package at.ebinterface.web2.page;
 
+import java.util.Locale;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -60,7 +62,7 @@ public class PageRootService extends AbstractAppWebPage
 
     final BootstrapErrorBox ret = new BootstrapErrorBox ();
     for (final IError aError : aErrorList)
-      ret.addChild (new HCDiv ().addChild (aError.getAsStringLocaleIndepdent ()));
+      ret.addChild (new HCDiv ().addChild (aError.getErrorText (Locale.ROOT)));
     return ret;
   }
 
@@ -100,6 +102,22 @@ public class PageRootService extends AbstractAppWebPage
                        " ermöglicht die automatische Übernahme der Daten ins Mobile Banking des Rechnungsempfängers."));
     aForm.addChild (new HCHiddenField (CPageParam.PARAM_ACTION, CPageParam.ACTION_PERFORM));
 
+    final HCDiv aUploadFile;
+    {
+      aUploadFile = aForm.addAndReturnChild (div ().addClass (CSS_CLASS_UPLOAD_FILE));
+      final HCEditFile aInput = aUploadFile.addAndReturnChild (new HCEditFile (FIELD_FILE_INPUT).addClass (CSS_CLASS_INPUT_FILE)
+                                                                                                .setID ("fileInput1"));
+      aUploadFile.addChild (new HCLabel ().setFor (aInput)
+                                          .addChild (EFontAwesome5Icon.FILE.getAsNode ())
+                                          .addChild (" durchsuchen"));
+      final HCP aUplopadText = aUploadFile.addAndReturnChild (p ().setID ("uploadText")
+                                                                  .addClass (CSS_CLASS_UPLOAD_LABEL)
+                                                                  .addChild ("Keine Datei ausgewählt"));
+      aInput.addEventHandler (EJSEvent.CHANGE,
+                              JSExpr.invoke ("getFileName").arg (aInput.getID ()).arg (aUplopadText.getID ()));
+      EFontAwesome5Icon.registerResourcesForThisRequest ();
+    }
+
     final FormErrorList aFormErrors = new FormErrorList ();
     if (aWPEC.hasAction (CPageParam.ACTION_PERFORM))
     {
@@ -132,21 +150,6 @@ public class PageRootService extends AbstractAppWebPage
             aForm.addChild (success ("Diese Datei ist gültig gemäß ebInterface Standard " + sEbiVersion));
         }
       }
-    }
-
-    {
-      final HCDiv aUploadFile = aForm.addAndReturnChild (div ().addClass (CSS_CLASS_UPLOAD_FILE));
-      final HCEditFile aInput = aUploadFile.addAndReturnChild (new HCEditFile (FIELD_FILE_INPUT).addClass (CSS_CLASS_INPUT_FILE)
-                                                                                                .setID ("fileInput1"));
-      aUploadFile.addChild (new HCLabel ().setFor (aInput)
-                                          .addChild (EFontAwesome5Icon.FILE.getAsNode ())
-                                          .addChild (" durchsuchen"));
-      final HCP aUplopadText = aUploadFile.addAndReturnChild (p ().setID ("uploadText")
-                                                                  .addClass (CSS_CLASS_UPLOAD_LABEL)
-                                                                  .addChild ("Keine Datei ausgewählt"));
-      aInput.addEventHandler (EJSEvent.CHANGE,
-                              JSExpr.invoke ("getFileName").arg (aInput.getID ()).arg (aUplopadText.getID ()));
-      EFontAwesome5Icon.registerResourcesForThisRequest ();
 
       aUploadFile.addChild (fieldErrors (aFormErrors.getListOfField (FIELD_FILE_INPUT)));
     }
