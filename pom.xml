@@ -33,6 +33,10 @@
   </repositories>
   
   <properties>
+    <java.version>21</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
     <log4j.version>2.24.3</log4j.version>
   </properties>
 

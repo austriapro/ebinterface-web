@@ -14,9 +14,12 @@ import com.helger.html.hc.ext.HCCustomizerAutoFocusFirstCtrl;
 import com.helger.html.hc.impl.HCCustomizerList;
 import com.helger.html.jquery.JQueryAjaxBuilder;
 import com.helger.html.jscode.JSAssocArray;
+import com.helger.html.resource.css.ICSSPathProvider;
+import com.helger.html.resource.js.IJSPathProvider;
 import com.helger.photon.ajax.IAjaxRegistry;
 import com.helger.photon.app.html.PhotonCSS;
 import com.helger.photon.app.html.PhotonJS;
+import com.helger.photon.bootstrap4.BootstrapCustomConfig;
 import com.helger.photon.bootstrap4.ext.BootstrapSystemMessage;
 import com.helger.photon.bootstrap4.servlet.BootstrapCustomizer;
 import com.helger.photon.bootstrap4.servlet.WebAppListenerBootstrap;
@@ -29,6 +32,7 @@ import com.helger.photon.core.menu.MenuTree;
 import com.helger.photon.core.requestparam.RequestParameterHandlerURLPathNamed;
 import com.helger.photon.core.requestparam.RequestParameterManager;
 import com.helger.photon.core.servlet.AbstractPublicApplicationServlet;
+import com.helger.photon.uicore.EUICoreJSPathProvider;
 import com.helger.photon.uictrls.autonumeric.AbstractHCAutoNumeric;
 import com.helger.photon.uictrls.datatables.DataTablesLengthMenu;
 import com.helger.photon.uictrls.datatables.EDataTablesFilterType;
@@ -205,7 +209,15 @@ public final class AppWebAppListener extends WebAppListenerBootstrap
     // By default allow markdown in system message
     BootstrapSystemMessage.setDefaultUseMarkdown (true);
 
+    // Global CSS
+    for (final ICSSPathProvider aPP : BootstrapCustomConfig.getAllBootstrapCSS ())
+      PhotonCSS.registerCSSIncludeForGlobal (aPP);
     PhotonCSS.readCSSIncludesForGlobal (new ClassPathResource (PhotonCSS.DEFAULT_FILENAME));
+
+    // Global JS
+    PhotonJS.registerJSIncludeForGlobal (EUICoreJSPathProvider.JQUERY_3);
+    for (final IJSPathProvider aPP : BootstrapCustomConfig.getAllBootstrapJS ())
+      PhotonJS.registerJSIncludeForGlobal (aPP);
     PhotonJS.readJSIncludesForGlobal (new ClassPathResource (PhotonJS.DEFAULT_FILENAME));
   }
 }

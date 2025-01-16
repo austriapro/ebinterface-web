@@ -15,12 +15,6 @@
   <organization>
     <url>http://ebinterface.at</url>
   </organization>
-  
-  <properties>
-    <java.version>17</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-  </properties>
 
   <dependencies>
     <!-- ebInterface core for the validation logic -->
