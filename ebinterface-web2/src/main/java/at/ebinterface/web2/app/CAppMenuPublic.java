@@ -5,7 +5,8 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public final class CAppMenuPublic
 {
-  public static final String MENU_ROOT = "root";
+  public static final String MENU_ROOT_SERVICE = "service";
+  public static final String MENU_ROOT_LABS = "labs";
 
   private CAppMenuPublic ()
   {}

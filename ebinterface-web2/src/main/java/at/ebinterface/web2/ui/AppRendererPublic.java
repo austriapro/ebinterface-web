@@ -46,6 +46,7 @@ public final class AppRendererPublic
     final HCDiv aContent = aOuterContainer.addAndReturnChild (new HCDiv ().addClass (CSS_CLASS_CONTENT));
     final HCDiv aContentInside = aContent.addAndReturnChild (new HCDiv ().addClass (CSS_CLASS_CONTENT_INSIDE));
     {
+      // Header
       final HCDiv aTopSection = aContentInside.addAndReturnChild (new HCDiv ().addClass (CSS_CLASS_TOP_SECTION));
       final HCHeader aHeader = aTopSection.addAndReturnChild (new HCHeader ());
       final HCDiv aLocationInfo = aHeader.addAndReturnChild (new HCDiv ().setID ("location-info"));
@@ -67,10 +68,11 @@ public final class AppRendererPublic
       }
     }
 
-    final BootstrapContainer aContainer = aContentInside.addAndReturnChild (new BootstrapContainer ());
-
-    // content - determine is exactly same as for view
-    aContainer.addChild (BootstrapPageRenderer.getPageContent (aLEC));
+    // Main content
+    {
+      final BootstrapContainer aContainer = aContentInside.addAndReturnChild (new BootstrapContainer ());
+      aContainer.addChild (BootstrapPageRenderer.getPageContent (aLEC));
+    }
 
     // Footer
     {

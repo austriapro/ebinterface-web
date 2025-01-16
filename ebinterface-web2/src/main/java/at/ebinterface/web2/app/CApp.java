@@ -14,6 +14,10 @@ public final class CApp
 
   public static final String APP_NAME = "ebInterface Services";
 
+  // Define the global app mode
+  public static final EAppMode APP_MODE = EAppMode.getFromIDOrDefault (System.getenv ("APPLICATION_PATH"),
+                                                                       EAppMode.SERVICE);
+
   private CApp ()
   {}
 }

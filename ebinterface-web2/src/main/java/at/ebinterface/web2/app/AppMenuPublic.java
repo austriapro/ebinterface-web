@@ -5,7 +5,8 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.photon.core.menu.IMenuTree;
 
-import at.ebinterface.web2.page.PageRoot;
+import at.ebinterface.web2.page.PageRootLabs;
+import at.ebinterface.web2.page.PageRootService;
 
 @Immutable
 public final class AppMenuPublic
@@ -15,9 +16,11 @@ public final class AppMenuPublic
 
   public static void init (@Nonnull final IMenuTree aMenuTree)
   {
-    aMenuTree.createRootItem (new PageRoot (CAppMenuPublic.MENU_ROOT));
+    aMenuTree.createRootItem (new PageRootService (CAppMenuPublic.MENU_ROOT_SERVICE));
+    aMenuTree.createRootItem (new PageRootLabs (CAppMenuPublic.MENU_ROOT_LABS));
 
     // Set default
-    aMenuTree.setDefaultMenuItemID (CAppMenuPublic.MENU_ROOT);
+    aMenuTree.setDefaultMenuItemID (CApp.APP_MODE.isService () ? CAppMenuPublic.MENU_ROOT_SERVICE
+                                                               : CAppMenuPublic.MENU_ROOT_LABS);
   }
 }

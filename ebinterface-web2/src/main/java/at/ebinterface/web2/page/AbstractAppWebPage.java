@@ -1,9 +1,9 @@
 package at.ebinterface.web2.page;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
-import com.helger.html.hc.IHCNode;
 import com.helger.photon.bootstrap4.pages.AbstractBootstrapWebPage;
 import com.helger.photon.uicore.page.WebPageExecutionContext;
 
@@ -14,9 +14,10 @@ public abstract class AbstractAppWebPage extends AbstractBootstrapWebPage <WebPa
     super (sID, sName);
   }
 
-  @Nonnull
-  protected static IHCNode _unescapeHTML (final String s)
+  @Override
+  @Nullable
+  public String getHeaderText (@Nonnull final WebPageExecutionContext aWPEC)
   {
-    return AbstractAppWebPageForm._unescapeHTML (s);
+    return null;
   }
 }
