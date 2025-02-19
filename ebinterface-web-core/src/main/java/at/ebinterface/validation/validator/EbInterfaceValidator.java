@@ -115,6 +115,7 @@ public class EbInterfaceValidator
    *        The XML data
    * @return The validation result. Never <code>null</code>.
    */
+  @Nonnull
   public ValidationResult validateXMLInstanceAgainstSchema (final byte [] uploadedData)
   {
     LOGGER.info ("Performing XML validation");
@@ -127,6 +128,9 @@ public class EbInterfaceValidator
       result.setSchemaValidationErrorMessage ("Die hochgeladene Datei konnte nicht als XML interpretiert werden.");
       return result;
     }
+
+    // Remember parsed document
+    result.setParsedXMLDocument (aDoc);
 
     // Step 1 - determine the correct ebInterface version
     final EbiVersion version;

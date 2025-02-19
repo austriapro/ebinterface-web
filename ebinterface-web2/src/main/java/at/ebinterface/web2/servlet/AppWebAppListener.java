@@ -6,7 +6,6 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.system.SystemProperties;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.html.hc.config.HCConversionSettings;
 import com.helger.html.hc.config.HCSettings;
@@ -40,10 +39,8 @@ import com.helger.photon.uictrls.datatables.ajax.AjaxExecutorDataTables;
 import com.helger.photon.uictrls.datatables.ajax.AjaxExecutorDataTablesI18N;
 import com.helger.photon.uictrls.datatables.plugins.DataTablesPluginSearchHighlight;
 import com.helger.photon.uictrls.famfam.EFamFamIcon;
-import com.helger.scope.ScopeHelper;
 import com.helger.scope.singleton.SingletonHelper;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
-import com.helger.web.scope.mgr.WebScopeManager;
 import com.helger.xservlet.requesttrack.RequestTrackerSettings;
 
 import at.ebinterface.web2.app.AppConfig;
@@ -99,18 +96,6 @@ public final class AppWebAppListener extends WebAppListenerBootstrap
 
     if (GlobalDebug.isDebugMode ())
     {
-      if (false)
-        ScopeHelper.setDebugSessionScopeEnabled (true);
-
-      // Enable Java Serialization debug
-      SystemProperties.setPropertyValue ("sun.io.serialization.extendedDebugInfo", "true");
-
-      if (false)
-      {
-        // Not production ready yet
-        WebScopeManager.setSessionPassivationAllowed (true);
-      }
-
       // Disable in debug mode
       RequestTrackerSettings.setLongRunningRequestsCheckEnabled (false);
       RequestTrackerSettings.setParallelRunningRequestsCheckEnabled (false);

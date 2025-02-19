@@ -46,7 +46,7 @@ public class AppLayoutHTMLProvider extends AbstractSWECHTMLProvider
     final HCBody aBody = aHtml.body ();
 
     // Add menu item in page title
-    aHead.setPageTitle (StringHelper.getConcatenatedOnDemand (CApp.APP_NAME,
+    aHead.setPageTitle (StringHelper.getConcatenatedOnDemand (CApp.getAppName (),
                                                               " - ",
                                                               aMenuItem.getDisplayText (aDisplayLocale)));
 

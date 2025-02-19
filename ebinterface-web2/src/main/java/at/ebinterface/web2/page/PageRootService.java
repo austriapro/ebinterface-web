@@ -35,6 +35,7 @@ import com.helger.web.fileupload.IFileItem;
 import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
+import at.ebinterface.web2.pdf.PDFHelper;
 
 public class PageRootService extends AbstractAppWebPage
 {
@@ -74,7 +75,7 @@ public class PageRootService extends AbstractAppWebPage
     final BootstrapRow aRow = aNodeList.addAndReturnChild (new BootstrapRow ());
     final BootstrapCol aCol = aRow.createColumn (-1, 12, -1, -1, -1);
     aCol.addChild (h1 ("ebInterface Rechnungen erstellen, prüfen und anzeigen"));
-    aCol.addChild (div (strong ("Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im Format ebInterface.")));
+    aCol.addChild (h3 ("Auf dieser Seite finden Sie die wichtigsten Services rund um die E-Rechnung im Format ebInterface."));
 
     final HCDiv aDiv = aCol.addAndReturnChild (div ());
 
@@ -127,27 +128,34 @@ public class PageRootService extends AbstractAppWebPage
 
       if (aFormErrors.isEmpty ())
       {
-        // Try read as XML
+        // Try read as XML and validate against XSD
         final ValidationResult aValResult = new EbInterfaceValidator ().validateXMLInstanceAgainstSchema (aFile.directGet ());
         final EbiVersion eDeterminedVersion = aValResult.getDeterminedEbInterfaceVersion ();
         if (eDeterminedVersion == null)
         {
           aFormErrors.addFieldError (FIELD_FILE_INPUT,
-                                     "Das XML kann nicht verarbeitet werden, das es keiner ebInterface Version entspricht.");
+                                     "Das XML kann nicht verarbeitet werden, das es keiner ebInterface-Version entspricht.");
         }
         else
         {
+          // Show determined version
           String sEbiVersion = eDeterminedVersion.getCaption ();
           if (eDeterminedVersion.supportsSigning ())
             sEbiVersion += eDeterminedVersion.isSigned () ? " (signiert)" : " (unsigniert)";
 
+          // Was there a validation error?
           final String sValidationError = aValResult.getSchemaValidationErrorMessage ();
           if (StringHelper.hasText (sValidationError))
           {
             aFormErrors.addFieldError (FIELD_FILE_INPUT, sValidationError);
           }
           else
+          {
             aForm.addChild (success ("Diese Datei ist gültig gemäß ebInterface Standard " + sEbiVersion));
+
+            // Start creating XML
+            final byte [] aPDFBytes = PDFHelper.createPDF (aValResult.getParsedXMLDocument (), eDeterminedVersion);
+          }
         }
       }
 

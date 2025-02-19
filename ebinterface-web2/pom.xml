@@ -46,6 +46,18 @@
       <groupId>at.austriapro</groupId>
       <artifactId>ebinterface-web-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>at.austriapro</groupId>
+      <artifactId>ebinterface-ubl-mapping</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-pdf-layout</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-open-sans</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>

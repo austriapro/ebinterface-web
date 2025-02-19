@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk11
+FROM tomcat:10-jdk21
 
 ENV JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom" 
 
