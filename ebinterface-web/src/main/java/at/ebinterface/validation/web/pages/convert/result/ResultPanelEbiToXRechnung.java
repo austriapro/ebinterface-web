@@ -32,7 +32,7 @@ public final class ResultPanelEbiToXRechnung extends Panel
     final WebMarkupContainer mappingLogErrorContainer = new WebMarkupContainer ("mappingLogError");
     add (mappingLogErrorContainer);
 
-    if (StringHelper.hasText (sErrorLog))
+    if (StringHelper.isNotEmpty (sErrorLog))
     {
       mappingLogSuccessContainer.setVisible (false);
       mappingLogErrorContainer.setVisible (true);

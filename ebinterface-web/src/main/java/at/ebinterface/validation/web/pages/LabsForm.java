@@ -129,7 +129,7 @@ final class LabsForm extends Form <Object>
         break;
       case VISUALIZATION_HTML:
         // Visualization is only possible for valid instances
-        if (StringHelper.hasText (validationResult.getSchemaValidationErrorMessage ()))
+        if (StringHelper.isNotEmpty (validationResult.getSchemaValidationErrorMessage ()))
         {
           error ("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
           onError ();

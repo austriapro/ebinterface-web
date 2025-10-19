@@ -33,7 +33,7 @@ public enum CustomParser
 
     // Map it to an enumeration
     final String sFoundNS = customHandler.getFoundNameSpace ();
-    if (StringHelper.hasText (sFoundNS))
+    if (StringHelper.isNotEmpty (sFoundNS))
       for (final EEbInterfaceVersion v : EEbInterfaceVersion.values ())
         if (v.getNamespaceURI ().equals (sFoundNS))
         {

@@ -35,7 +35,7 @@ public final class ResultPanelXRechnungToEbi extends Panel
     mappingContainer.add (errorContainer);
     errorContainer.setVisible (true);
 
-    if (StringHelper.hasText (log))
+    if (StringHelper.isNotEmpty (log))
     {
       mappingContainer.setVisible (true);
 

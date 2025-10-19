@@ -55,7 +55,7 @@ public class ValidationApplication extends WebApplication
     }
 
     APP_PATH = System.getenv ("APPLICATION_PATH");
-    if (StringHelper.hasNoText (APP_PATH))
+    if (StringHelper.isEmpty (APP_PATH))
       LOG.debug ("APPLICATION_PATH not set, always returning default homepage");
   }
 
@@ -107,7 +107,7 @@ public class ValidationApplication extends WebApplication
     // https://gitlab.ecosio.com/misc/austriapro/issues/11
     Class <? extends Page> homePage = StartPage.class;
 
-    if (StringHelper.hasText (APP_PATH))
+    if (StringHelper.isNotEmpty (APP_PATH))
       switch (APP_PATH)
       {
         case "service":

@@ -67,7 +67,7 @@ public final class ResultPanel extends Panel
     add (schemaNOkContainer);
 
     // Schema is OK
-    if (StringHelper.hasNoText (validationResult.getSchemaValidationErrorMessage ()))
+    if (StringHelper.isEmpty (validationResult.getSchemaValidationErrorMessage ()))
     {
       schemaOkContainer.setVisible (true);
       schemaNOkContainer.setVisible (false);

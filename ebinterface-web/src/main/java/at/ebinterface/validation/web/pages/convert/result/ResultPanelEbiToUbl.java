@@ -30,7 +30,7 @@ public final class ResultPanelEbiToUbl extends Panel
     add (mappingLogErrorContainer);
 
 
-    if (StringHelper.hasText (sErrorLog))
+    if (StringHelper.isNotEmpty (sErrorLog))
     {
       mappingLogSuccessContainer.setVisible (false);
       mappingLogErrorContainer.setVisible (true);
