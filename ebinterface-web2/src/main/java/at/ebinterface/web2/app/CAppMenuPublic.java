@@ -1,6 +1,6 @@
 package at.ebinterface.web2.app;
 
-import javax.annotation.concurrent.Immutable;
+import com.helger.annotation.concurrent.Immutable;
 
 @Immutable
 public final class CAppMenuPublic

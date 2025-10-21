@@ -1,8 +1,8 @@
 package at.ebinterface.web2.pdf;
 
-import javax.annotation.Nonnull;
+import com.helger.base.enforce.ValueEnforcer;
 
-import com.helger.commons.ValueEnforcer;
+import jakarta.annotation.Nonnull;
 
 /**
  * Class for all PDF generation exceptions.

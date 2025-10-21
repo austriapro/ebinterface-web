@@ -3,10 +3,6 @@ package at.ebinterface.web2.pdf;
 import java.io.OutputStream;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.WillClose;
-
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -17,9 +13,10 @@ import org.apache.pdfbox.util.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.WillClose;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.pdflayout.IPDDocumentCustomizer;
 import com.helger.pdflayout.PDFCreationException;
@@ -31,6 +28,8 @@ import at.ebinterface.web2.app.CApp;
 import at.ebinterface.web2.pdf.cover.PLCover;
 import at.ebinterface.web2.pdf.cover.ReportDataCover;
 import at.ebinterface.web2.pdf.details.PLDetails;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
 /**
@@ -139,7 +138,7 @@ public final class InvoicePDFGenerator
       }
 
       // Add watermark for preview
-      final IPDDocumentCustomizer aWatermarkCustomizer = StringHelper.hasNoText (m_sWatermark) ? null : aDoc -> {
+      final IPDDocumentCustomizer aWatermarkCustomizer = StringHelper.isEmpty (m_sWatermark) ? null : aDoc -> {
         final PDFont aFont = new PDType1Font (Standard14Fonts.FontName.HELVETICA_BOLD);
         final float fFontSize = 100.0f;
         final String sMessage = m_sWatermark;

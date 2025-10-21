@@ -1,9 +1,9 @@
 package at.ebinterface.validation.parser;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.annotation.Nonempty;
+import com.helger.annotation.Nonempty;
 import com.helger.ebinterface.EEbInterfaceVersion;
+
+import jakarta.annotation.Nonnull;
 
 public class EbiVersion
 {

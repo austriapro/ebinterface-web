@@ -4,21 +4,19 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.CommonsHashMap;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.datetime.PDTToString;
-import com.helger.commons.locale.country.CountryCache;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.string.StringHelper;
+import com.helger.base.string.StringImplode;
+import com.helger.base.string.StringReplace;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.CommonsHashMap;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.collection.commons.ICommonsMap;
+import com.helger.datetime.format.PDTToString;
 import com.helger.ebinterface.EbInterface40Marshaller;
 import com.helger.ebinterface.EbInterface41Marshaller;
 import com.helger.ebinterface.EbInterface42Marshaller;
@@ -34,6 +32,7 @@ import com.helger.ebinterface.v43.Ebi43InvoiceType;
 import com.helger.ebinterface.v50.Ebi50InvoiceType;
 import com.helger.ebinterface.v60.Ebi60InvoiceType;
 import com.helger.ebinterface.v61.Ebi61InvoiceType;
+import com.helger.text.locale.country.CountryCache;
 
 import at.austriapro.ebinterface.ubl.AbstractEbInterfaceUBLConverter;
 import at.austriapro.ebinterface.ubl.to.EbInterface40ToInvoiceConverter;
@@ -45,7 +44,8 @@ import at.austriapro.ebinterface.ubl.to.EbInterface60ToInvoiceConverter;
 import at.austriapro.ebinterface.ubl.to.EbInterface61ToInvoiceConverter;
 import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.web2.app.CApp;
-import at.ebinterface.web2.pdf.cover.ECoverText;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.AddressType;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.ContactType;
 import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_21.DeliveryType;
@@ -121,12 +121,12 @@ public final class PDFHelper
   {
     String sUnified = s;
     // Replace \r and \t with space
-    sUnified = StringHelper.replaceAll (sUnified, '\r', ' ');
-    sUnified = StringHelper.replaceAll (sUnified, '\t', ' ');
+    sUnified = StringReplace.replaceAll (sUnified, '\r', ' ');
+    sUnified = StringReplace.replaceAll (sUnified, '\t', ' ');
     // Merge all duplicate spaces
-    sUnified = StringHelper.replaceAllRepeatedly (sUnified, "  ", " ");
+    sUnified = StringReplace.replaceAllRepeatedly (sUnified, "  ", " ");
     // Avoid blanks at line end
-    return StringHelper.replaceAll (sUnified, " \n", "\n");
+    return StringReplace.replaceAll (sUnified, " \n", "\n");
   }
 
   /**
@@ -153,7 +153,7 @@ public final class PDFHelper
 
     final ICommonsList <String> aElements = new CommonsArrayList <> ();
 
-    if (StringHelper.hasText (aDelivery.getIDValue ()))
+    if (StringHelper.isNotEmpty (aDelivery.getIDValue ()))
       aElements.add (EPDFText.DELIVERY_ID.getDisplayTextWithArgs (aDisplayLocale, aDelivery.getID ()));
 
     if (aDelivery.getActualDeliveryDateValue () != null)
@@ -185,23 +185,23 @@ public final class PDFHelper
     }
 
     final String sElements = aElements.isEmpty () ? null
-                                                  : StringHelper.imploder ()
-                                                                .source (aElements)
-                                                                .separator (sSep)
-                                                                .build ();
+                                                  : StringImplode.imploder ()
+                                                                 .source (aElements)
+                                                                 .separator (sSep)
+                                                                 .build ();
     final String sDescription = aDelivery.hasDeliveryTermsEntries () &&
                                 aDelivery.getDeliveryTermsAtIndex (0).hasSpecialTermsEntries ()
                                                                                                 ? StringHelper.trim (aDelivery.getDeliveryTermsAtIndex (0)
                                                                                                                               .getSpecialTermsAtIndex (0)
                                                                                                                               .getValue ())
                                                                                                 : null;
-    final String ret = StringHelper.imploder ()
-                                   .source (sElements, sDescription)
-                                   .separator ('\n')
-                                   .filterNonEmpty ()
-                                   .build ();
+    final String ret = StringImplode.imploder ()
+                                    .source (sElements, sDescription)
+                                    .separator ('\n')
+                                    .filterNonEmpty ()
+                                    .build ();
     // Avoid returning ""
-    return StringHelper.hasText (ret) ? ret : null;
+    return StringHelper.isNotEmpty (ret) ? ret : null;
   }
 
   @Nonnull
@@ -211,12 +211,12 @@ public final class PDFHelper
 
     // Contact
     final String sContact = StringHelper.trim (aContact.getNameValue ());
-    if (StringHelper.hasText (sContact))
+    if (StringHelper.isNotEmpty (sContact))
       aContactDetails.append (unifySpaces (sContact));
 
     // Email address
     final String sEmail = StringHelper.trim (aContact.getElectronicMailValue ());
-    if (StringHelper.hasText (sEmail))
+    if (StringHelper.isNotEmpty (sEmail))
     {
       // Avoid contact and email as this might get too long
       if (aContactDetails.length () > 0)
@@ -226,7 +226,7 @@ public final class PDFHelper
 
     // Append telephone number
     String sTelephone = StringHelper.trim (aContact.getTelephoneValue ());
-    if (StringHelper.hasText (sTelephone))
+    if (StringHelper.isNotEmpty (sTelephone))
     {
       if (aContactDetails.length () > 0)
         aContactDetails.append ('\n');
@@ -236,7 +236,7 @@ public final class PDFHelper
       if (nIndex > 0)
         sTelephone = unifySpaces (sTelephone.substring (0, nIndex).trim ()) + " [+]";
 
-      aContactDetails.append (ECoverText.PHONE_NUMBER.getDisplayTextWithArgs (aDisplayLocale, sTelephone));
+      aContactDetails.append (EPDFText.PHONE_NUMBER.getDisplayTextWithArgs (aDisplayLocale, sTelephone));
     }
 
     return aContactDetails.toString ();
@@ -248,7 +248,7 @@ public final class PDFHelper
     final StringBuilder aSB = new StringBuilder ();
     // Street
     final String sStreet = StringHelper.trim (aAddress.getStreetNameValue ());
-    if (StringHelper.hasText (sStreet))
+    if (StringHelper.isNotEmpty (sStreet))
     {
       if (aSB.length () > 0)
         aSB.append ('\n');
@@ -257,7 +257,7 @@ public final class PDFHelper
 
     // PO Box
     final String sPOBox = StringHelper.trim (aAddress.getPostboxValue ());
-    if (StringHelper.hasText (sPOBox))
+    if (StringHelper.isNotEmpty (sPOBox))
     {
       if (aSB.length () > 0)
         aSB.append ('\n');
@@ -268,7 +268,7 @@ public final class PDFHelper
     final String sZipAndTown = StringHelper.getConcatenatedOnDemand (StringHelper.trim (aAddress.getPostalZoneValue ()),
                                                                      " ",
                                                                      StringHelper.trim (aAddress.getCityNameValue ()));
-    if (StringHelper.hasText (sZipAndTown))
+    if (StringHelper.isNotEmpty (sZipAndTown))
     {
       if (aSB.length () > 0)
         aSB.append ('\n');
@@ -279,7 +279,7 @@ public final class PDFHelper
     final String sCountry = CountryCache.getInstance ()
                                         .getCountry (aAddress.getCountry ().getIdentificationCodeValue ())
                                         .getDisplayName (aDisplayLocale);
-    if (StringHelper.hasText (sCountry))
+    if (StringHelper.isNotEmpty (sCountry))
     {
       if (aSB.length () > 0)
         aSB.append ('\n');
@@ -299,14 +299,14 @@ public final class PDFHelper
     final String sSalutation = aParty.hasPersonEntries () ? StringHelper.trim (aParty.getPersonAtIndex (0)
                                                                                      .getGenderCodeValue ())
                                                           : null;
-    if (StringHelper.hasText (sSalutation))
+    if (StringHelper.isNotEmpty (sSalutation))
       aSB.append (unifySpaces (sSalutation));
 
     // Name
     final String sName = aParty.hasPartyNameEntries () ? StringHelper.trim (aParty.getPartyNameAtIndex (0)
                                                                                   .getNameValue ())
                                                        : null;
-    if (StringHelper.hasText (sName))
+    if (StringHelper.isNotEmpty (sName))
     {
       if (aSB.length () > 0)
         aSB.append ('\n');
@@ -316,7 +316,7 @@ public final class PDFHelper
     if (bIncludingContact)
     {
       final String sContact = createContactDetails (aDisplayLocale, aParty.getContact ());
-      if (StringHelper.hasText (sContact))
+      if (StringHelper.isNotEmpty (sContact))
       {
         if (aSB.length () > 0)
           aSB.append ('\n');
@@ -331,7 +331,7 @@ public final class PDFHelper
     if (aParty.hasPartyTaxSchemeEntries ())
       sVATIN = aParty.getPartyTaxSchemeAtIndex (0).getCompanyIDValue ();
     final String sRealVATIN = StringHelper.trim (sVATIN);
-    if (StringHelper.hasText (sRealVATIN))
+    if (StringHelper.isNotEmpty (sRealVATIN))
     {
       if (aSB.length () > 0)
         aSB.append ('\n');
@@ -349,7 +349,7 @@ public final class PDFHelper
     {
       // Office location
       final String sOfficeLocation = aFurtherIdentifications.get (EFurtherIdentification.OFFICE_LOCATION.getID ());
-      if (StringHelper.hasText (sOfficeLocation))
+      if (StringHelper.isNotEmpty (sOfficeLocation))
       {
         if (aSB.length () > 0)
           aSB.append ('\n');
@@ -360,7 +360,7 @@ public final class PDFHelper
 
       // Commercial registration number
       final String sCommercialRegistrationNumber = aFurtherIdentifications.get (EFurtherIdentification.COMMERCIAL_REGISTER_NUMBER.getID ());
-      if (StringHelper.hasText (sCommercialRegistrationNumber))
+      if (StringHelper.isNotEmpty (sCommercialRegistrationNumber))
       {
         if (aSB.length () > 0)
           aSB.append ('\n');
@@ -371,7 +371,7 @@ public final class PDFHelper
 
       // Commercial court
       final String sCommercialCourt = aFurtherIdentifications.get (EFurtherIdentification.COMMERCIAL_COURT.getID ());
-      if (StringHelper.hasText (sCommercialCourt))
+      if (StringHelper.isNotEmpty (sCommercialCourt))
       {
         if (aSB.length () > 0)
           aSB.append ('\n');
@@ -382,7 +382,7 @@ public final class PDFHelper
 
       // BBG Partnernummer
       final String sBBGPartnerNumber = aFurtherIdentifications.get (EFurtherIdentification.CONSOLIDATOR.getID ());
-      if (StringHelper.hasText (sBBGPartnerNumber))
+      if (StringHelper.isNotEmpty (sBBGPartnerNumber))
       {
         if (aSB.length () > 0)
           aSB.append ('\n');
@@ -393,7 +393,7 @@ public final class PDFHelper
 
       // BBG Geschäftszahl (should be either or with the previous one)
       final String sBBGReferenceNumber = aFurtherIdentifications.get (EFurtherIdentification.BBG_GZ.getID ());
-      if (StringHelper.hasText (sBBGReferenceNumber))
+      if (StringHelper.isNotEmpty (sBBGReferenceNumber))
       {
         if (aSB.length () > 0)
           aSB.append ('\n');

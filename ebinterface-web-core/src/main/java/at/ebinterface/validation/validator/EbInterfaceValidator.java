@@ -3,7 +3,6 @@ package at.ebinterface.validation.validator;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
@@ -17,11 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.io.stream.NonBlockingStringWriter;
+import com.helger.base.io.nonblocking.NonBlockingStringWriter;
 import com.helger.ebinterface.CEbInterface;
 import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.ebinterface.visualization.VisualizationManager;
+import com.helger.io.resource.ClassPathResource;
 import com.helger.xml.sax.InputSourceFactory;
 import com.helger.xml.serialize.read.DOMReader;
 import com.helger.xml.transform.TransformResultFactory;
@@ -33,6 +32,7 @@ import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.rtr.VerificationServiceInvoker;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentRequest;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
+import jakarta.annotation.Nonnull;
 
 /**
  * This class validates a given ebInterface XML instance against a schematron

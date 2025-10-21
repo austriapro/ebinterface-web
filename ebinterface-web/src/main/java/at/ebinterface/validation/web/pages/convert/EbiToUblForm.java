@@ -3,8 +3,6 @@ package at.ebinterface.validation.web.pages.convert;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,13 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.error.IError;
-import com.helger.commons.error.list.ErrorList;
-import com.helger.commons.error.list.IErrorList;
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.string.StringImplode;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.diagnostics.error.IError;
+import com.helger.diagnostics.error.list.ErrorList;
+import com.helger.diagnostics.error.list.IErrorList;
 import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.ebinterface.EbInterface40Marshaller;
 import com.helger.ebinterface.EbInterface41Marshaller;
@@ -53,6 +51,7 @@ import at.ebinterface.validation.exception.NamespaceUnknownException;
 import at.ebinterface.validation.parser.CustomParser;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageEbiToUbl;
+import jakarta.annotation.Nonnull;
 import jakarta.xml.bind.ValidationEventHandler;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 
@@ -153,9 +152,9 @@ public final class EbiToUblForm extends Form <Object>
     if (!POSSIBLE_EBI_VERSIONS.contains (eVersion))
     {
       error ("Es können nur ebInterface-Dateien in den folgenden Versionen konvertiert werden: " +
-             StringHelper.getImplodedMapped (", ",
-                                             POSSIBLE_EBI_VERSIONS,
-                                             x -> x.getVersion ().getAsString (false, true)));
+             StringImplode.getImplodedMapped (", ",
+                                              POSSIBLE_EBI_VERSIONS,
+                                              x -> x.getVersion ().getAsString (false, true)));
       onError ();
       return;
     }

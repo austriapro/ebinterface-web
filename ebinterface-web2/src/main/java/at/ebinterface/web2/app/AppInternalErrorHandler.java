@@ -2,11 +2,8 @@ package at.ebinterface.web2.app;
 
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.email.EmailAddress;
+import com.helger.annotation.Nonempty;
+import com.helger.base.email.EmailAddress;
 import com.helger.photon.core.interror.InternalErrorBuilder;
 import com.helger.photon.core.interror.InternalErrorSettings;
 import com.helger.photon.core.interror.callback.AbstractErrorCallback;
@@ -15,6 +12,9 @@ import com.helger.photon.core.smtp.CNamedSMTPSettings;
 import com.helger.photon.core.smtp.NamedSMTPSettings;
 import com.helger.smtp.settings.ISMTPSettings;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class AppInternalErrorHandler extends AbstractErrorCallback
 {

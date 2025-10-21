@@ -3,8 +3,6 @@ package at.ebinterface.validation.web.pages.resultpages;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.annotation.Nullable;
-
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,12 +13,13 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.rtr.VerificationServiceInvoker;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.panels.SignatureDetailsPanel;
+import jakarta.annotation.Nullable;
 
 public final class ResultPanel extends Panel
 {
@@ -69,7 +68,7 @@ public final class ResultPanel extends Panel
     add (schemaNOkContainer);
 
     // Schema is OK
-    if (StringHelper.hasNoText (validationResult.getSchemaValidationErrorMessage ()))
+    if (StringHelper.isEmpty (validationResult.getSchemaValidationErrorMessage ()))
     {
       schemaOkContainer.setVisible (true);
       schemaNOkContainer.setVisible (false);

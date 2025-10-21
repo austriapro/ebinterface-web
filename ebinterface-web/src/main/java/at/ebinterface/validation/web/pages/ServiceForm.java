@@ -13,8 +13,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.string.StringHelper;
 
 import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
@@ -126,7 +126,7 @@ final class ServiceForm extends Form <Object>
         break;
       case VISUALIZATION_HTML:
         // Visualization is only possible for valid instances
-        if (StringHelper.hasText (validationResult.getSchemaValidationErrorMessage ()))
+        if (StringHelper.isNotEmpty (validationResult.getSchemaValidationErrorMessage ()))
         {
           error ("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
           onError ();

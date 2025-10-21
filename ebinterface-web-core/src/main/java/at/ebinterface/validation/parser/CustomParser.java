@@ -1,13 +1,12 @@
 package at.ebinterface.validation.parser;
 
-import javax.annotation.Nonnull;
-
 import org.w3c.dom.Document;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.ebinterface.validation.exception.NamespaceUnknownException;
+import jakarta.annotation.Nonnull;
 
 /**
  * Custom parser for XML instances. Used to determine the used XML Schema based
@@ -33,7 +32,7 @@ public enum CustomParser
 
     // Map it to an enumeration
     final String sFoundNS = customHandler.getFoundNameSpace ();
-    if (StringHelper.hasText (sFoundNS))
+    if (StringHelper.isNotEmpty (sFoundNS))
       for (final EEbInterfaceVersion v : EEbInterfaceVersion.values ())
         if (v.getNamespaceURI ().equals (sFoundNS))
         {

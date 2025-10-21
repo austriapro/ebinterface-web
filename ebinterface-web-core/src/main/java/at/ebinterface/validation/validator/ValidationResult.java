@@ -1,11 +1,10 @@
 package at.ebinterface.validation.validator;
 
-import javax.annotation.Nullable;
-
 import org.w3c.dom.Document;
 
 import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.rtr.generated.VerifyDocumentResponse;
+import jakarta.annotation.Nullable;
 
 /**
  * DTO for the XML Schema validation result

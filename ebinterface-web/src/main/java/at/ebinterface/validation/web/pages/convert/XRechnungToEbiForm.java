@@ -3,8 +3,6 @@ package at.ebinterface.validation.web.pages.convert;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebPage;
@@ -19,11 +17,11 @@ import org.apache.wicket.model.ResourceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.error.IError;
-import com.helger.commons.error.list.ErrorList;
-import com.helger.commons.io.stream.StreamHelper;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.diagnostics.error.IError;
+import com.helger.diagnostics.error.list.ErrorList;
 import com.helger.ebinterface.EEbInterfaceVersion;
 import com.helger.ebinterface.EbInterface41Marshaller;
 import com.helger.ebinterface.EbInterface42Marshaller;
@@ -60,6 +58,7 @@ import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.Constants;
 import at.ebinterface.validation.web.components.AbstractChoiceRenderer;
 import at.ebinterface.validation.web.pages.convert.result.ResultPageXRechnungToEbi;
+import jakarta.annotation.Nonnull;
 import net.sf.jasperreports.engine.JasperReport;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;

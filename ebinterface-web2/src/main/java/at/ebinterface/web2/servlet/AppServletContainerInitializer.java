@@ -3,12 +3,10 @@ package at.ebinterface.web2.servlet;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.ValueEnforcer;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.photon.ajax.servlet.PhotonAjaxServlet;
 import com.helger.photon.api.servlet.PhotonAPIServlet;
 import com.helger.photon.core.go.GoServlet;
@@ -17,6 +15,7 @@ import com.helger.photon.core.servlet.AbstractObjectDeliveryHttpHandler;
 import com.helger.photon.core.servlet.StreamServlet;
 import com.helger.servlet.filter.CharacterEncodingFilter;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.ServletContext;

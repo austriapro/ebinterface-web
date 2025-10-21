@@ -8,24 +8,24 @@ import java.time.LocalTime;
 import java.util.Currency;
 import java.util.Locale;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.CGlobal;
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.collection.impl.CommonsHashMap;
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.concurrent.SimpleReadWriteLock;
-import com.helger.commons.datetime.PDTToString;
-import com.helger.commons.math.MathHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.GuardedBy;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.CGlobal;
+import com.helger.base.concurrent.SimpleReadWriteLock;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.numeric.BigHelper;
+import com.helger.base.string.StringReplace;
+import com.helger.collection.commons.CommonsHashMap;
+import com.helger.collection.commons.ICommonsMap;
+import com.helger.datetime.format.PDTToString;
 import com.helger.masterdata.currency.ECurrency;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Abstract base class for layouting
@@ -118,7 +118,7 @@ public abstract class AbstractStyledElement
     aCurrencyDF.setMaximumFractionDigits (nMaxFractionDigits);
 
     // Extract value pattern from currency pattern (without currency symbol)
-    final String sValuePattern = StringHelper.replaceAll (aCurrencyDF.toPattern (), "\u00A4", "").trim ();
+    final String sValuePattern = StringReplace.replaceAll (aCurrencyDF.toPattern (), "\u00A4", "").trim ();
 
     // Use the decimal symbols from the currency format
     final DecimalFormat ret = new DecimalFormat (sValuePattern, aCurrencyDF.getDecimalFormatSymbols ());
@@ -146,7 +146,7 @@ public abstract class AbstractStyledElement
     String ret = m_aNFUnitAmount.format (aValue);
 
     // Skip trailing 0s to avoid that a tilde is added to "3.1000"
-    if (MathHelper.getWithoutTrailingZeroes (aValue).scale () > UNIT_AMOUNT_FRACTION)
+    if (BigHelper.getWithoutTrailingZeroes (aValue).scale () > UNIT_AMOUNT_FRACTION)
       ret = "~" + ret;
     return ret;
   }
@@ -173,7 +173,7 @@ public abstract class AbstractStyledElement
     if (false)
     {
       // Skip trailing 0s to avoid that a tilde is added to "3.1000"
-      if (MathHelper.getWithoutTrailingZeroes (aValue).scale () > TOTAL_AMOUNT_FRACTION)
+      if (BigHelper.getWithoutTrailingZeroes (aValue).scale () > TOTAL_AMOUNT_FRACTION)
         ret = "~" + ret;
     }
 
@@ -245,6 +245,6 @@ public abstract class AbstractStyledElement
       m_aNFDecimal.setRoundingMode (PDFHelper.ROUNDING_MODE);
     }
 
-    return m_aNFDecimal.format (MathHelper.getWithoutTrailingZeroes (aValue));
+    return m_aNFDecimal.format (BigHelper.getWithoutTrailingZeroes (aValue));
   }
 }

@@ -2,11 +2,11 @@ package at.ebinterface.web2.app;
 
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.text.locale.LocaleCache;
 
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.locale.LocaleCache;
+import jakarta.annotation.Nonnull;
 
 @Immutable
 public final class CApp

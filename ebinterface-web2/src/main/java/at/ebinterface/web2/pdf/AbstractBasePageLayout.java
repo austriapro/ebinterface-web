@@ -1,9 +1,6 @@
 package at.ebinterface.web2.pdf;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringReplace;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.element.text.PLText;
@@ -11,6 +8,9 @@ import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Abstract PageLayout (PL)
@@ -49,7 +49,7 @@ public abstract class AbstractBasePageLayout
     if (sRealText != null)
     {
       // 0009 = tabulator -> not printable in PDF
-      sRealText = StringHelper.replaceAll (sRealText, '\t', ' ');
+      sRealText = StringReplace.replaceAll (sRealText, '\t', ' ');
     }
     return sRealText;
   }

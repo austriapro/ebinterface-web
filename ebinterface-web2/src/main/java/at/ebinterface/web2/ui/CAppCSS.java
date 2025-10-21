@@ -1,6 +1,6 @@
 package at.ebinterface.web2.ui;
 
-import javax.annotation.concurrent.Immutable;
+import com.helger.annotation.concurrent.Immutable;
 
 /**
  * Contains constant CSS classes

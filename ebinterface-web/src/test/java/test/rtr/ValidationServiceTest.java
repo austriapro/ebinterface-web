@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.io.stream.StreamHelper;
+import com.helger.base.io.stream.StreamHelper;
 
 import at.ebinterface.validation.dto.SignatureValidationResult;
 import at.ebinterface.validation.rtr.VerificationServiceInvoker;

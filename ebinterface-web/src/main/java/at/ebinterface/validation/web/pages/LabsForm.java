@@ -12,8 +12,8 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.string.StringHelper;
 
 import at.austriapro.rendering.BaseRenderer;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
@@ -111,7 +111,8 @@ final class LabsForm extends Form <Object>
     }
 
     // Validate the XML instance - performed in any case
-    final EbInterfaceValidator validator = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+    final EbInterfaceValidator validator = Application.get ()
+                                                      .getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
     final ValidationResult validationResult = validator.validateXMLInstanceAgainstSchema (uploadedData);
 
     if (validationResult.getDeterminedEbInterfaceVersion () == null)
@@ -129,7 +130,7 @@ final class LabsForm extends Form <Object>
         break;
       case VISUALIZATION_HTML:
         // Visualization is only possible for valid instances
-        if (StringHelper.hasText (validationResult.getSchemaValidationErrorMessage ()))
+        if (StringHelper.isNotEmpty (validationResult.getSchemaValidationErrorMessage ()))
         {
           error ("Die gewählte ebInterface Instanz ist nicht valide. Es können nur valide Schemainstanzen in der Druckansicht angezeigt werden.");
           onError ();
@@ -137,7 +138,8 @@ final class LabsForm extends Form <Object>
         else
         {
           // Get the transformed string
-          final String s = validator.transformInput (uploadedData, validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
+          final String s = validator.transformInput (uploadedData,
+                                                     validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
           // Redirect to the printview page
           setResponsePage (new PrintViewPage (s));
         }

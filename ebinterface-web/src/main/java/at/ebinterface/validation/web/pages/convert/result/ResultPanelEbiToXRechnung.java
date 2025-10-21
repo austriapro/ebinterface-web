@@ -3,8 +3,6 @@ package at.ebinterface.validation.web.pages.convert.result;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.annotation.Nullable;
-
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -14,7 +12,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
+
+import jakarta.annotation.Nullable;
 
 public final class ResultPanelEbiToXRechnung extends Panel
 {
@@ -32,7 +32,7 @@ public final class ResultPanelEbiToXRechnung extends Panel
     final WebMarkupContainer mappingLogErrorContainer = new WebMarkupContainer ("mappingLogError");
     add (mappingLogErrorContainer);
 
-    if (StringHelper.hasText (sErrorLog))
+    if (StringHelper.isNotEmpty (sErrorLog))
     {
       mappingLogSuccessContainer.setVisible (false);
       mappingLogErrorContainer.setVisible (true);

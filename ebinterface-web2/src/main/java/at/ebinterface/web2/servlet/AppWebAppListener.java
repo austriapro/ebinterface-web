@@ -1,11 +1,8 @@
 package at.ebinterface.web2.servlet;
 
-import javax.annotation.Nonnull;
-
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import com.helger.commons.debug.GlobalDebug;
-import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.base.debug.GlobalDebug;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.html.hc.config.HCConversionSettings;
 import com.helger.html.hc.config.HCSettings;
@@ -15,12 +12,12 @@ import com.helger.html.jquery.JQueryAjaxBuilder;
 import com.helger.html.jscode.JSAssocArray;
 import com.helger.html.resource.css.ICSSPathProvider;
 import com.helger.html.resource.js.IJSPathProvider;
+import com.helger.io.resource.ClassPathResource;
 import com.helger.photon.ajax.IAjaxRegistry;
 import com.helger.photon.app.html.PhotonCSS;
 import com.helger.photon.app.html.PhotonJS;
 import com.helger.photon.bootstrap4.BootstrapCustomConfig;
 import com.helger.photon.bootstrap4.ext.BootstrapSystemMessage;
-import com.helger.photon.bootstrap4.servlet.BootstrapCustomizer;
 import com.helger.photon.bootstrap4.servlet.WebAppListenerBootstrap;
 import com.helger.photon.bootstrap4.uictrls.datatables.BootstrapDataTables;
 import com.helger.photon.core.appid.CApplicationID;
@@ -49,6 +46,7 @@ import at.ebinterface.web2.app.AppMenuPublic;
 import at.ebinterface.web2.app.CApp;
 import at.ebinterface.web2.app.CAppAjax;
 import at.ebinterface.web2.app.DefaultSecurity;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 
 /**
@@ -110,8 +108,7 @@ public final class AppWebAppListener extends WebAppListenerBootstrap
     {
       // Special Bootstrap customizer
       HCSettings.getMutableConversionSettings ()
-                .setCustomizer (new HCCustomizerList (new BootstrapCustomizer (),
-                                                      new HCCustomizerAutoFocusFirstCtrl ()));
+                .setCustomizer (new HCCustomizerList (new HCCustomizerAutoFocusFirstCtrl ()));
     }
 
     // Set default icon set if none is defined

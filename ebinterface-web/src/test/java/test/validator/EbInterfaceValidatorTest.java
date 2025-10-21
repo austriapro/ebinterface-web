@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.ebinterface.EEbInterfaceVersion;
 
 import at.ebinterface.validation.rtr.VerificationServiceInvoker;
@@ -71,14 +71,14 @@ public class EbInterfaceValidatorTest
     uploadedData = IOUtils.toByteArray (input);
     EbInterfaceValidator validator = new EbInterfaceValidator ();
     ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema
     input = this.getClass ().getResourceAsStream ("/ebinterface/4p3/ebInterface_4p3_sample_invalid.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
   }
 
@@ -101,14 +101,14 @@ public class EbInterfaceValidatorTest
     uploadedData = IOUtils.toByteArray (input);
     EbInterfaceValidator validator = new EbInterfaceValidator ();
     ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema
     input = this.getClass ().getResourceAsStream ("/ebinterface/4p2/ebInterface_4p2_sample_invalid.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
   }
 
@@ -131,14 +131,14 @@ public class EbInterfaceValidatorTest
     uploadedData = IOUtils.toByteArray (input);
     EbInterfaceValidator validator = new EbInterfaceValidator ();
     ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema
     input = this.getClass ().getResourceAsStream ("/ebinterface/4p1/ebInterface_4p1_sample_invalid.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
   }
 
@@ -161,27 +161,27 @@ public class EbInterfaceValidatorTest
     uploadedData = IOUtils.toByteArray (input);
     EbInterfaceValidator validator = new EbInterfaceValidator ();
     ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/4p0/ebinterface4-test1.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema
     input = this.getClass ().getResourceAsStream ("/ebinterface/4p0/testinstance-invalid-schema.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema with non-qualified attributes
     input = this.getClass ().getResourceAsStream ("/ebinterface/4p0/ebinterface4-test1-noprefix.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
   }
 
@@ -203,7 +203,7 @@ public class EbInterfaceValidatorTest
     if (VerificationServiceInvoker.isActivated ())
     {
       // Signature validation exception message must be present
-      assertTrue (StringHelper.hasText (result.getSignatureValidationExceptionMessage ()));
+      assertTrue (StringHelper.isNotEmpty (result.getSignatureValidationExceptionMessage ()));
     }
 
     // Test a correctly signed sample
@@ -249,26 +249,26 @@ public class EbInterfaceValidatorTest
     EbInterfaceValidator validator = new EbInterfaceValidator ();
     byte [] uploadedData = IOUtils.toByteArray (input);
     ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p02/InvoiceExample2.xml");
     validator = new EbInterfaceValidator ();
     uploadedData = IOUtils.toByteArray (input);
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p02/valid_and_signed.xml");
     validator = new EbInterfaceValidator ();
     uploadedData = IOUtils.toByteArray (input);
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p02/InvoiceExample-invalid.xml");
     validator = new EbInterfaceValidator ();
     uploadedData = IOUtils.toByteArray (input);
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     System.out.println (result);
 
@@ -293,50 +293,50 @@ public class EbInterfaceValidatorTest
     byte [] uploadedData = IOUtils.toByteArray (input);
     EbInterfaceValidator validator = new EbInterfaceValidator ();
     ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/valid1.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/valid2.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/valid3.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/valid4.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/valid5.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/valid6.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertTrue (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertTrue (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     // Invalid schema
     input = this.getClass ().getResourceAsStream ("/ebinterface/3p0/InvoiceExample-invalid.xml");
     uploadedData = IOUtils.toByteArray (input);
     validator = new EbInterfaceValidator ();
     result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
 
     System.out.println (result);
 
@@ -351,6 +351,6 @@ public class EbInterfaceValidatorTest
     final byte [] uploadedData = IOUtils.toByteArray (input);
     final EbInterfaceValidator validator = new EbInterfaceValidator ();
     final ValidationResult result = validator.validateXMLInstanceAgainstSchema (uploadedData);
-    assertFalse (StringHelper.hasNoText (result.getSchemaValidationErrorMessage ()));
+    assertFalse (StringHelper.isEmpty (result.getSchemaValidationErrorMessage ()));
   }
 }

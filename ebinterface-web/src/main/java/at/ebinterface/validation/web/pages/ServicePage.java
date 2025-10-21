@@ -1,13 +1,12 @@
 package at.ebinterface.validation.web.pages;
 
-import javax.annotation.Nullable;
-
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 
-import com.helger.commons.annotation.UsedViaReflection;
+import com.helger.annotation.style.UsedViaReflection;
 
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.validation.web.pages.resultpages.ResultPanel;
+import jakarta.annotation.Nullable;
 
 public final class ServicePage extends BasePage
 {

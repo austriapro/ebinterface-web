@@ -2,14 +2,10 @@ package at.ebinterface.web2.page;
 
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.error.IError;
-import com.helger.commons.error.list.IErrorList;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.url.SimpleURL;
+import com.helger.base.string.StringHelper;
 import com.helger.css.property.CCSSProperties;
+import com.helger.diagnostics.error.IError;
+import com.helger.diagnostics.error.list.IErrorList;
 import com.helger.html.hc.IHCNode;
 import com.helger.html.hc.html.forms.HCButton_Submit;
 import com.helger.html.hc.html.forms.HCEditFile;
@@ -30,12 +26,15 @@ import com.helger.photon.core.form.FormErrorList;
 import com.helger.photon.icon.fontawesome.EFontAwesome5Icon;
 import com.helger.photon.uicore.css.CPageParam;
 import com.helger.photon.uicore.page.WebPageExecutionContext;
+import com.helger.url.SimpleURL;
 import com.helger.web.fileupload.IFileItem;
 
 import at.ebinterface.validation.parser.EbiVersion;
 import at.ebinterface.validation.validator.EbInterfaceValidator;
 import at.ebinterface.validation.validator.ValidationResult;
 import at.ebinterface.web2.pdf.PDFHelper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class PageRootService extends AbstractAppWebPage
 {
@@ -145,7 +144,7 @@ public class PageRootService extends AbstractAppWebPage
 
           // Was there a validation error?
           final String sValidationError = aValResult.getSchemaValidationErrorMessage ();
-          if (StringHelper.hasText (sValidationError))
+          if (StringHelper.isNotEmpty (sValidationError))
           {
             aFormErrors.addFieldError (FIELD_FILE_INPUT, sValidationError);
           }

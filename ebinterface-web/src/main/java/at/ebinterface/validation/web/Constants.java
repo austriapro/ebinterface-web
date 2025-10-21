@@ -18,7 +18,7 @@ public final class Constants
   public static final MetaDataKey <EbInterfaceValidator> METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR = new MetaDataKey <> ()
   {};
 
-  public static final Locale DE_AT = new Locale ("de", "AT");
+  public static final Locale DE_AT = new Locale.Builder ().setLanguage ("de").setRegion ("AT").build ();
 
   private Constants ()
   {}

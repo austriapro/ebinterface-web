@@ -2,10 +2,9 @@ package at.ebinterface.web2.app;
 
 import java.util.List;
 
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.annotation.CodingStyleguideUnaware;
-import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.CodingStyleguideUnaware;
+import com.helger.collection.commons.CommonsArrayList;
 import com.helger.photon.security.CSecurity;
 
 @Immutable

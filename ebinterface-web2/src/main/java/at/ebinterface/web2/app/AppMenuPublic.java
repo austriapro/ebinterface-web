@@ -1,13 +1,12 @@
 package at.ebinterface.web2.app;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
+import com.helger.annotation.concurrent.Immutable;
 import com.helger.photon.core.menu.IMenuObjectFilter;
 import com.helger.photon.core.menu.IMenuTree;
 
 import at.ebinterface.web2.page.PageRootLabs;
 import at.ebinterface.web2.page.PageRootService;
+import jakarta.annotation.Nonnull;
 
 @Immutable
 public final class AppMenuPublic
