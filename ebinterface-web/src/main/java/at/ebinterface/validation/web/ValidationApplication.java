@@ -9,6 +9,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.base.exception.InitializationException;
 import com.helger.base.string.StringHelper;
 
 import at.ebinterface.validation.validator.EbInterfaceValidator;
@@ -47,11 +48,10 @@ public class ValidationApplication extends WebApplication
       LOG.info ("Setting key store reference to {}", url.getPath ());
       System.setProperty ("javax.net.ssl.trustStore", url.getPath ());
       System.setProperty ("javax.net.ssl.trustStorePassword", "");
-
     }
     catch (final Exception e1)
     {
-      throw new RuntimeException ("Error while reading SSL Keystore. Unable to proceed.", e1);
+      throw new InitializationException ("Error while reading SSL Keystore. Unable to proceed.", e1);
     }
 
     APP_PATH = System.getenv ("APPLICATION_PATH");

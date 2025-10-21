@@ -50,24 +50,22 @@ public enum CodeBoxLanguage
 
   CodeBoxLanguage (final String cssClass)
   {
-    this.m_sCssClass = cssClass;
-    m_sExtraJSfile = null;
+    this (cssClass, null);
   }
 
   CodeBoxLanguage (final String cssClass, final String extraJSfile)
   {
-    this.m_sCssClass = cssClass;
-    this.m_sExtraJSfile = extraJSfile;
+    m_sCssClass = cssClass;
+    m_sExtraJSfile = extraJSfile;
   }
 
   public String getCSSClass ()
   {
-    return this.m_sCssClass;
+    return m_sCssClass;
   }
 
   public String getExtraJSfile ()
   {
     return m_sExtraJSfile;
   }
-
 }

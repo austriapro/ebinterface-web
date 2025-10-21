@@ -100,7 +100,6 @@ final class LabsForm extends Form <Object>
     // Get the file input
     final FileUpload upload = fileUploadField.getFileUpload ();
     byte [] uploadedData = null;
-
     try
     {
       uploadedData = StreamHelper.getAllBytes (upload.getInputStream ());
@@ -111,9 +110,9 @@ final class LabsForm extends Form <Object>
     }
 
     // Validate the XML instance - performed in any case
-    final EbInterfaceValidator validator = Application.get ()
-                                                      .getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
-    final ValidationResult validationResult = validator.validateXMLInstanceAgainstSchema (uploadedData);
+    final EbInterfaceValidator ebiValidator = Application.get ()
+                                                         .getMetaData (Constants.METADATAKEY_EBINTERFACE_XMLSCHEMAVALIDATOR);
+    final ValidationResult validationResult = ebiValidator.validateXMLInstanceAgainstSchema (uploadedData);
 
     if (validationResult.getDeterminedEbInterfaceVersion () == null)
     {
@@ -138,8 +137,9 @@ final class LabsForm extends Form <Object>
         else
         {
           // Get the transformed string
-          final String s = validator.transformInput (uploadedData,
-                                                     validationResult.getDeterminedEbInterfaceVersion ().getVersion ());
+          final String s = ebiValidator.transformInput (uploadedData,
+                                                        validationResult.getDeterminedEbInterfaceVersion ()
+                                                                        .getVersion ());
           // Redirect to the printview page
           setResponsePage (new PrintViewPage (s));
         }
@@ -148,9 +148,11 @@ final class LabsForm extends Form <Object>
         final BaseRenderer renderer = new BaseRenderer ();
         try
         {
-          LOGGER.debug ("Load ebInterface JasperReport template from application context.");
+          if (LOGGER.isDebugEnabled ())
+            LOGGER.debug ("Load ebInterface JasperReport template from application context.");
           final JasperReport jrReport = Application.get ().getMetaData (Constants.METADATAKEY_EBINTERFACE_JRTEMPLATE);
-          LOGGER.debug ("Rendering PDF from ebInterface file.");
+          if (LOGGER.isDebugEnabled ())
+            LOGGER.debug ("Rendering PDF from ebInterface file.");
           final byte [] pdf = renderer.renderReport (jrReport, uploadedData, null);
 
           // Redirect to the ebInterface result page

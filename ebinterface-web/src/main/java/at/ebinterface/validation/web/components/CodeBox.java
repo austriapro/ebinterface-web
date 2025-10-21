@@ -35,7 +35,7 @@ public class CodeBox extends WebComponent
 
   /**
    * Create a Codebox with static content with the given `id`.
-   * 
+   *
    * @param id
    *        ID
    */
@@ -130,7 +130,7 @@ public class CodeBox extends WebComponent
     {
       if (isDisplayLineNumbers ())
       {
-        code = formatLineNumbers (code);
+        code = _formatLineNumbers (code);
       }
       replaceComponentTagBody (markupStream, openTag, code);
     }
@@ -140,7 +140,7 @@ public class CodeBox extends WebComponent
     }
   }
 
-  private String formatLineNumbers (final String code)
+  private static String _formatLineNumbers (final String code)
   {
     final StringBuilder codeWithLines = new StringBuilder (code.length () * 2);
     final String [] lines = code.split ("\n");
@@ -149,7 +149,7 @@ public class CodeBox extends WebComponent
     for (final String line : lines)
     {
       codeWithLines.append ("<span class=\"nocode\">");
-      codeWithLines.append (rightJustifyAndPad (lineNo++, numPlaces));
+      codeWithLines.append (_rightJustifyAndPad (lineNo++, numPlaces));
       codeWithLines.append (":</span> ");
       codeWithLines.append (line);
       codeWithLines.append ('\n');
@@ -171,7 +171,7 @@ public class CodeBox extends WebComponent
    */
   public CodeBox setDisplayLineNumbers (final boolean displayLineNumbers)
   {
-    this.m_bDisplayLineNumbers = displayLineNumbers;
+    m_bDisplayLineNumbers = displayLineNumbers;
     return this;
   }
 
@@ -189,11 +189,11 @@ public class CodeBox extends WebComponent
    */
   public CodeBox setLanguageOverride (final CodeBoxLanguage languageOverride)
   {
-    this.m_eLanguageOverride = languageOverride;
+    m_eLanguageOverride = languageOverride;
     return this;
   }
 
-  private String rightJustifyAndPad (final int lineNo, final int places)
+  private static String _rightJustifyAndPad (final int lineNo, final int places)
   {
     final StringBuilder result = new StringBuilder (places);
     result.append (lineNo);
@@ -203,5 +203,4 @@ public class CodeBox extends WebComponent
     }
     return result.toString ();
   }
-
 }
